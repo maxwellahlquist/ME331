@@ -1,0 +1,28 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: AddForceGravity  (Uniform "local" gravity) 
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) Particle  P, Q
+   (6) RigidBody B
+   (7) P.SetMass( mP )
+   (8) Q.SetMass( mQ )
+   (9) B.SetMass( mB )
+   (10) System.AddForceGravity( -9.8*Ny> )
+-> (11) Force_Bcm> = -9.8*mB*Ny>
+-> (12) Force_P> = -9.8*mP*Ny>
+-> (13) Force_Q> = -9.8*mQ*Ny>
+
+   (14) ResultantGravityForce> = System.GetResultantForce()
+-> (15) ResultantGravityForce> = (-9.8*mB-9.8*mP-9.8*mQ)*Ny>
+
+   (16) %--------------------------------------------------------------------
+   (17) % Example 2: AddForceGravity  (Inverse-square "universal" gravity) 
+   (18) %--------------------------------------------------------------------
+   (19) Constant  G
+   (20) Variable  x, y
+   (21) Q.SetPosition( P, x*Nx> + y*Ny> )
+-> (22) p_P_Q> = x*Nx> + y*Ny>
+
+   (23) Q.AddForceGravity( P, G )
+-> (24) Force_Q_P> = -mP*mQ*G*x/(x^2+y^2)^1.5*Nx> - mP*mQ*G*y/(x^2+y^2)^1.5*Ny>
+

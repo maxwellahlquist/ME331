@@ -1,0 +1,14 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: SetMass 
+   (3) %--------------------------------------------------------------------
+   (4) Particle   P, Q, R, S            
+   (5) RigidBody  B
+   (6) Variable   mS'
+   (7) P.SetMass( 17 )   
+   (8) Q.SetMass( mQ )         % Declares mQ as a non-negative constant
+   (9) R.SetMass( mR = 3 kg )  % Declares mR and sets its INPUT value to 3 kg
+   (10) S.SetMass( mS )         % mS may be governed by an ODE or equation
+   (11) B.SetMass( mB )         % Declares mB as a non-negative constant
+   (12) mSystem= System.GetMass()    
+-> (13) mSystem = 17 + mB + mQ + mR + mS
+

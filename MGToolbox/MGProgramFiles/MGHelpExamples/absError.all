@@ -1,0 +1,13 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: absError, relError, tInitial, tFinal, tStep, ...
+   (3) %--------------------------------------------------------------------
+   (4) Variable x'' = 2*sin(x) 
+-> (5) x'' = 2*sin(x)
+
+   (6) Input x = 1 m,  x' = 0 m/s
+   (7) Input absError = 1E-5 cm,  relError = 1E-7
+   (8) Input tInitial = -3 sec,  tFinal = 2 sec,  tStep = 0.02 sec
+   (9) Input printIntScreen = 1,  printIntFile = 0
+   (10) Output  t sec,  x m,  x' m/s,  x'' m/s^2
+   (11) ODE() odePendulumExample
+

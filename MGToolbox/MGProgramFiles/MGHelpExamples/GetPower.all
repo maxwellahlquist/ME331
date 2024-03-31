@@ -1,0 +1,58 @@
+   (1) %----------------------------------------------------------------------
+   (2) % Example 1: GetPowerForce   (Power of force on point Bo from point Ao)
+   (3) %----------------------------------------------------------------------
+   (4) NewtonianFrame  N
+   (5) RigidBody       A, B
+   (6) Variable        vx, vy, wz
+   (7) Ao.SetVelocity( N,  2*Nx> )
+-> (8) v_Ao_N> = 2*Nx>
+
+   (9) Bo.SetVelocity( N,  vx*Nx> + vy*Ny> )
+-> (10) v_Bo_N> = vx*Nx> + vy*Ny>
+
+   (11) Bo.AddForce( Ao,  444*Nx> )
+-> (12) Force_Bo_Ao> = 444*Nx>
+
+   (13) PowerOfForceOnBoFromAo = Bo.GetPowerForce( Ao )
+-> (14) PowerOfForceOnBoFromAo = -888 + 444*vx
+
+   (15) %----------------------------------------------------------------------
+   (16) % Example 2: GetPowerForce   (Power of external force on point Bo)
+   (17) %----------------------------------------------------------------------
+   (18) Specified       Fx, Fy, Tz
+   (19) Bo.AddForce( Fx*Nx> + Fy*Ny> )
+-> (20) Force_Bo> = Fx*Nx> + Fy*Ny>
+
+   (21) PowerOfExternalForceOnBo = Bo.GetPowerForce()
+-> (22) PowerOfExternalForceOnBo = Fx*vx + Fy*vy
+
+   (23) %----------------------------------------------------------------------
+   (24) % Example 3: GetPowerTorque  (Power of torque on body B from body A)
+   (25) %----------------------------------------------------------------------
+   (26) A.SetAngularVelocity( N, 3*Nz> )  
+-> (27) w_A_N> = 3*Nz>
+
+   (28) B.SetAngularVelocity( N, wz*Nz> )  
+-> (29) w_B_N> = wz*Nz>
+
+   (30) B.AddTorque( A,  333*Nz> )  
+-> (31) Torque_B_A> = 333*Nz>
+
+   (32) PowerOfTorqueOnBFromA = B.GetPowerTorque( A )   
+-> (33) PowerOfTorqueOnBFromA = -999 + 333*wz
+
+   (34) %----------------------------------------------------------------------
+   (35) % Example 4: GetPowerTorque  (Power of external torque on body B)
+   (36) %----------------------------------------------------------------------
+   (37) B.AddTorque( Tz*Nz> )  
+-> (38) Torque_B> = Tz*Nz>
+
+   (39) PowerOfExternalTorqueOnB = B.GetPowerTorque()
+-> (40) PowerOfExternalTorqueOnB = Tz*wz
+
+   (41) %----------------------------------------------------------------------
+   (42) % Example 5: GetPower   (Power of all forces and torques on the system)
+   (43) %----------------------------------------------------------------------
+   (44) PowerOfSystem = System.GetPower()   
+-> (45) PowerOfSystem = -1887 + 333*wz + 444*vx + Fx*vx + Fy*vy + Tz*wz
+

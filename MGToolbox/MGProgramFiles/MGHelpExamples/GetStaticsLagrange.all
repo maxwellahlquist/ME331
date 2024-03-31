@@ -1,0 +1,22 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetStaticsLagrange (Mass-spring system)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame  N            % Earth.
+   (5) Particle        Q
+   (6) Constant        g            % Earth's gravitational constant.
+   (7) Constant        k            % Spring constant.
+   (8) Variable        y            % Spring stretch.
+   (9) SetGeneralizedCoordinate( y )
+   (10) Q.SetMass( m )
+   (11) Q.SetPosition( No, y*Ny> )
+-> (12) p_No_Q> = y*Ny>
+
+   (13) PotentialEnergy = m*g*y + 1/2*k*y^2
+-> (14) PotentialEnergy = 0.5*y*(2*m*g+k*y)
+
+   (15) LagranageStatics = System.GetStaticsLagrange( systemPotential = PotentialEnergy )
+-> (16) LagranageStatics = [-m*g - k*y]
+
+   (17) Solve( LagranageStatics = 0,  y )
+-> (18) y = -m*g/k
+

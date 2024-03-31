@@ -1,0 +1,49 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetInertiaDyadic  (inertia dyadic of a rigid body)
+   (3) %--------------------------------------------------------------------
+   (4) RigidBody  B
+   (5) B.SetInertia( Bcm, Ixx, Iyy, Izz )
+   (6) BInertiaDyadicAboutBcm>> = B.GetInertiaDyadic( Bcm )
+-> (7) BInertiaDyadicAboutBcm>> = Ixx*Bx>*Bx> + Iyy*By>*By> + Izz*Bz>*Bz>
+
+   (8) %--------------------------------------------------------------------
+   (9) % Example 2: GetInertiaDyadic  (inertia dyadic in designated basis)
+   (10) %--------------------------------------------------------------------
+   (11) RigidFrame A
+   (12) Variable  theta
+   (13) B.SetRotationMatrixZ( A, theta )
+-> (14) B_A = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+
+   (15) BInertiaDyadicAboutBcmExpressedInA>> = B.GetInertiaDyadic( Bcm, A )
+-> (16) BInertiaDyadicAboutBcmExpressedInA>> = (Ixx*cos(theta)^2+Iyy*sin(theta)^2)
+        *Ax>*Ax> + (Ixx-Iyy)*sin(theta)*cos(theta)*Ax>*Ay> + (Ixx-Iyy)*sin(the
+        ta)*cos(theta)*Ay>*Ax> + (Iyy+(Ixx-Iyy)*sin(theta)^2)*Ay>*Ay> + Izz*Az>*Az>
+
+   (17) %--------------------------------------------------------------------
+   (18) % Example 3: GetInertiaDyadic  (inertia dyadic of a particle)
+   (19) %--------------------------------------------------------------------
+   (20) Particle   Q
+   (21) Q.SetMass( mQ )
+   (22) Variable   x, y, z
+   (23) Q.SetPosition( Bo, x*Bx> + y*By> + z*Bz> )
+-> (24) p_Bo_Q> = x*Bx> + y*By> + z*Bz>
+
+   (25) QInertiaDyadicAboutBoExpressedInB>> = Q.GetInertiaDyadic( Bo, B )
+-> (26) QInertiaDyadicAboutBoExpressedInB>> = mQ*(y^2+z^2)*Bx>*Bx> - mQ*x*y*Bx>*By>
+        - mQ*x*z*Bx>*Bz> - mQ*x*y*By>*Bx> + mQ*(x^2+z^2)*By>*By> - mQ*y*z*By>*Bz>
+        - mQ*x*z*Bz>*Bx> - mQ*y*z*Bz>*By> + mQ*(x^2+y^2)*Bz>*Bz>
+
+   (27) %--------------------------------------------------------------------
+   (28) % Example 4: GetInertiaDyadic  (inertia dyadic of a system)
+   (29) %--------------------------------------------------------------------
+   (30) B.SetMass( mB )
+   (31) Bcm.SetPosition( Bo, 2*Bx> + 3*By> + 4*Bz> )
+-> (32) p_Bo_Bcm> = 2*Bx> + 3*By> + 4*Bz>
+
+   (33) SystemInertiaDyadicAboutBoExpressedInB>> = System.GetInertiaDyadic( Bo, B )
+-> (34) SystemInertiaDyadicAboutBoExpressedInB>> = (Ixx+25*mB+mQ*(y^2+z^2))*Bx>*Bx>
+        + (-6*mB-mQ*x*y)*Bx>*By> + (-8*mB-mQ*x*z)*Bx>*Bz> + (-6*mB-mQ*x*y)*By>*Bx>
+        + (Iyy+20*mB+mQ*(x^2+z^2))*By>*By> + (-12*mB-mQ*y*z)*By>*Bz> + (-8*mB-
+        mQ*x*z)*Bz>*Bx> + (-12*mB-mQ*y*z)*Bz>*By> + (Izz+13*mB+mQ*(x^2+y^2))*
+        Bz>*Bz>
+

@@ -1,0 +1,142 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 22.15.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">22.15.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  22.15.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N                % Example: Earth.
+   (6) RigidBody       A                % Example: Upper forearm.
+   (7) RigidBody      	B                % Comment.
+   (8) Point           AN( A )
+   (9) %--------------------------------------------------------------------
+   (10) %   Mathematical declarations.
+   (11) Variable    x'', y''
+   (12) Variable    wx', wy', wz'
+   (13) Variable    R{1:3}{1:3}'	% R23 == Ryz
+   (14) Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+   (15) Constant    omega
+   (16) Constant    I, J, K
+   (17) Constant    r
+   (18) Constant    mA, mB, m = mA + mB
+-> (19) m = mA + mB
+
+   (20) %--------------------------------------------------------------------
+   (21) %   Mass and inertia properties.
+   (22) A.SetMass( mA )
+   (23) B.SetMass( mB )
+   (24) A.SetInertia( Acm,  I,  I,  I )
+   (25) B.SetInertia( Bcm, A, J, J, K )
+   (26) %--------------------------------------------------------------------
+   (27) %   Rotational kinematics.
+   (28) A.SetAngularVelocity( N, wx*Ax> + wy*Ay> + wz*Az> )
+-> (29) w_A_N> = wx*Ax> + wy*Ay> + wz*Az>
+
+   (30) %A.SetRotationMatrixODE( N, [R11, R12, R13; R21, R22, R23; R31, R32, R33] )
+   (31) A.SetRotationMatrixODE( N, Poisson, R11, R12, R13, R21, R22, R23, R31, R32, R33 )
+-> (32) A_N = [R11, R12, R13;  R21, R22, R23;  R31, R32, R33]
+-> (33) R11' = R21*wz - R31*wy
+-> (34) R12' = R22*wz - R32*wy
+-> (35) R13' = R23*wz - R33*wy
+-> (36) R21' = R31*wx - R11*wz
+-> (37) R22' = R32*wx - R12*wz
+-> (38) R23' = R33*wx - R13*wz
+-> (39) R31' = R11*wy - R21*wx
+-> (40) R32' = R12*wy - R22*wx
+-> (41) R33' = R13*wy - R23*wx
+
+   (42) B.SetAngularVelocity( A, omega*Az> )
+-> (43) w_B_A> = omega*Az>
+
+   (44) %--------------------------------------------------------------------
+   (45) %   Translational kinematics.
+   (46) Acm.Translate( No, x*Nx> + y*Ny> + r*Nz> )
+-> (47) p_No_Acm> = x*Nx> + y*Ny> + r*Nz>
+-> (48) v_Acm_N> = x'*Nx> + y'*Ny>
+-> (49) a_Acm_N> = x''*Nx> + y''*Ny>
+
+   (50) Bcm.Translate( Acm, 0> )
+-> (51) p_Acm_Bcm> = 0>
+-> (52) v_Bcm_N> = x'*Nx> + y'*Ny>
+-> (53) a_Bcm_N> = x''*Nx> + y''*Ny>
+
+   (54) AN.SetPositionVelocity( Acm, -r*Nz> )
+-> (55) p_Acm_AN> = -r*Nz>
+-> (56) v_AN_N> = (x'-r*(R12*wx+R22*wy+R32*wz))*Nx> + (r*(R11*wx+R21*wy+R31*wz)
+        +y')*Ny>
+
+   (57) %AN.GetAcceleration( Acm, -r*Nz> ) % Probably doesn't need to run
+   (58) %--------------------------------------------------------------------
+   (59) %   Motion constraints (if any).
+   (60) MotionConstraint[1] = Dot( AN.GetVelocity( N ), Nx> )
+-> (61) MotionConstraint[1] = x' - r*(R12*wx+R22*wy+R32*wz)
+
+   (62) MotionConstraint[2] = Dot( AN.GetVelocity( N ), Ny> )
+-> (63) MotionConstraint[2] = r*(R11*wx+R21*wy+R31*wz) + y'
+
+   (64) MotionConstraintDT = DT( MotionConstraint )
+-> (65) MotionConstraintDT[1] = x'' - r*(R12*wx'+R22*wy'+R32*wz'+wx*R12'+wy*R2
+        2'+wz*R32')
+-> (66) MotionConstraintDT[2] = r*(R11*wx'+R21*wy'+R31*wz'+wx*R11'+wy*R21'+wz*
+        R31') + y''
+
+   (67) Solve( [MotionConstraint, MotionConstraintDT], x', y', x'', y'' )
+-> (68) x' = r*(R12*wx+R22*wy+R32*wz)
+-> (69) y' = -r*(R11*wx+R21*wy+R31*wz)
+-> (70) x'' = r*(R12*wx'+R22*wy'+R32*wz'+wx*R12'+wy*R22'+wz*R32')
+-> (71) y'' = -r*(R11*wx'+R21*wy'+R31*wz'+wx*R11'+wy*R21'+wz*R31')
+
+   (72) SetGeneralizedSpeeds(wx, wy, wz)
+   (73) eqs = System.GetDynamicsKane()
+-> (74) eqs[1] = J*omega*wy + mA*r^2*(R11*(wx*R11'+wy*R21'+wz*R31')+R12*(wx*R1
+        2'+wy*R22'+wz*R32')) + mB*r^2*(R11*(wx*R11'+wy*R21'+wz*R31')+R12*(wx*
+        R12'+wy*R22'+wz*R32')) + r^2*(mA+mB)*(R11*R21+R12*R22)*wy' + r^2*(mA+
+        mB)*(R11*R31+R12*R32)*wz' + (I+J+mA*r^2*(R11^2+R12^2)+mB*r^2*(R11^2+R12^2))*wx'
+        - (J-K)*wy*(omega+wz)
+
+-> (75) eqs[2] = (J-K)*wx*(omega+wz) + mA*r^2*(R21*(wx*R11'+wy*R21'+wz*R31')+
+        R22*(wx*R12'+wy*R22'+wz*R32')) + mB*r^2*(R21*(wx*R11'+wy*R21'+wz*R31')+
+        R22*(wx*R12'+wy*R22'+wz*R32')) + r^2*(mA+mB)*(R11*R21+R12*R22)*wx'
+        + r^2*(mA+mB)*(R21*R31+R22*R32)*wz' + (I+J+mA*r^2*(R21^2+R22^2)+mB*r^2*
+        (R21^2+R22^2))*wy' - J*omega*wx
+
+-> (76) eqs[3] = r^2*(mA+mB)*(R31*(wx*R11'+wy*R21'+wz*R31')+R32*(wx*R12'+wy*R2
+        2'+wz*R32')) + r^2*(mA+mB)*(R11*R31+R12*R32)*wx' + r^2*(mA+mB)*(R21*R31
+        +R22*R32)*wy' + (I+K+mA*r^2*(R31^2+R32^2)+mB*r^2*(R31^2+R32^2))*wz'
+
+   (77) FactorQuadratic(eqs, wx, wy, wz )
+-> (78) eqs[1] = K*omega*wy + r^2*(mA+mB)*(R11*R21+R12*R22)*wy' + r^2*(mA+mB)*(
+        R11*R31+R12*R32)*wz' + (I+J+mA*r^2*(R11^2+R12^2)+mB*r^2*(R11^2+R12^2))*wx'
+        - (J-K)*wy*wz
+
+-> (79) eqs[2] = (J-K)*wx*wz + r^2*(mA+mB)*(R11*R21+R12*R22)*wx' + r^2*(mA+mB)*
+        (R21*R31+R22*R32)*wz' + (I+J+mA*r^2*(R21^2+R22^2)+mB*r^2*(R21^2+R22^2))*wy'
+        - K*omega*wx
+
+-> (80) eqs[3] = r^2*(mA+mB)*(R11*R31+R12*R32)*wx' + r^2*(mA+mB)*(R21*R31+R22*
+        R32)*wy' + (I+K+mA*r^2*(R31^2+R32^2)+mB*r^2*(R31^2+R32^2))*wz'
+
+   (81) matrix = Exclude (GetCoefficientMatrix( eqs, wx', wy', wz' ), wx', wy', wz')
+-> (82) matrix[1,1] = I + J + mA*r^2*(R11^2+R12^2) + mB*r^2*(R11^2+R12^2)
+-> (83) matrix[1,2] = r^2*(mA+mB)*(R11*R21+R12*R22)
+-> (84) matrix[1,3] = r^2*(mA+mB)*(R11*R31+R12*R32)
+-> (85) matrix[2,1] = r^2*(mA+mB)*(R11*R21+R12*R22)
+-> (86) matrix[2,2] = I + J + mA*r^2*(R21^2+R22^2) + mB*r^2*(R21^2+R22^2)
+-> (87) matrix[2,3] = r^2*(mA+mB)*(R21*R31+R22*R32)
+-> (88) matrix[3,1] = r^2*(mA+mB)*(R11*R31+R12*R32)
+-> (89) matrix[3,2] = r^2*(mA+mB)*(R21*R31+R22*R32)
+-> (90) matrix[3,3] = I + K + mA*r^2*(R31^2+R32^2) + mB*r^2*(R31^2+R32^2)
+
+   (91) rhs = -1*Exclude( eqs, wx', wy', wz' )
+-> (92) rhs[1] = -wy*(K*omega-(J-K)*wz)
+-> (93) rhs[2] = wx*(K*omega-(J-K)*wz)
+-> (94) rhs[3] = 0
+
+   (95) KE = System.GetKineticEnergy()
+-> (96) KE = 0.5*J*wx^2 + 0.5*J*wy^2 + 0.5*K*(omega+wz)^2 + 0.5*I*(wx^2+wy^2+wz^2)
+        + 0.5*mA*(x'^2+y'^2) + 0.5*mB*(x'^2+y'^2)
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

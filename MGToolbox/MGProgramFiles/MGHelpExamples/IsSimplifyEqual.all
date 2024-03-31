@@ -1,0 +1,73 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  IsSimplifyEqual( scalarA, scalarB )
+   (3) %--------------------------------------------------------------------
+   (4) isEqualA = IsSimplifyEqual( 5,  5 )
+-> (5) isEqualA = true
+
+   (6) isEqualB = IsSimplifyEqual( 5, -5 )
+-> (7) isEqualB = false
+
+   (8) isEqualC = IsSimplifyEqual( 5, 5.01,  0.02 )
+-> (9) isEqualC = true
+
+   (10) isEqualD = IsSimplifyEqual( 5, 5.03,  0.02 )
+-> (11) isEqualD = false
+
+   (12) isEqualE = IsSimplifyEqual( sin(1.01*t), sin(t),     0.02 )
+-> (13) isEqualE = true
+
+   (14) isEqualF = IsSimplifyEqual( sin(1.03*t), sin(t),     0.02 )
+-> (15) isEqualF = false
+
+   (16) isEqualG = IsSimplifyEqual( sin(10.1*t), sin(10*t),  0, 0.02 )
+-> (17) isEqualG = true
+
+   (18) isEqualH = IsSimplifyEqual( sin(10.3*t), sin(10*t),  0, 0.02 )
+-> (19) isEqualH = false
+
+   (20) isEqualI = IsSimplifyEqual( t^7.33,  t^7.34,  0.02 )
+-> (21) isEqualI = true
+
+   (22) isEqualJ = IsSimplifyEqual( t^7.33,  t^7.36,  0.02 )
+-> (23) isEqualJ = false
+
+   (24) isEqualK = IsSimplifyEqual( t^10.1,  t^10,    0, 0.02 )
+-> (25) isEqualK = true
+
+   (26) isEqualL = IsSimplifyEqual( t^10.3,  t^10,    0, 0.02 )
+-> (27) isEqualL = false
+
+   (28) isEqualM = IsSimplifyEqual( t^10.3,  t^10.4,  0, 0.02 ) 
+-> (29) isEqualM = false
+
+   (30) isEqualN = IsSimplifyEqual( t^10.3,  t^10.4,  0.02, 0 ) 
+-> (31) isEqualN = false
+
+   (32) %--------------------------------------------------------------------
+   (33) % Example 2:  IsSimplifyEqual( vectorA, vectorB ) 
+   (34) %--------------------------------------------------------------------
+   (35) RigidBody  B
+   (36) isEqualO = IsSimplifyEqual( Bx>,  Bx> )
+-> (37) isEqualO = true
+
+   (38) isEqualP = IsSimplifyEqual( Bx>,  By> )
+-> (39) isEqualP = false
+
+   (40) isEqualQ = IsSimplifyEqual( Bx>,  8   )
+-> (41) isEqualQ = false
+
+   (42) isEqualR = IsSimplifyEqual( Bx>,  By>*Bz> )
+-> (43) isEqualR = false
+
+   (44) isEqualS = IsSimplifyEqual( Bx>,  1.01*Bx>,  0.02 )
+-> (45) isEqualS = true
+
+   (46) isEqualT = IsSimplifyEqual( Bx>,  0.03*Bx>,  0.02 )
+-> (47) isEqualT = false
+
+   (48) %--------------------------------------------------------------------
+   (49) % Example 3:  IsSimplifyEqual( matrixA, matrixB ) 
+   (50) %--------------------------------------------------------------------
+   (51) isEqualU = IsSimplifyEqual( [2, Bx>,  Bx>*By>],  [2, Bx>, Bx>*By>] )
+-> (52) isEqualU = true
+

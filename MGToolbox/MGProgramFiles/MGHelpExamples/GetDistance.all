@@ -1,0 +1,31 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetDistance  GetDistanceSquared  
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame  N
+   (5) Particle    P, Q
+   (6) Variable    xQ
+   (7) Q.SetPosition( P, xQ*Nx> )
+-> (8) p_P_Q> = xQ*Nx>
+
+   (9) distanceBetweenQAndP = Q.GetDistance( P )
+-> (10) distanceBetweenQAndP = abs(xQ)
+
+   (11) distanceSquaredQAndP = Q.GetDistanceSquared( P )
+-> (12) distanceSquaredQAndP = xQ^2
+
+   (13) %--------------------------------------------------------------------
+   (14) % Example 2: GetDistance  GetDistanceSquared  GetLength  GetLengthSquared
+   (15) %--------------------------------------------------------------------
+   (16) Variable    x, y, z
+   (17) P.SetPosition( No,  x*Nx> + y*Ny> + z*Nz> )
+-> (18) p_No_P> = x*Nx> + y*Ny> + z*Nz>
+
+   (19) distanceBetweenPAndNo = P.GetDistance( No )
+-> (20) distanceBetweenPAndNo = sqrt(x^2+y^2+z^2)
+
+   (21) distanceBetweenQAndNo = Q.GetDistance( No )    % Same as Q.GetLength( No )
+-> (22) distanceBetweenQAndNo = sqrt(y^2+z^2+(x+xQ)^2)
+
+   (23) distanceSquaredPAndNo = Q.GetLengthSquared( No )
+-> (24) distanceSquaredPAndNo = y^2 + z^2 + (x+xQ)^2
+

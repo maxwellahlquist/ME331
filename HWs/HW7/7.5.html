@@ -1,0 +1,47 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 7.5.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">7.5.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  7.5.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) %NewtonianFrame  N                % Example: Earth.
+   (6) RigidFrame      A                % Frame to rotate from
+   (7) RigidFrame      B                % Frame for 1
+   (8) RigidFrame      C                % Frame for 2
+   (9) RigidFrame      D                % Frame for 3
+   (10) %--------------------------------------------------------------------
+   (11) %   
+   (12) lambda1> = Az>					% Unit vector for first rotation
+-> (13) lambda1> = Az>
+
+   (14) lambda2> = Az>					% Unit vector for second rotation
+-> (15) lambda2> = Az>
+
+   (16) lambda3> = -0.46*Ax> -0.46*Ay> + 0.76*Az>	% Unit vector for third rotation
+-> (17) lambda3> = -0.46*Ax> - 0.46*Ay> + 0.76*Az>
+
+   (18) theta1 = pi/3		% Radians
+-> (19) theta1 = 1.047198
+
+   (20) theta2 = 1.08		% Radians
+-> (21) theta2 = 1.08
+
+   (22) theta3 = 0.858		% Radians
+-> (23) theta3 = 0.858
+
+   (24) %--------------------------------------------------------------------
+   (25) B.SetRotationMatrix( A, lambda1>, theta1 )
+-> (26) B_A = [0.5, 0.8660254, 0;  -0.8660254, 0.5, 0;  0, 0, 1]
+
+   (27) C.SetRotationMatrix( A, lambda2>, theta2 )
+-> (28) C_A = [0.4713284, 0.8819578, 0;  -0.8819578, 0.4713284, 0;  0, 0, 1]
+
+   (29) D.SetRotationMatrix( A, lambda3>, theta3 )
+-> (30) D_A = [0.7271756, 0.6481913, 0.2270282;  -0.5017437, 0.7271756, -0.4689851;  
+        -0.4689851, 0.2270282, 0.8538293]
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

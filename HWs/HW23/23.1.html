@@ -1,0 +1,80 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 23.1.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">23.1.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  23.1.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N
+   (6) RigidFrame      A
+   (7) Particle        Q
+   (8) %--------------------------------------------------------------------
+   (9) %   Mathematical declarations.
+   (10) Variable    v'
+   (11) Variable    F_unmodelled = 40*(sin(t))^2
+-> (12) F_unmodelled = 40*sin(t)^2
+
+   (13) Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+   (14) Constant    theta
+   (15) Constant    m, b
+   (16) Specified   Kp1 = 0.25, Kp2 = 0.5, Kp3 = 1
+-> (17) Kp1 = 0.25
+-> (18) Kp2 = 0.5
+-> (19) Kp3 = 1
+
+   (20) Specified   vDes'
+   (21) SetDt( vDes = 20 )
+-> (22) vDes = 20
+-> (23) vDes' = 0
+
+   (24) Variable    Fc = m*( vDes' + Kp1*(vDes - v) ) + b*v^2 + m*g*sin(theta)
+-> (25) Fc = g*m*sin(theta) + b*v^2 + m*(vDes'+Kp1*(vDes-v))
+
+   (26) %--------------------------------------------------------------------
+   (27) %   Mass and inertia properties.
+   (28) Q.SetMass( m )
+   (29) %--------------------------------------------------------------------
+   (30) %   Rotational kinematics. 
+   (31) A.RotateZ( N, theta )
+-> (32) A_N = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+-> (33) w_A_N> = 0>
+-> (34) alf_A_N> = 0>
+
+   (35) %--------------------------------------------------------------------
+   (36) %   Translational kinematics.
+   (37) Q.SetVelocityAcceleration(N, v*Ax>)
+-> (38) v_Q_N> = v*Ax>
+-> (39) a_Q_N> = v'*Ax>
+
+   (40) %--------------------------------------------------------------------
+   (41) %   Add relevant contact/distance forces.
+   (42) System.AddForceGravity( -g*Ny> )            % Add's gravity force to each massive object.
+-> (43) Force_Q> = -g*m*Ny>
+
+   (44) Q.AddForce( (Fc - b*v^2 - F_unmodelled)*Ax> )
+-> (45) Force_Q> = (Fc-F_unmodelled-b*v^2)*Ax> - g*m*Ny>
+
+   (46) %--------------------------------------------------------------------
+   (47) %   Translational dynamic equations (F = m*a).
+   (48) %   For static analysis, use  B.GetStatics()  or  System.GetStatics().
+   (49) SetGeneralizedSpeeds( v )
+   (50) Eq = System.GetDynamicsKane()
+-> (51) Eq = [g*m*sin(theta) + F_unmodelled + b*v^2 + m*v' - Fc]
+
+   (52) Solve( Explicit(Eq, theta) = 0, v' )
+-> (53) v' = vDes' + Kp1*(vDes-v) - F_unmodelled/m
+
+   (54) Variable v2' = Evaluate(v', Kp1 = Kp2, v = v2)
+-> (55) v2' = vDes' + Kp2*(vDes-v2) - F_unmodelled/m
+
+   (56) Variable v3' = Evaluate(v', Kp1 = Kp3, v = v3)
+-> (57) v3' = vDes' + Kp3*(vDes-v3) - F_unmodelled/m
+
+   (58) Input tfinal = 12 sec, m = 50 kg, v = 0 m/s, v2 = 0 m/s, v3 = 0 m/s
+   (59) OutputPlot t sec, v m/s, v2 m/s, v3 m/s
+   (60) ODE()
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

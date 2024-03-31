@@ -1,0 +1,37 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: V2PTS  (velocity of a point Q fixed on rigid body B)
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame N             
+   (5) RigidBody  B      % Points P and Q are both fixed on B.
+   (6) Point      P(B)   % P is a point fixed on B.
+   (7) Point      Q(B)   % Q is a point fixed on B.
+   (8) Constant   r      % Bx> measure of Q's position from P.
+   (9) Variable   wz' 
+   (10) B.SetAngularVelocityAcceleration( N,  wz*Bz> )
+-> (11) w_B_N> = wz*Bz>
+-> (12) alf_B_N> = wz'*Bz>
+
+   (13) Q.SetPosition( P,  r*Bx> )
+-> (14) p_P_Q> = r*Bx>
+
+   (15) P.SetVelocityAcceleration( N,  2*Nx> + 3*t*Ny> )
+-> (16) v_P_N> = 2*Nx> + 3*t*Ny>
+-> (17) a_P_N> = 3*Ny>
+
+   (18) %----------------------------------
+   (19) V2PTS( N, B, P, Q )
+-> (20) v_Q_N> = r*wz*By> + 2*Nx> + 3*t*Ny>
+
+   (21) %--------------------------------------------------------------------
+   (22) % Example: A2PTS  (acceleration of a point Q fixed on rigid body B)
+   (23) %--------------------------------------------------------------------
+   (24) A2PTS( N, B, P, Q )
+-> (25) a_Q_N> = -r*wz^2*Bx> + r*wz'*By> + 3*Ny>
+
+   (26) %--------------------------------------------------------------------
+   (27) % Example: VA2PTS  (velocity and acceleration of point Q fixed on B)
+   (28) %--------------------------------------------------------------------
+   (29) VA2PTS( N, B, P, Q )
+-> (30) v_Q_N> = r*wz*By> + 2*Nx> + 3*t*Ny>
+-> (31) a_Q_N> = -r*wz^2*Bx> + r*wz'*By> + 3*Ny>
+

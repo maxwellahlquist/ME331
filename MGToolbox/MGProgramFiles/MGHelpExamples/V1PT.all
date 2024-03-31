@@ -1,0 +1,33 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: V1PT  (velocity of a point Q moving on rigid body B)
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame N             
+   (5) RigidBody  B
+   (6) Point      BQ(B)   % BQ is the point of B coincident with Q.
+   (7) Point      Q       % Q is moving on B.
+   (8) Variable   r''     % Relates to Q's position on B.
+   (9) Variable   wz'  
+   (10) B.SetAngularVelocityAcceleration( N,  wz*Bz>  )
+-> (11) w_B_N> = wz*Bz>
+-> (12) alf_B_N> = wz'*Bz>
+
+   (13) Q.SetVelocityAcceleration( B,  r'*Bx>  )
+-> (14) v_Q_B> = r'*Bx>
+-> (15) a_Q_B> = r''*Bx>
+
+   (16) %--------------------------------
+   (17) BQ.SetVelocity( N,  r*wz*By>  )
+-> (18) v_BQ_N> = r*wz*By>
+
+   (19) V1PT( N, B, BQ, Q )
+-> (20) V_Q_N> = r'*Bx> + r*wz*By>
+
+   (21) %--------------------------------------------------------------------
+   (22) % Example: A1PT  (acceleration of a point Q moving on rigid body B)
+   (23) %--------------------------------------------------------------------
+   (24) BQ.SetAcceleration( N, r*wz'*By> - r*wz^2*Bx> )
+-> (25) a_BQ_N> = -r*wz^2*Bx> + r*wz'*By>
+
+   (26) A1PT( N, B, BQ, Q )
+-> (27) A_Q_N> = (r''-r*wz^2)*Bx> + (r*wz'+2*wz*r')*By>
+

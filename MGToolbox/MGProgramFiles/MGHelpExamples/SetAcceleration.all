@@ -1,0 +1,62 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: SetAcceleration 
+   (3) % Set Q1's acceleration in N by differentiation.  Uses No fixed on N 
+   (4) %--------------------------------------------------------------------
+   (5) RigidFrame N             
+   (6) Point      Q1            
+   (7) Variable   x1'', y1''           
+   (8) Q1.SetPosition( No,  x1*Nx> + y1*Ny> )
+-> (9) p_No_Q1> = x1*Nx> + y1*Ny>
+
+   (10) Q1.SetAcceleration( N, No )   
+-> (11) a_Q1_N> = x1''*Nx> + y1''*Ny>
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2: SetAcceleration 
+   (14) % Set Q2's acceleration in N by differentiation and Q1's acceleration
+   (15) %--------------------------------------------------------------------
+   (16) Point     Q2            
+   (17) Variable  x2'', y2''  
+   (18) Q2.SetPosition( Q1,  x2*Nx> + y2*Ny> )
+-> (19) p_Q1_Q2> = x2*Nx> + y2*Ny>
+
+   (20) Q2.SetAcceleration( N, Q1 )     
+-> (21) a_Q2_N> = (x1''+x2'')*Nx> + (y1''+y2'')*Ny>
+
+   (22) %--------------------------------------------------------------------
+   (23) % Example 3: SetAcceleration
+   (24) % Set Q3's acceleration in N via two points (Q3 and Bo) fixed on B.
+   (25) %--------------------------------------------------------------------
+   (26) RigidBody B                  % Body B translates and rotates in N.
+   (27) Point     Q3( B )            % Q3 is a point fixed on B.
+   (28) Constant  L                  % Distance between Bo and Q3.
+   (29) Variable  wB'                % Angular rate and its time-derivative.
+   (30) B.SetAngularVelocityAcceleration( N,  wB*Bz> )
+-> (31) w_B_N> = wB*Bz>
+-> (32) alf_B_N> = wB'*Bz>
+
+   (33) Bo.SetAcceleration( N,  t*Nx> )
+-> (34) a_Bo_N> = t*Nx>
+
+   (35) Q3.SetPosition( Bo,  L*Bx> )
+-> (36) p_Bo_Q3> = L*Bx>
+
+   (37) Q3.SetAcceleration( N, Bo, B )  
+-> (38) a_Q3_N> = -L*wB^2*Bx> + L*wB'*By> + t*Nx>
+
+   (39) %--------------------------------------------------------------------
+   (40) % Example 4: SetAcceleration
+   (41) % Set Q4's acceleration in N via one point (Q4) moving on rigid-body B
+   (42) %--------------------------------------------------------------------
+   (43) Point      Q4,  BQ4( B )     % BQ4 is point of B coincident with Q4.
+   (44) Variable   x4''  
+   (45) Q4.SetPosition( Bo,  x4*Bx> )
+-> (46) p_Bo_Q4> = x4*Bx>
+
+   (47) Q4.SetAcceleration( N, Bo, B, BQ4 )    
+-> (48) p_Bo_BQ4> = x4*Bx>
+-> (49) a_BQ4_N> = -x4*wB^2*Bx> + x4*wB'*By> + t*Nx>
+-> (50) v_Q4_B> = x4'*Bx>
+-> (51) a_Q4_B> = x4''*Bx>
+-> (52) a_Q4_N> = (x4''-x4*wB^2)*Bx> + (x4*wB'+2*wB*x4')*By> + t*Nx>
+

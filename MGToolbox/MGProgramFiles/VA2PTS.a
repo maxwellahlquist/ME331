@@ -1,0 +1,10 @@
+% VA2PTS   Uses V2PTS command to forms translational velocity, e.g., v_Q_N>.
+%          Also forms translational acceleration,  e.g., a_Q_N>.
+% Copyright (c) 2020-2021 Motion Genesis LLC.  All rights reserved.
+%----------------------------------------------------------------------------
+% Syntax: VA2PTS( N, B, Bo, Bcm )
+% Output: v_Bcm_N> (velocity of Bcm in N) and 
+%         a_Bcm_N> (acceleration of Bcm in N).
+%----------------------------------------------------------------------------
+V2PTS(#1#, #2#, #3#, #4#)
+A2PTS(#1#, #2#, #3#, #4#)

@@ -1,0 +1,56 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: SetGeneralizedSpeedNewAuxiliary  (Pendulum)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame  N            % Earth
+   (5) RigidBody       B            % Pendulum
+   (6) B.SetMass( m = 1 kg )
+   (7) B.SetInertia( Bcm, Ixx, Iyy, Izz )
+   (8) Constant  g = 9.8 m/s^2
+   (9) Constant  L = 1 m
+   (10) Variable  theta''            % Pendulum angle.
+   (11) Variable  Rx,  Ry            % Reaction forces.
+   (12) Variable  vx', vy'           % Auxiliary generalized speeds.
+   (13) SetDt( vx = 0 )
+-> (14) vx = 0
+-> (15) vx' = 0
+
+   (16) SetDt( vy = 0 )
+-> (17) vy = 0
+-> (18) vy' = 0
+
+   (19) SetGeneralizedSpeed( theta', vx, vy )
+   (20) B.RotateZ( N,  theta )
+-> (21) B_N = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+-> (22) w_B_N> = theta'*Bz>
+-> (23) alf_B_N> = theta''*Bz>
+
+   (24) Bo.SetVelocityAcceleration( N,  vx*Nx> + vy*Ny> )
+-> (25) v_Bo_N> = vx*Nx> + vy*Ny>
+-> (26) a_Bo_N> = 0>
+
+   (27) Bcm.Translate( Bo,  -0.5*L*By> )
+-> (28) p_Bo_Bcm> = -0.5*L*By>
+-> (29) v_Bcm_N> = 0.5*L*theta'*Bx> + vx*Nx> + vy*Ny>
+-> (30) a_Bcm_N> = 0.5*L*theta''*Bx> + 0.5*L*theta'^2*By>
+
+   (31) Bo.AddForce( No,  Rx*Nx> + Ry*Ny> )
+-> (32) Force_Bo_No> = Rx*Nx> + Ry*Ny>
+
+   (33) Bcm.AddForce( -m*g*Ny> )
+-> (34) Force_Bcm> = -m*g*Ny>
+
+   (35) KanesEquations = System.GetDynamicsKane()
+-> (36) KanesEquations[1] = 0.5*m*g*L*sin(theta) + 0.25*(4*Izz+m*L^2)*theta''
+-> (37) KanesEquations[2] = 0.5*m*L*cos(theta)*theta'' - Rx - 0.5*m*L*sin(theta)
+        *theta'^2
+-> (38) KanesEquations[3] = m*g + 0.5*m*L*cos(theta)*theta'^2 + 0.5*m*L*sin(th
+        eta)*theta'' - Ry
+
+   (39) Solve( KanesEquations,  theta'',  Rx,  Ry )
+-> (40) theta'' = -2*m*g*L*sin(theta)/(4*Izz+m*L^2)
+-> (41) Rx = -0.5*m*L*sin(theta)*(2*m*g*L*cos(theta)/(4*Izz+m*L^2)+theta'^2)
+-> (42) Ry = -0.5*m*(2*m*g*L^2*sin(theta)^2/(4*Izz+m*L^2)-2*g-L*cos(theta)*theta'^2)
+
+   (43) KE = System.GetKineticEnergy()
+-> (44) KE = 0.125*(4*Izz+m*L^2)*theta'^2
+

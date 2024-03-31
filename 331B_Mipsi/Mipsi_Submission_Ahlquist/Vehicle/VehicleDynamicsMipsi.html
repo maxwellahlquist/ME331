@@ -1,0 +1,254 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: VehicleDynamicsMipsi.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">VehicleDynamicsMipsi.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  VehicleDynamicsMipsi.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N                % Example: Earth.
+   (6) RigidBody       A
+   (7) RigidBody       B
+   (8) RigidFrame      C
+   (9) RigidBody       D
+   (10) Point           BN( B )
+   (11) Point           DN( D )
+   (12) %--------------------------------------------------------------------
+   (13) %   Mathematical declarations.
+   (14) Variable    qA'', qC''
+   (15) Variable    vx', vy'
+   (16) Variable    wB', wD'
+   (17) Variable    x'', y''
+   (18) Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+   (19) Constant    R = 0.25 m
+   (20) Constant    L = 1 m
+   (21) Constant    mA = 600 kg
+   (22) Constant    m = 25 kg
+   (23) Constant    IAzz = 150 kg*m^2
+   (24) Constant    J = 2.4 kg*m^2
+   (25) Constant    K = 1.2 kg*m^2
+   (26) Variable   TB % This may be specified, but they said variable
+   (27) Variable   Tsteer % This may be specified, but they said variable
+   (28) %--------------------------------------------------------------------
+   (29) %   Mass and inertia properties.
+   (30) A.SetMass( mA )
+   (31) B.SetMass( m )
+   (32) D.SetMass( m )
+   (33) A.SetInertia( Acm,  0,  0,  IAzz )
+   (34) B.SetInertia( Bcm, A, K, J, K )
+   (35) D.SetInertia( Dcm, C, K, J, K )
+   (36) %--------------------------------------------------------------------
+   (37) %   Rotational kinematics.
+   (38) A.RotateZ( N, qA )
+-> (39) A_N = [cos(qA), sin(qA), 0;  -sin(qA), cos(qA), 0;  0, 0, 1]
+-> (40) w_A_N> = qA'*Az>
+-> (41) alf_A_N> = qA''*Az>
+
+   (42) B.SetAngularVelocityAcceleration( A, wB*Ay> )
+-> (43) w_B_A> = wB*Ay>
+-> (44) w_B_N> = wB*Ay> + qA'*Az>
+-> (45) alf_B_A> = wB'*Ay>
+-> (46) alf_B_N> = -wB*qA'*Ax> + wB'*Ay> + qA''*Az>
+
+   (47) C.RotateZ( A, qC )
+-> (48) C_A = [cos(qC), sin(qC), 0;  -sin(qC), cos(qC), 0;  0, 0, 1]
+-> (49) w_C_A> = qC'*Cz>
+-> (50) w_C_N> = (qA'+qC')*Az>
+-> (51) alf_C_A> = qC''*Cz>
+-> (52) alf_C_N> = (qA''+qC'')*Az>
+
+   (53) D.SetAngularVelocityAcceleration( C, wD*Cy> )
+-> (54) w_D_C> = wD*Cy>
+-> (55) w_D_N> = wD*Cy> + (qA'+qC')*Cz>
+-> (56) alf_D_C> = wD'*Cy>
+-> (57) alf_D_N> = -wD*(qA'+qC')*Cx> + wD'*Cy> + (qA''+qC'')*Cz>
+
+   (58) %--------------------------------------------------------------------
+   (59) %   Translational kinematics.
+   (60) Bcm.SetVelocityAcceleration( N, vx*Ax> + vy*Ay> )
+-> (61) v_Bcm_N> = vx*Ax> + vy*Ay>
+-> (62) a_Bcm_N> = (vx'-vy*qA')*Ax> + (vy'+vx*qA')*Ay>
+
+   (63) BN.SetPositionVelocity( Bcm, -R*Az> )
+-> (64) p_Bcm_BN> = -R*Az>
+-> (65) v_BN_N> = (vx-R*wB)*Ax> + vy*Ay>
+
+   (66) Acm.Translate( Bcm, L*Ax> )
+-> (67) p_Bcm_Acm> = L*Ax>
+-> (68) v_Acm_N> = vx*Ax> + (vy+L*qA')*Ay>
+-> (69) a_Acm_N> = (vx'-vy*qA'-L*qA'^2)*Ax> + (vy'+vx*qA'+L*qA'')*Ay>
+
+   (70) Dcm.Translate( Acm, L*Ax> )
+-> (71) p_Acm_Dcm> = L*Ax>
+-> (72) v_Dcm_N> = vx*Ax> + (vy+2*L*qA')*Ay>
+-> (73) a_Dcm_N> = (vx'-vy*qA'-2*L*qA'^2)*Ax> + (vy'+vx*qA'+2*L*qA'')*Ay>
+
+   (74) DN.SetPositionVelocity( Dcm, -R*Cz> )
+-> (75) p_Dcm_DN> = -R*Cz>
+-> (76) v_DN_N> = vx*Ax> + (vy+2*L*qA')*Ay> - R*wD*Cx>
+
+   (77) %--------------------------------------------------------------------
+   (78) %   Motion constraints (if any).
+   (79) BcmPositionBasedVelocityinN> = x'*Nx> + y'*Ny>
+-> (80) BcmPositionBasedVelocityinN> = x'*Nx> + y'*Ny>
+
+   (81) VelocityRelationship[1] = Dot ( Bcm.GetVelocity(N) - BcmPositionBasedVelocityinN>, Ax> )
+-> (82) VelocityRelationship[1] = vx - sin(qA)*y' - cos(qA)*x'
+
+   (83) VelocityRelationship[2] = Dot ( Bcm.GetVelocity(N) - BcmPositionBasedVelocityinN>, Ay> )
+-> (84) VelocityRelationship[2] = vy + sin(qA)*x' - cos(qA)*y'
+
+   (85) SolveDt( VelocityRelationship = 0, x', y' )
+-> (86) x' = vx*cos(qA) - vy*sin(qA)
+-> (87) y' = vx*sin(qA) + vy*cos(qA)
+-> (88) x'' = cos(qA)*vx' - qA'*y' - sin(qA)*vy'
+-> (89) y'' = qA'*x' + sin(qA)*vx' + cos(qA)*vy'
+
+   (90) MotionConstraint[1] = Dot( BN.GetVelocity(N), Nx>)
+-> (91) MotionConstraint[1] = cos(qA)*(vx-R*wB) - vy*sin(qA)
+
+   (92) MotionConstraint[2] = Dot( BN.GetVelocity(N), Ny>)
+-> (93) MotionConstraint[2] = vy*cos(qA) + sin(qA)*(vx-R*wB)
+
+   (94) MotionConstraint[3] = Dot( DN.GetVelocity(N), Cx>)
+-> (95) MotionConstraint[3] = vx*cos(qC) + sin(qC)*(vy+2*L*qA') - R*wD
+
+   (96) MotionConstraint[4] = Dot( DN.GetVelocity(N), Cy>)
+-> (97) MotionConstraint[4] = cos(qC)*(vy+2*L*qA') - vx*sin(qC)
+
+   (98) SolveDT( Explicit(MotionConstraint, vx, qC') = 0, qA', wB, wD, vy )
+-> (99) qA' = 0.5*vx*tan(qC)/L
+-> (100) wB = vx/R
+-> (101) wD = vx/(R*cos(qC))
+-> (102) vy = 0
+-> (103) qA'' = 0.5*(sin(qC)*vx'+vx*cos(qC)*qC'+2*L*sin(qC)*qA'*qC'+cos(qC)*(
+         vx-R*wB)*qA')/(L*cos(qC))
+-> (104) wB' = vx'/R
+-> (105) wD' = (vx'+2*L*qA'*qC')/(R*cos(qC))
+-> (106) vy' = -(vx-R*wB)*qA'
+
+   (107) %--------------------------------------------------------------------
+   (108) %   Add relevant torques.
+   (109) System.AddForceGravity(-g*Az>)
+-> (110) Force_Acm> = -g*mA*Az>
+-> (111) Force_Bcm> = -g*m*Az>
+-> (112) Force_Dcm> = -g*m*Az>
+
+   (113) B.AddTorque( A, TB*Ay> )
+-> (114) Torque_B_A> = TB*Ay>
+
+   (115) D.AddTorque( A, Tsteer*Az> )
+-> (116) Torque_D_A> = Tsteer*Az>
+
+   (117) %--------------------------------------------------------------------
+   (118) %   Translational dynamic equations (F = m*a)
+   (119) SetGeneralizedSpeeds( vx, qC' )
+   (120) Dynamics = System.GetDynamicsKane()
+-> (121) Dynamics[1] = 2*J*L*qC'*qA'/(R^2*cos(qC)^2) + 0.25*(IAzz+2*K)*sin(qC)*
+         (cos(qC)*qC'*vx+2*L*sin(qC)*qC'*qA'-cos(qC)*(R*wB-vx)*qA')/(L^2*cos(
+         qC)^2) + 0.5*K*tan(qC)*qC''/L + 0.25*(4*m+4*J/R^2+4*m/cos(qC)^2+mA*(4+
+         tan(qC)^2)+(IAzz+2*K)*tan(qC)^2/L^2+4*J/(R^2*cos(qC)^2))*vx' - TB/R
+         - 2*m*vy*qA' - m*(2*L*qA'^2+tan(qC)*(R*wB*qA'-qC'*vx-vy'-2*vx*qA'-2*L*
+         tan(qC)*qC'*qA')) - 0.25*mA*(4*vy*qA'+4*L*qA'^2+tan(qC)*(R*wB*qA'-qC'*
+         vx-2*vy'-3*vx*qA'-2*L*tan(qC)*qC'*qA'))
+
+-> (122) Dynamics[2] = 0.5*K*(cos(qC)*qC'*vx+2*L*sin(qC)*qC'*qA'-cos(qC)*(R*wB-
+         vx)*qA')/(L*cos(qC)) + K*qC'' + 0.5*K*tan(qC)*vx'/L - Tsteer
+
+   (123) % Solve for all necessary ODEs
+   (124) Solve( Dynamics = 0, vx', qC'' )
+-> (125) vx' = (4*TB/R+8*m*vy*qA'+4*m*(2*L*qA'^2+tan(qC)*(R*wB*qA'-qC'*vx-vy'-2
+         *vx*qA'-2*L*tan(qC)*qC'*qA'))+mA*(4*vy*qA'+4*L*qA'^2+tan(qC)*(R*wB*qA'
+         -qC'*vx-2*vy'-3*vx*qA'-2*L*tan(qC)*qC'*qA'))-2*Tsteer*tan(qC)/L-8*J*L*
+         qC'*qA'/(R^2*cos(qC)^2)-(IAzz+K)*sin(qC)*(cos(qC)*qC'*vx+2*L*sin(qC)*
+         qC'*qA'-cos(qC)*(R*wB-vx)*qA')/(L^2*cos(qC)^2))/(4*m+4*J/R^2+4*m/cos(
+         qC)^2+mA*(4+tan(qC)^2)+(IAzz+K)*tan(qC)^2/L^2+4*J/(R^2*cos(qC)^2))
+
+-> (126) qC'' = 0.5*(4*m+4*J/R^2+4*m/cos(qC)^2+mA*(4+tan(qC)^2)+(IAzz+2*K)*tan(
+         qC)^2/L^2+4*J/(R^2*cos(qC)^2))*(2*Tsteer-K*(cos(qC)*qC'*vx+2*L*sin(qC)
+         *qC'*qA'-cos(qC)*(R*wB-vx)*qA')/(L*cos(qC)))/(K*(4*m+4*J/R^2+4*m/cos(
+         qC)^2+mA*(4+tan(qC)^2)+(IAzz+K)*tan(qC)^2/L^2+4*J/(R^2*cos(qC)^2)))
+         - 0.5*tan(qC)*(4*TB/R+8*m*vy*qA'+4*m*(2*L*qA'^2+tan(qC)*(R*wB*qA'-qC'*
+         vx-vy'-2*vx*qA'-2*L*tan(qC)*qC'*qA'))+mA*(4*vy*qA'+4*L*qA'^2+tan(qC)*(
+         R*wB*qA'-qC'*vx-2*vy'-3*vx*qA'-2*L*tan(qC)*qC'*qA'))-8*J*L*qC'*qA'/(R^2
+         *cos(qC)^2)-(IAzz+2*K)*sin(qC)*(cos(qC)*qC'*vx+2*L*sin(qC)*qC'*qA'-cos
+         (qC)*(R*wB-vx)*qA')/(L^2*cos(qC)^2))/(L*(4*m+4*J/R^2+4*m/cos(qC)^2+mA*
+         (4+tan(qC)^2)+(IAzz+K)*tan(qC)^2/L^2+4*J/(R^2*cos(qC)^2)))
+
+   (127) Solve( [vx', qC''], TB, Tsteer )
+-> (128) TB = -0.25*R*((4*m+4*J/R^2+4*m/cos(qC)^2+mA*(4+tan(qC)^2)+(IAzz+2*K)*
+         tan(qC)^2/L^2+4*J/(R^2*cos(qC)^2))*(8*m*vy*qA'+4*m*(2*L*qA'^2+tan(qC)*
+         (R*wB*qA'-qC'*vx-vy'-2*vx*qA'-2*L*tan(qC)*qC'*qA'))+mA*(4*vy*qA'+4*L*qA'^2
+         +tan(qC)*(R*wB*qA'-qC'*vx-2*vy'-3*vx*qA'-2*L*tan(qC)*qC'*qA'))-8*J*L*
+         qC'*qA'/(R^2*cos(qC)^2)-(IAzz+K)*sin(qC)*(cos(qC)*qC'*vx+2*L*sin(qC)*
+         qC'*qA'-cos(qC)*(R*wB-vx)*qA')/(L^2*cos(qC)^2))/(4*m+4*J/R^2+4*m/cos(
+         qC)^2+mA*(4+tan(qC)^2)+(IAzz+K)*tan(qC)^2/L^2+4*J/(R^2*cos(qC)^2))-K*
+         tan(qC)*((4*m+4*J/R^2+4*m/cos(qC)^2+mA*(4+tan(qC)^2)+4*J/(R^2*cos(qC)^2))
+         *(cos(qC)*qC'*vx+2*L*sin(qC)*qC'*qA'-cos(qC)*(R*wB-vx)*qA')/(L*cos(qC)
+         *(4*m+4*J/R^2+4*m/cos(qC)^2+mA*(4+tan(qC)^2)+(IAzz+K)*tan(qC)^2/L^2+4*
+         J/(R^2*cos(qC)^2)))-tan(qC)*(8*J*L*qC'*qA'/(R^2*cos(qC)^2)-8*m*vy*qA'-
+         4*m*(2*L*qA'^2+tan(qC)*(R*wB*qA'-qC'*vx-vy'-2*vx*qA'-2*L*tan(qC)*qC'*
+         qA'))-mA*(4*vy*qA'+4*L*qA'^2+tan(qC)*(R*wB*qA'-qC'*vx-2*vy'-3*vx*qA'-2
+         *L*tan(qC)*qC'*qA')))/(L*(4*m+4*J/R^2+4*m/cos(qC)^2+mA*(4+tan(qC)^2)+(
+         IAzz+K)*tan(qC)^2/L^2+4*J/(R^2*cos(qC)^2))))/L)
+
+-> (129) Tsteer = 0.5*K*((IAzz+K)*sin(qC)^2/(L^3*cos(qC)^3*(4*m+4*J/R^2+4*m/cos
+         (qC)^2+mA*(4+tan(qC)^2)+(IAzz+K)*tan(qC)^2/L^2+4*J/(R^2*cos(qC)^2)))+(
+         4*m+4*J/R^2+4*m/cos(qC)^2+mA*(4+tan(qC)^2)+4*J/(R^2*cos(qC)^2))/(L*cos
+         (qC)*(4*m+4*J/R^2+4*m/cos(qC)^2+mA*(4+tan(qC)^2)+(IAzz+K)*tan(qC)^2/L^2
+         +4*J/(R^2*cos(qC)^2))))*(cos(qC)*qC'*vx+2*L*sin(qC)*qC'*qA'-cos(qC)*(R
+         *wB-vx)*qA')
+
+   (130) M_matrix = GetCoefficientMatrix( Dynamics, vx', qC'')
+-> (131) M_matrix[1,1] = m + J/R^2 + m/cos(qC)^2 + 0.25*mA*(4+tan(qC)^2) + J/(R^2
+         *cos(qC)^2) + 0.25*(IAzz+2*K)*tan(qC)^2/L^2
+
+-> (132) M_matrix[1,2] = 0.5*K*tan(qC)/L
+-> (133) M_matrix[2,1] = 0.5*K*tan(qC)/L
+-> (134) M_matrix[2,2] = K
+
+   (135) N_matrix = GetCoefficient(Exclude( Dynamics, vx', qC'' ), TB, Tsteer)
+-> (136) N_matrix = [-1/R, 0;  0, -1]
+
+   (137) % Must exclude the above (or I get zeros)
+   (138) % Desired Motion
+   (139) Specified vxDes' 
+   (140) SetDt( vxDes = 2*t)
+-> (141) vxDes = 2*t
+-> (142) vxDes' = 2
+
+   (143) Specified qCDes'' 
+   (144) SetDt( qCDes = (15*pi/180)*sin(t) )
+-> (145) qCDes = 0.2617994*sin(t)
+-> (146) qCDes' = 0.2617994*cos(t)
+-> (147) qCDes'' = -0.2617994*sin(t)
+
+   (148) % Control Law
+   (149) Constant	Kp = 2 s^-1, zeta = 1 noUnits, wn = 2 rad/s
+   (150) Specified controlLawvx' = vxDes' + Kp*(vxDes - vx)
+-> (151) controlLawvx' = vxDes' + Kp*(vxDes-vx)
+
+   (152) Specified controlLawqC'' = qCDes'' + 2*zeta*wn*(qCDes' - qC') + wn^2*(qCDes - qC)
+-> (153) controlLawqC'' = qCDes'' + wn^2*(qCDes-qC) + 2*wn*zeta*(qCDes'-qC')
+
+   (154) % Solve Setup
+   (155) Input tfinal = 20 sec, absError = 1.0E-05, tStep = 0.05 sec
+   (156) Input qA = 0 deg, vx = 0 m/s, qC = 0.1 deg, x = 0 m, y = 0 m % Given Explicitly
+   (157) % Less Explicitly given
+   (158) Input qC' = 0 rad/s, controlLawqC = EvaluateAtInput(qC), controlLawqC' = EvaluateAtInput(qC')
+   (159) Input controlLawvx = EvaluateAtInput(vx)
+   (160) vx' := controlLawvx'
+-> (161) vx' = controlLawvx'
+
+   (162) qC'' := controlLawqc''
+-> (163) qC'' = controlLawqC''
+
+   (164) OutputPlot x m, y m
+   (165) OutputPlot t sec, qC deg
+   (166) OutputPlot t sec, TB N*m
+   (167) OutputPlot t sec, Tsteer N*m
+   (168) ODE()
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

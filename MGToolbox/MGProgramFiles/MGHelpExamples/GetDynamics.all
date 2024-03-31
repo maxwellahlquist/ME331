@@ -1,0 +1,59 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetDynamics   (dynamics of a particle in free-fall)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N             
+   (5) Particle       Q
+   (6) Q.SetMass( mQ )
+   (7) Variable  y''
+   (8) Q.Translate( No, y*Ny> )
+-> (9) p_No_Q> = y*Ny>
+-> (10) v_Q_N> = y'*Ny>
+-> (11) a_Q_N> = y''*Ny>
+
+   (12) Constant  g
+   (13) Q.AddForceGravity( -g*Ny> )
+-> (14) Force_Q> = -mQ*g*Ny>
+
+   (15) NewtonsVectorEqnForQ> = Q.GetDynamics()
+-> (16) NewtonsVectorEqnForQ> = mQ*(g+y'')*Ny>
+
+   (17) NewtonsScalarEqnForQ = Dot( NewtonsVectorEqnForQ>, Ny> )
+-> (18) NewtonsScalarEqnForQ = mQ*(g+y'')
+
+   (19) Solve(  NewtonsScalarEqnForQ,  y'' )
+-> (20) y'' = -g
+
+   (21) %--------------------------------------------------------------------
+   (22) % Example 2: GetDynamics  (rigid-body pendulum with applied torque)
+   (23) %--------------------------------------------------------------------
+   (24) RigidBody      B            
+   (25) Constant       L                 % Distance to B's center of mass
+   (26) Variable       q''               % Pendulum angle 
+   (27) Variable       Tz                % Torque is applied to B 
+   (28) B.SetMass( m )
+   (29) B.SetInertia( Bcm, Ixx, Iyy, Izz )
+   (30) B.RotateZ( N, q )  
+-> (31) B_N = [cos(q), sin(q), 0;  -sin(q), cos(q), 0;  0, 0, 1]
+-> (32) w_B_N> = q'*Bz>
+-> (33) alf_B_N> = q''*Bz>
+
+   (34) Bcm.Translate( No, -L*By> )
+-> (35) p_No_Bcm> = -L*By>
+-> (36) v_Bcm_N> = L*q'*Bx>
+-> (37) a_Bcm_N> = L*q''*Bx> + L*q'^2*By>
+
+   (38) B.AddForceGravity( -g*Ny> )
+-> (39) Force_Bcm> = -m*g*Ny>
+
+   (40) B.AddTorque( Tz*Bz> )  
+-> (41) Torque_B> = Tz*Bz>
+
+   (42) EulersVectorEqnForBAboutNo> = B.GetDynamics( No )
+-> (43) EulersVectorEqnForBAboutNo> = (m*g*L*sin(q)+Izz*q''+m*L^2*q''-Tz)*Bz>
+
+   (44) EulersScalarEqnForBAboutNo = Dot( EulersVectorEqnForBAboutNo>, Nz> )
+-> (45) EulersScalarEqnForBAboutNo = m*g*L*sin(q) + Izz*q'' + m*L^2*q'' - Tz
+
+   (46) Solve( EulersScalarEqnForBAboutNo, q'' )
+-> (47) q'' = (Tz-m*g*L*sin(q))/(Izz+m*L^2)
+

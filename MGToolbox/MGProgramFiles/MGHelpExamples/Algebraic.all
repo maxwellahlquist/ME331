@@ -1,0 +1,51 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: CODE Algebraic()  (Fortran for volume of a tetrahedron)
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame  N
+   (5) Point       A, B, C, D
+   (6) Constant    a1 = 0 m,  a2 = 0 m,  a3 = 0 m
+   (7) Constant    b1 = 5 m,  b2 = 0 m,  b3 = 0 m
+   (8) Constant    c1 = 0 m,  c2 = 5 m,  c3 = 0 m
+   (9) Constant    d1 = 2 m,  d2 = 2 m,  d3 = 5 m
+   (10) A.SetPosition( No, a1*Nx> + a2*Ny> + a3*Nz> )
+-> (11) p_No_A> = a1*Nx> + a2*Ny> + a3*Nz>
+
+   (12) B.SetPosition( No, b1*Nx> + b2*Ny> + b3*Nz> )
+-> (13) p_No_B> = b1*Nx> + b2*Ny> + b3*Nz>
+
+   (14) C.SetPosition( No, c1*Nx> + c2*Ny> + c3*Nz> )
+-> (15) p_No_C> = c1*Nx> + c2*Ny> + c3*Nz>
+
+   (16) D.SetPosition( No, d1*Nx> + d2*Ny> + d3*Nz> )
+-> (17) p_No_D> = d1*Nx> + d2*Ny> + d3*Nz>
+
+   (18) Side1> = B.GetPosition(A)
+-> (19) Side1> = (b1-a1)*Nx> + (b2-a2)*Ny> + (b3-a3)*Nz>
+
+   (20) Side2> = C.GetPosition(A)
+-> (21) Side2> = (c1-a1)*Nx> + (c2-a2)*Ny> + (c3-a3)*Nz>
+
+   (22) Side3> = D.GetPosition(A)
+-> (23) Side3> = (d1-a1)*Nx> + (d2-a2)*Ny> + (d3-a3)*Nz>
+
+   (24) Volume = abs( Dot( Cross( Side1>, Side2> ), Side3> ) / 6 )
+-> (25) Volume = abs(0.1666667*(a2-d2)*((a1-b1)*(a3-c3)-(a1-c1)*(a3-b3))-0.1666667
+        *(a1-d1)*((a2-b2)*(a3-c3)-(a2-c2)*(a3-b3))-0.1666667*(a3-d3)*((a1-b1)*(
+        a2-c2)-(a1-c1)*(a2-b2)))
+
+   (26) Output  Volume
+   (27) Code Algebraic() Tetra.for
+
+   (28) %--------------------------------------------------------------------
+   (29) % Example 2: CODE Algebraic(...)   (.m code for linear equations) 
+   (30) %--------------------------------------------------------------------
+   (31) Variable  x, y
+   (32) ZeroMatrix[1] = x + y - sin(t)
+-> (33) ZeroMatrix[1] = x + y - sin(t)
+
+   (34) ZeroMatrix[2] = x - y + t^2
+-> (35) ZeroMatrix[2] = t^2 + x - y
+
+   (36) Output  t, x, y
+   (37) Code Algebraic( ZeroMatrix, x, y )  [t=0, 10, 1]  TwoEquations.c
+

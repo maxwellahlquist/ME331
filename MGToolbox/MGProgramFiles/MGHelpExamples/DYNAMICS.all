@@ -1,0 +1,24 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: DYNAMICS  (Motion of a particle of mass m on straight line)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame   N
+   (5) Particle         Q
+   (6) Variable         x''
+   (7) SetGeneralizedSpeed( x' )
+   (8) Q.SetMass( m )
+   (9) Q.Translate( No, x*Nx> )
+-> (10) p_No_Q> = x*Nx>
+-> (11) v_Q_N> = x'*Nx>
+-> (12) a_Q_N> = x''*Nx>
+
+   (13) Q.AddForce( 5*Nx> )
+-> (14) Force_Q> = 5*Nx>
+
+   (15) Zero = System.GetDynamicsKane()
+-> (16) Zero = [-5 + m*x'']
+
+   (17) Input  x = 0 m,  x' = 0 m/s,  tFinal = 5 s, tStep = 0.1 s
+   (18) Output t sec, x m, x' m/sec
+   (19) SetDefaults( AUTOLEV )
+   (20) Code DYNAMICS() ParticleOnLine.c
+

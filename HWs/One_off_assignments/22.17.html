@@ -1,0 +1,587 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 22.17.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">22.17.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  22.17.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N                % Earth.
+   (6) RigidBody       A                % Vertical Post
+   (7) RigidBody       B                % Link 1
+   (8) RigidBody       C                % Link 2
+   (9) RigidBody	D		 % Shell
+   (10) RigidBody       E                % Sphere
+   (11) Point		AB( A )
+   (12) Point		BC( B )
+   (13) Point		CD( C )
+   (14) Point           EN( E )
+   (15) Particle	m
+   (16) %--------------------------------------------------------------------
+   (17) %   Mathematical declarations.
+   (18) Variable    qA'', qB'', qC''	 % qA, qB, qC and its 1st and 2nd derivatives.
+   (19) Variable    wx', wy', wz'
+   (20) Variable    Fx, Fy, Fz		% Contact forces at EN
+   (21) Variable    Td			% Revolute motor torque at CD
+   (22) Constant    	g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+   (23) Constant	r = 0.4 m
+   (24) Constant	h = 0.6 m
+   (25) Constant	LB = 0.8 m
+   (26) Constant	LC = 1.2 m
+   (27) Constant	mE = 50 kg
+   (28) Constant	mm = 800 kg
+   (29) %--------------------------------------------------------------------
+   (30) %   Mass and inertia properties.
+   (31) %Come back here later
+   (32) A.SetMass( 0 )
+   (33) B.SetMass( 0 )
+   (34) C.SetMass( 0 )
+   (35) D.SetMass( 0 )
+   (36) % will this make everything go away
+   (37) E.SetMass( mE )
+   (38) m.SetMass( mm )
+   (39) A.SetInertia( Acm, 0, 0, 0 )
+   (40) B.SetInertia( Bcm, 0, 0, 0 )
+   (41) C.SetInertia( Ccm, 0, 0, 0 )
+   (42) D.SetInertia( Dcm, 0, 0, 0 )
+   (43) E.SetInertia( Ecm, A, IExx = 2/5*mE*r^2,  IEyy = 2/5*mE*r^2,  IEzz = 2/5*mE*r^2 )
+-> (44) IExx = 0.4*mE*r^2
+-> (45) IEyy = 0.4*mE*r^2
+-> (46) IEzz = 0.4*mE*r^2
+
+   (47) %--------------------------------------------------------------------
+   (48) %   Rotational kinematics.
+   (49) A.RotateY( N, qA )
+-> (50) A_N = [cos(qA), 0, -sin(qA);  0, 1, 0;  sin(qA), 0, cos(qA)]
+-> (51) w_A_N> = qA'*Ay>
+-> (52) alf_A_N> = qA''*Ay>
+
+   (53) B.RotateZ( A, qB )
+-> (54) B_A = [cos(qB), sin(qB), 0;  -sin(qB), cos(qB), 0;  0, 0, 1]
+-> (55) w_B_A> = qB'*Bz>
+-> (56) w_B_N> = qA'*Ay> + qB'*Bz>
+-> (57) alf_B_A> = qB''*Bz>
+-> (58) alf_B_N> = qA'*qB'*Ax> + qA''*Ay> + qB''*Bz>
+
+   (59) C.RotateNegativeZ( A, qC )
+-> (60) C_A = [cos(qC), -sin(qC), 0;  sin(qC), cos(qC), 0;  0, 0, 1]
+-> (61) w_C_A> = -qC'*Cz>
+-> (62) w_C_N> = qA'*Ay> - qC'*Cz>
+-> (63) alf_C_A> = -qC''*Cz>
+-> (64) alf_C_N> = -qA'*qC'*Ax> + qA''*Ay> - qC''*Cz>
+
+   (65) D.SetRotationMatrix( A, [1, 0, 0; 0, 1, 0; 0, 0, 1] )
+-> (66) D_A = [1, 0, 0;  0, 1, 0;  0, 0, 1]
+
+   (67) E.SetAngularVelocityAcceleration( A, wx*Ax> + wy*Ay> + wz*Az> )
+-> (68) w_E_A> = wx*Ax> + wy*Ay> + wz*Az>
+-> (69) w_E_N> = wx*Ax> + (wy+qA')*Ay> + wz*Az>
+-> (70) alf_E_A> = wx'*Ax> + wy'*Ay> + wz'*Az>
+-> (71) alf_E_N> = (wx'+wz*qA')*Ax> + (wy'+qA'')*Ay> + (wz'-wx*qA')*Az>
+
+   (72) %--------------------------------------------------------------------
+   (73) %   Translational kinematics.
+   (74) AB.SetPositionVelocityAcceleration( No, h*Ay> )
+-> (75) p_No_AB> = h*Ay>
+-> (76) v_AB_N> = 0>
+-> (77) a_AB_N> = 0>
+
+   (78) Acm.SetPositionVelocityAcceleration( No, h/2*Ay> )
+-> (79) p_No_Acm> = 0.5*h*Ay>
+-> (80) v_Acm_N> = 0>
+-> (81) a_Acm_N> = 0>
+
+   (82) BC.SetPositionVelocityAcceleration( AB, LB*Bx> )
+-> (83) p_AB_BC> = LB*Bx>
+-> (84) v_BC_N> = LB*qB'*By> - LB*cos(qB)*qA'*Bz>
+-> (85) a_BC_N> = -LB*cos(qB)*qA'^2*Ax> - LB*qB'^2*Bx> + LB*qB''*By> + LB*(2*
+        sin(qB)*qA'*qB'-cos(qB)*qA'')*Bz>
+
+   (86) CD.SetPositionVelocityAcceleration( BC, LC*Cx> )
+-> (87) p_BC_CD> = LC*Cx>
+-> (88) v_CD_N> = LB*qB'*By> - LB*cos(qB)*qA'*Bz> - LC*qC'*Cy> - LC*cos(qC)*qA'*Cz>
+-> (89) a_CD_N> = -(LB*cos(qB)+LC*cos(qC))*qA'^2*Ax> - LB*qB'^2*Bx> + LB*qB''*By>
+        + LB*(2*sin(qB)*qA'*qB'-cos(qB)*qA'')*Bz> - LC*qC'^2*Cx> - LC*qC''*Cy>
+        + LC*(2*sin(qC)*qA'*qC'-cos(qC)*qA'')*Cz>
+
+   (90) Ecm.SetPositionVelocityAcceleration( CD, -r*Ay> )
+-> (91) p_CD_Ecm> = -r*Ay>
+-> (92) v_Ecm_N> = LB*qB'*By> - LB*cos(qB)*qA'*Bz> - LC*qC'*Cy> - LC*cos(qC)*
+        qA'*Cz>
+-> (93) a_Ecm_N> = -(LB*cos(qB)+LC*cos(qC))*qA'^2*Ax> - LB*qB'^2*Bx> + LB*qB''*By>
+        + LB*(2*sin(qB)*qA'*qB'-cos(qB)*qA'')*Bz> - LC*qC'^2*Cx> - LC*qC''*Cy>
+        + LC*(2*sin(qC)*qA'*qC'-cos(qC)*qA'')*Cz>
+
+   (94) EN.SetPositionVelocityAcceleration( Ecm, -r*Ay> )
+-> (95) p_Ecm_EN> = -r*Ay>
+-> (96) v_EN_N> = r*wz*Ax> + LB*qB'*By> + (-r*wx-LB*cos(qB)*qA')*Bz> - LC*qC'*Cy>
+        - LC*cos(qC)*qA'*Cz>
+-> (97) a_EN_N> = (r*(wz'-2*wx*qA')-r*wx*wy-(LB*cos(qB)+LC*cos(qC))*qA'^2)*Ax>
+        + r*(wx^2+wz^2)*Ay> - LB*qB'^2*Bx> + LB*qB''*By> + (LB*(2*sin(qB)*qA'*
+        qB'-cos(qB)*qA'')-r*(wy*wz+wx'+2*wz*qA'))*Bz> - LC*qC'^2*Cx> - LC*qC''*Cy>
+        + LC*(2*sin(qC)*qA'*qC'-cos(qC)*qA'')*Cz>
+
+   (98) m.SetPositionVelocityAcceleration( CD, 0> )
+-> (99) p_CD_m> = 0>
+-> (100) v_m_N> = LB*qB'*By> - LB*cos(qB)*qA'*Bz> - LC*qC'*Cy> - LC*cos(qC)*qA'*Cz>
+-> (101) a_m_N> = -(LB*cos(qB)+LC*cos(qC))*qA'^2*Ax> - LB*qB'^2*Bx> + LB*qB''*By>
+         + LB*(2*sin(qB)*qA'*qB'-cos(qB)*qA'')*Bz> - LC*qC'^2*Cx> - LC*qC''*Cy>
+         + LC*(2*sin(qC)*qA'*qC'-cos(qC)*qA'')*Cz>
+
+   (102) NoAB> = AB.GetPosition( No )
+-> (103) NoAB> = h*Ay>
+
+   (104) ABBC> = BC.GetPosition( AB )
+-> (105) ABBC> = LB*Bx>
+
+   (106) BCCD> = CD.GetPosition( BC )
+-> (107) BCCD> = LC*Cx>
+
+   (108) CDEcm> = Ecm.GetPosition( CD )
+-> (109) CDEcm> = -r*Ay>
+
+   (110) EcmEN> = EN.GetPosition( Ecm )
+-> (111) EcmEN> = -r*Ay>
+
+   (112) pseudoLoop> = NoAB> + ABBC> + BCCD> + CDEcm> + EcmEN> % Only a closed loop in Ay>
+-> (113) pseudoLoop> = (h-2*r)*Ay> + LB*Bx> + LC*Cx>
+
+   (114) Variable x = Dot(pseudoLoop>, Nx>)
+-> (115) x = cos(qA)*(LB*cos(qB)+LC*cos(qC))
+
+   (116) Variable z = Dot(pseudoLoop>, Nz>)
+-> (117) z = -sin(qA)*(LB*cos(qB)+LC*cos(qC))
+
+   (118) %--------------------------------------------------------------------
+   (119) %   Motion constraints (if any).
+   (120) MotionConstraint[1] = DtDt( Dot( pseudoLoop>, Ay> )) % Pseudo Loop Constraint
+-> (121) MotionConstraint[1] = LC*(sin(qC)*qC'^2-cos(qC)*qC'') - LB*(sin(qB)*qB'^2
+         -cos(qB)*qB'')
+
+   (122) MotionConstraint[2] = Dt( Dot( EN.GetVelocity( N ), Ax> ) )
+-> (123) MotionConstraint[2] = r*wz' - LB*cos(qB)*qB'^2 - LC*cos(qC)*qC'^2
+         - LB*sin(qB)*qB'' - LC*sin(qC)*qC''
+
+   (124) MotionConstraint[3] = Dt( Dot( EN.GetVelocity( N ), Az> ) )
+-> (125) MotionConstraint[3] = LB*sin(qB)*qA'*qB' + LC*sin(qC)*qA'*qC' - r*wx'
+         - LB*cos(qB)*qA'' - LC*cos(qC)*qA''
+
+   (126) %SolveDt( MotionConstraint[2:3] = 0,  wx', wz' ) % May need to come back and do this part...
+   (127) % Come back and look at the website
+   (128) % Do change variables???
+   (129) %--------------------------------------------------------------------
+   (130) m.AddForceGravity( -g*Ny> )
+-> (131) Force_m> = -g*mm*Ny>
+
+   (132) E.AddForceGravity( -g*Ny> )
+-> (133) Force_Ecm> = -g*mE*Ny>
+
+   (134) EN.AddForce( Fx*Ax> + Fy*Ay> + Fz*Az> )
+-> (135) Force_EN> = Fx*Ax> + Fy*Ay> + Fz*Az>
+
+   (136) D.AddTorque( C, Td*Az> )
+-> (137) Torque_D_C> = Td*Az>
+
+   (138) %--------------------------------------------------------------------
+   (139) %   Rotational dynamic equations (M = DH/Dt + ...).
+   (140) %   For static analysis, use  B.GetStatics( aboutPoint ).
+   (141) Dynamics[1] = Dot(  System(A, B, C, D, E).GetDynamics(No),  Ay>  )
+-> (142) Dynamics[1] = (IExx-IEzz)*wx*wz + IEyy*(wy'+qA'') + LC*cos(qC)*(Fz-2*
+         LB*mE*sin(qB)*qA'*qB'-LC*mE*(2*sin(qC)*qA'*qC'-cos(qC)*qA'')) + LB*cos
+         (qB)*(Fz-2*LC*mE*(sin(qC)*qA'*qC'-cos(qC)*qA'')-LB*mE*(2*sin(qB)*qA'*
+         qB'-cos(qB)*qA''))
+
+   (143) Dynamics[2] = Dot(  System(B, C, D, E).GetDynamics(AB),  Az>  )
+-> (144) Dynamics[2] = LB*Fx*sin(qB) + IEzz*(wz'-wx*qA') + LB*mE*sin(qB)*(LB*
+         cos(qB)+LC*cos(qC))*qA'^2 + mE*(g*LB*cos(qB)+g*LC*cos(qC)+LB*LC*sin(
+         qB+qC)*qC'^2+LB^2*qB''+LB*LC*cos(qB+qC)*qB''-LB*r*cos(qB)*qB'^2-LC*r*
+         cos(qC)*qC'^2-LB*LC*sin(qB+qC)*qB'^2-LC^2*qC''-LB*r*sin(qB)*qB''-LC*r*
+         sin(qC)*qC''-LB*LC*cos(qB+qC)*qC'') - 2*r*Fx - LB*Fy*cos(qB) - LC*Fx*sin(qC)
+         - LC*Fy*cos(qC) - (IExx-IEyy)*wx*(wy+qA') - mE*r*(LB*cos(qB)+LC*cos(
+         qC))*qA'^2 - LC*mE*sin(qC)*(LB*cos(qB)+LC*cos(qC))*qA'^2
+
+   (145) Dynamics[3] = Dot(  System(C, D, E).GetDynamics(BC),  Az>  )
+-> (146) Dynamics[3] = IEzz*(wz'-wx*qA') - 2*r*Fx - LC*Fx*sin(qC) - LC*Fy*cos(qC)
+         - (IExx-IEyy)*wx*(wy+qA') - mE*r*(LB*cos(qB)+LC*cos(qC))*qA'^2 - LC*
+         mE*sin(qC)*(LB*cos(qB)+LC*cos(qC))*qA'^2 - mE*(LB*r*cos(qB)*qB'^2+LC*r
+         *cos(qC)*qC'^2+LB*LC*sin(qB+qC)*qB'^2+LC^2*qC''+LB*r*sin(qB)*qB''+LC*r
+         *sin(qC)*qC''-g*LC*cos(qC)-LB*LC*cos(qB+qC)*qB'')
+
+   (147) Dynamics[4] = Dot(  System(D, E).GetDynamics(CD),  Az>  )
+-> (148) Dynamics[4] = IEzz*(wz'-wx*qA') - Td - 2*r*Fx - (IExx-IEyy)*wx*(wy+qA')
+         - mE*r*(LB*cos(qB)+LC*cos(qC))*qA'^2 - mE*r*(LB*cos(qB)*qB'^2+LC*cos(
+         qC)*qC'^2+LB*sin(qB)*qB''+LC*sin(qC)*qC'')
+
+   (149) Dynamics[5] = Dot(  E.GetDynamics(Ecm),  Ax>  )
+-> (150) Dynamics[5] = r*Fz + IExx*(wx'+wz*qA') - (IEyy-IEzz)*wz*(wy+qA')
+
+   (151) Dynamics[6] = Dot(  E.GetDynamics(Ecm),  Ay>  )
+-> (152) Dynamics[6] = (IExx-IEzz)*wx*wz + IEyy*(wy'+qA'')
+
+   (153) Dynamics[7] = Dot(  E.GetDynamics(Ecm),  Az>  )
+-> (154) Dynamics[7] = IEzz*(wz'-wx*qA') - r*Fx - (IExx-IEyy)*wx*(wy+qA')
+
+   (155) %--------------------------------------------------------------------
+   (156) %   Solve algebraic equations for list of unknowns.
+   (157) %Solve( [Dynamics; MotionConstraint] = 0,   qA'', qB'', qC'', wx', wy', wz', Td, Fx, Fy, Fz )
+   (158) Solve( Dynamics = 0,   qA'', qB'', qC'', wx', wy', wz', Td)
+-> (159) qA'' = -(LB*cos(qB)+LC*cos(qC))*(Fz-2*LB*mE*sin(qB)*qA'*qB'-2*LC*mE*
+         sin(qC)*qA'*qC')/(mE*(LC^2*cos(qC)^2+LB*cos(qB)*(LB*cos(qB)+2*LC*cos(
+         qC))))
+
+-> (160) qB'' = -(cos(qB+qC)*(r*Fx+IEzz*wx*qA'+(IExx-IEyy)*wx*(wy+qA'))/((LC+r*
+         sin(qC))*(r*sin(qB)-LB-LC*cos(qB+qC))-(LC+r*sin(qC)+LB*cos(qB+qC))*(r*
+         sin(qB)-LC*cos(qB+qC)))-((LC+r*sin(qC)+LB*cos(qB+qC))*(2*r*Fx+LC*Fx*
+         sin(qC)+LC*Fy*cos(qC)+IEzz*wx*qA'+(IExx-IEyy)*wx*(wy+qA')+mE*r*(LB*cos
+         (qB)+LC*cos(qC))*qA'^2+LC*mE*sin(qC)*(LB*cos(qB)+LC*cos(qC))*qA'^2-mE*
+         (g*LC*cos(qC)-LB*r*cos(qB)*qB'^2-LC*r*cos(qC)*qC'^2-LB*LC*sin(qB+qC)*qB'^2))
+         +(LC+r*sin(qC))*(LB*Fx*sin(qB)+LB*mE*sin(qB)*(LB*cos(qB)+LC*cos(qC))*qA'^2
+         -2*r*Fx-LB*Fy*cos(qB)-LC*Fx*sin(qC)-LC*Fy*cos(qC)-IEzz*wx*qA'-(IExx-
+         IEyy)*wx*(wy+qA')-mE*r*(LB*cos(qB)+LC*cos(qC))*qA'^2-LC*mE*sin(qC)*(
+         LB*cos(qB)+LC*cos(qC))*qA'^2-mE*(LB*r*cos(qB)*qB'^2+LC*r*cos(qC)*qC'^2
+         +LB*LC*sin(qB+qC)*qB'^2-g*LB*cos(qB)-g*LC*cos(qC)-LB*LC*sin(qB+qC)*qC'^2)))
+         /(LB*((LC+r*sin(qC))*(r*sin(qB)-LB-LC*cos(qB+qC))-(LC+r*sin(qC)+LB*cos
+         (qB+qC))*(r*sin(qB)-LC*cos(qB+qC)))))/mE
+
+-> (161) qC'' = LB*(r*Fx+LC*Fx*sin(qC)+LC*Fy*cos(qC)+Fy*cos(qB)*(r*sin(qB)-LC*
+         cos(qB+qC))+mE*r*(LB*cos(qB)+LC*cos(qC))*qA'^2+LC*mE*sin(qC)*(LB*cos(
+         qB)+LC*cos(qC))*qA'^2-Fx*sin(qB)*(r*sin(qB)-LC*cos(qB+qC))-g*mE*cos(
+         qB)*(r*sin(qB)-LC*cos(qB+qC))-LC*mE*sin(qB+qC)*(r*sin(qB)-LC*cos(qB+
+         qC))*qC'^2-mE*sin(qB)*(LB*cos(qB)+LC*cos(qC))*(r*sin(qB)-LC*cos(qB+qC))
+         *qA'^2-mE*(g*LC*cos(qC)-LB*r*cos(qB)*qB'^2-LC*r*cos(qC)*qC'^2-LB*LC*
+         sin(qB+qC)*qB'^2))/(LC*mE*((LC+r*sin(qC))*(r*sin(qB)-LB-LC*cos(qB+qC))
+         -(LC+r*sin(qC)+LB*cos(qB+qC))*(r*sin(qB)-LC*cos(qB+qC))))
+
+-> (162) wx' = -wz*qA' - (r*Fz-(IEyy-IEzz)*wz*(wy+qA'))/IExx
+-> (163) wy' = ((IExx-IEzz)*wx*wz+LB*cos(qB)*(Fz-2*LB*mE*sin(qB)*qA'*qB'-2*LC*
+         mE*sin(qC)*qA'*qC')+LC*cos(qC)*(Fz-2*LB*mE*sin(qB)*qA'*qB'-2*LC*mE*sin
+         (qC)*qA'*qC'))/(mE*(LC^2*cos(qC)^2+LB*cos(qB)*(LB*cos(qB)+2*LC*cos(qC))))
+         - (IExx-IEzz)*wx*wz*(IEyy+mE*LC^2*cos(qC)^2+LB*mE*cos(qB)*(LB*cos(qB)+
+         2*LC*cos(qC)))/(IEyy*mE*(LC^2*cos(qC)^2+LB*cos(qB)*(LB*cos(qB)+2*LC*
+         cos(qC))))
+
+-> (164) wz' = wx*qA' + (r*Fx+(IExx-IEyy)*wx*(wy+qA'))/IEzz
+-> (165) Td = -r*(Fx+mE*(LB*cos(qB)+LC*cos(qC))*qA'^2+mE*(LB*cos(qB)*qB'^2+LC*
+         cos(qC)*qC'^2)+(LB*sin(qC)*(r*Fx+LC*Fx*sin(qC)+LC*Fy*cos(qC)+Fy*cos(
+         qB)*(r*sin(qB)-LC*cos(qB+qC))+mE*r*(LB*cos(qB)+LC*cos(qC))*qA'^2+LC*
+         mE*sin(qC)*(LB*cos(qB)+LC*cos(qC))*qA'^2-Fx*sin(qB)*(r*sin(qB)-LC*cos(
+         qB+qC))-g*mE*cos(qB)*(r*sin(qB)-LC*cos(qB+qC))-LC*mE*sin(qB+qC)*(r*sin
+         (qB)-LC*cos(qB+qC))*qC'^2-mE*sin(qB)*(LB*cos(qB)+LC*cos(qC))*(r*sin(
+         qB)-LC*cos(qB+qC))*qA'^2-mE*(g*LC*cos(qC)-LB*r*cos(qB)*qB'^2-LC*r*cos(
+         qC)*qC'^2-LB*LC*sin(qB+qC)*qB'^2))-sin(qB)*(LB*cos(qB+qC)*(r*Fx+IEzz*
+         wx*qA'+(IExx-IEyy)*wx*(wy+qA'))-(LC+r*sin(qC)+LB*cos(qB+qC))*(2*r*Fx+
+         LC*Fx*sin(qC)+LC*Fy*cos(qC)+IEzz*wx*qA'+(IExx-IEyy)*wx*(wy+qA')+mE*r*(
+         LB*cos(qB)+LC*cos(qC))*qA'^2+LC*mE*sin(qC)*(LB*cos(qB)+LC*cos(qC))*qA'^2
+         -mE*(g*LC*cos(qC)-LB*r*cos(qB)*qB'^2-LC*r*cos(qC)*qC'^2-LB*LC*sin(qB+
+         qC)*qB'^2))-(LC+r*sin(qC))*(LB*Fx*sin(qB)+LB*mE*sin(qB)*(LB*cos(qB)+
+         LC*cos(qC))*qA'^2-2*r*Fx-LB*Fy*cos(qB)-LC*Fx*sin(qC)-LC*Fy*cos(qC)-IE
+         zz*wx*qA'-(IExx-IEyy)*wx*(wy+qA')-mE*r*(LB*cos(qB)+LC*cos(qC))*qA'^2-
+         LC*mE*sin(qC)*(LB*cos(qB)+LC*cos(qC))*qA'^2-mE*(LB*r*cos(qB)*qB'^2+LC*
+         r*cos(qC)*qC'^2+LB*LC*sin(qB+qC)*qB'^2-g*LB*cos(qB)-g*LC*cos(qC)-LB*
+         LC*sin(qB+qC)*qC'^2))))/((LC+r*sin(qC))*(r*sin(qB)-LB-LC*cos(qB+qC))-(
+         LC+r*sin(qC)+LB*cos(qB+qC))*(r*sin(qB)-LC*cos(qB+qC))))
+
+   (166) Constant qAF = 2*pi	rad
+   (167) Constant qAo = 0	rad
+   (168) Constant qBF = 60	deg
+   (169) Constant qBo = 20	deg
+   (170) Constant tf = 16	sec
+   (171) Constant kpA = 3000	Newton*m
+   (172) Constant kpB = 3000	Newton*m
+   (173) Constant kdA = 300	Newton*m
+   (174) Constant kdB = 300	Newton*m
+   (175) Specified	qAD''
+   (176) SetDt( qAD =  (qAF - qAo)*t/tf )
+-> (177) qAD = (qAF-qAo)*t/tf
+-> (178) qAD' = (qAF-qAo)/tf
+-> (179) qAD'' = 0
+
+   (180) Specified	qBD''
+   (181) SetDt( qBD = qBo + (qBF - qBo)*t/tf - (qBF-qBo)*sin(2*pi*t/tf)/(2*pi) )
+-> (182) qBD = qBo + (qBF-qBo)*t/tf - 0.1591549*(qBF-qBo)*sin(6.283185*t/tf)
+-> (183) qBD' = (qBF-qBo)*(1-cos(6.283185*t/tf))/tf
+-> (184) qBD'' = 6.283185*(qBF-qBo)*sin(6.283185*t/tf)/tf^2
+
+   (185) Specified	TA = -kpA*(qA - qAD) - kdA*(qA' - qAD')
+-> (186) TA = kpA*(qAD-qA) + kdA*(qAD'-qA')
+
+   (187) Specified	TB = -kpB*(qB - qBD) - kdB*(qB' - qBD')
+-> (188) TB = kpB*(qBD-qB) + kdB*(qBD'-qB')
+
+   (189) A.AddTorque( N, TA*Ay> )
+-> (190) Torque_A_N> = TA*Ay>
+
+   (191) B.AddTorque( A, TB*Az> )
+-> (192) Torque_B_A> = TB*Az>
+
+   (193) % Must redefine now that their are motor torques
+   (194) Dynamics[1] := Dot(  System(A, B, C, D, E).GetDynamics(No),  Ay>  )
+-> (195) Dynamics[1] = (IExx-IEzz)*wx*wz + IEyy*(wy'+qA'') + LC*cos(qC)*(Fz-2*
+         LB*mE*sin(qB)*qA'*qB'-LC*mE*(2*sin(qC)*qA'*qC'-cos(qC)*qA'')) + LB*cos
+         (qB)*(Fz-2*LC*mE*(sin(qC)*qA'*qC'-cos(qC)*qA'')-LB*mE*(2*sin(qB)*qA'*
+         qB'-cos(qB)*qA'')) - TA
+
+   (196) Dynamics[2] := Dot(  System(B, C, D, E).GetDynamics(AB),  Az>  )
+-> (197) Dynamics[2] = LB*Fx*sin(qB) + IEzz*(wz'-wx*qA') + LB*mE*sin(qB)*(LB*
+         cos(qB)+LC*cos(qC))*qA'^2 + mE*(g*LB*cos(qB)+g*LC*cos(qC)+LB*LC*sin(
+         qB+qC)*qC'^2+LB^2*qB''+LB*LC*cos(qB+qC)*qB''-LB*r*cos(qB)*qB'^2-LC*r*
+         cos(qC)*qC'^2-LB*LC*sin(qB+qC)*qB'^2-LC^2*qC''-LB*r*sin(qB)*qB''-LC*r*
+         sin(qC)*qC''-LB*LC*cos(qB+qC)*qC'') - TB - 2*r*Fx - LB*Fy*cos(qB)
+         - LC*Fx*sin(qC) - LC*Fy*cos(qC) - (IExx-IEyy)*wx*(wy+qA') - mE*r*(LB*
+         cos(qB)+LC*cos(qC))*qA'^2 - LC*mE*sin(qC)*(LB*cos(qB)+LC*cos(qC))*qA'^2
+
+   (198) Dynamics[3] := Dot(  System(C, D, E).GetDynamics(BC),  Az>  )
+-> (199) Dynamics[3] = IEzz*(wz'-wx*qA') - 2*r*Fx - LC*Fx*sin(qC) - LC*Fy*cos(qC)
+         - (IExx-IEyy)*wx*(wy+qA') - mE*r*(LB*cos(qB)+LC*cos(qC))*qA'^2 - LC*
+         mE*sin(qC)*(LB*cos(qB)+LC*cos(qC))*qA'^2 - mE*(LB*r*cos(qB)*qB'^2+LC*r
+         *cos(qC)*qC'^2+LB*LC*sin(qB+qC)*qB'^2+LC^2*qC''+LB*r*sin(qB)*qB''+LC*r
+         *sin(qC)*qC''-g*LC*cos(qC)-LB*LC*cos(qB+qC)*qB'')
+
+   (200) Dynamics[4] := Dot(  System(D, E).GetDynamics(CD),  Az>  )
+-> (201) Dynamics[4] = IEzz*(wz'-wx*qA') - Td - 2*r*Fx - (IExx-IEyy)*wx*(wy+qA')
+         - mE*r*(LB*cos(qB)+LC*cos(qC))*qA'^2 - mE*r*(LB*cos(qB)*qB'^2+LC*cos(
+         qC)*qC'^2+LB*sin(qB)*qB''+LC*sin(qC)*qC'')
+
+   (202) Dynamics[5] := Dot(  E.GetDynamics(Ecm),  Ax>  )
+-> (203) Dynamics[5] = r*Fz + IExx*(wx'+wz*qA') - (IEyy-IEzz)*wz*(wy+qA')
+
+   (204) Dynamics[6] := Dot(  E.GetDynamics(Ecm),  Ay>  )
+-> (205) Dynamics[6] = (IExx-IEzz)*wx*wz + IEyy*(wy'+qA'')
+
+   (206) Dynamics[7] := Dot(  E.GetDynamics(Ecm),  Az>  )
+-> (207) Dynamics[7] = IEzz*(wz'-wx*qA') - r*Fx - (IExx-IEyy)*wx*(wy+qA')
+
+   (208) Solve( [Dynamics; MotionConstraint] := 0,   qA'', qB'', qC'', wx', wy', wz', Td, Fx, Fy, Fz )
+-> (209) qA'' = (IExx*(LB*cos(qB)+LC*cos(qC))*qA'*(LB*sin(qB)*qB'+LC*sin(qC)*
+         qC')+r*wz*(LB*cos(qB)+LC*cos(qC))*(IExx*qA'-(IEyy-IEzz)*(wy+qA'))+r^2*
+         (TA+2*LB*mE*cos(qB)*qA'*(LB*sin(qB)*qB'+LC*sin(qC)*qC')+2*LC*mE*cos(
+         qC)*qA'*(LB*sin(qB)*qB'+LC*sin(qC)*qC')))/(IExx*(LB*cos(qB)+LC*cos(qC))^2
+         +mE*r^2*(LC^2*cos(qC)^2+LB*cos(qB)*(LB*cos(qB)+2*LC*cos(qC))))
+
+-> (210) qB'' = (LB*(r^2*wx*cos(qB)*cos(qC)*(IEzz*qA'+(IExx-IEyy)*(wy+qA'))+IE
+         zz*cos(qB)*cos(qC)*(LB*r*cos(qB)-(2*r+LC*sin(qC))*(LB*cos(qB)+LC*cos(
+         qC)))*qB'^2-mE*r^3*cos(qB)*cos(qC)*(LB*cos(qB)*qB'^2+(LB*cos(qB)+LC*
+         cos(qC))*qA'^2)-sin(qB)*(IEzz*LB*r*sin(qC)*cos(qB)-mE*r^2*((LC+r*sin(
+         qC))*(LB*cos(qB)+LC*cos(qC))-LC*cos(qC)*(LC+r*sin(qC)+LB*cos(qB+qC)))-
+         IEzz*sin(qC)*((2*r+LC*sin(qC))*(LB*cos(qB)+LC*cos(qC))+LC*cos(qC)*(LB*
+         sin(qB)-2*r-LC*sin(qC))))*qB'^2)+LC*(IEzz*LB*r*cos(qB)*qC'^2+LB*r*wx*
+         sin(qB)*cos(qC)^2*(IEzz*qA'+(IExx-IEyy)*(wy+qA'))+LB*r*wx*sin(qC)*cos(
+         qB)*cos(qC)*(IEzz*qA'+(IExx-IEyy)*(wy+qA'))+r^2*cos(qC)^2*(TB-LB*LC*
+         mE*sin(qB+qC)*qC'^2-LB*mE*sin(qB)*(LB*cos(qB)+LC*cos(qC))*qA'^2)-LB*
+         mE*r^3*cos(qB)*cos(qC)^2*qC'^2-mE*LB^2*r^2*cos(qB)*cos(qC)*sin(qB+qC)*qB'^2
+         -IEzz*(2*r+LC*sin(qC))*(LB*cos(qB)+LC*cos(qC))*qC'^2-LB*mE*r^2*sin(qC)
+         *cos(qB)*cos(qC)*(LB*cos(qB)+LC*cos(qC))*qA'^2-IEzz*cos(qC)^2*(LB*sin(
+         qB)-2*r-LC*sin(qC))*(LB*cos(qB)*qB'^2+LC*cos(qC)*qC'^2)-sin(qC)*(IEzz*
+         LC*sin(qC)*cos(qC)*(LB*sin(qB)-2*r-LC*sin(qC))+mE*r^2*((LC+r*sin(qC))*
+         (LB*cos(qB)+LC*cos(qC))-LC*cos(qC)*(LC+r*sin(qC)+LB*cos(qB+qC))))*qC'^2))
+         /(LB*(IEzz*sin(qB+qC)*((2*r+LC*sin(qC))*(LB*cos(qB)+LC*cos(qC))+LC*cos
+         (qC)*(LB*sin(qB)-2*r-LC*sin(qC)))+mE*r^2*cos(qB)*((LC+r*sin(qC))*(LB*
+         cos(qB)+LC*cos(qC))-LC*cos(qC)*(LC+r*sin(qC)+LB*cos(qB+qC)))-IEzz*LB*r
+         *cos(qB)*sin(qB+qC)-mE*r^2*cos(qC)*(LC*cos(qC)*(r*sin(qB)-LB-LC*cos(
+         qB+qC))-(LB*cos(qB)+LC*cos(qC))*(r*sin(qB)-LC*cos(qB+qC)))))
+
+-> (211) qC'' = (r*wx*cos(qB)*((2*r+LC*sin(qC))*(LB*cos(qB)+LC*cos(qC))+LC*cos(
+         qC)*(LB*sin(qB)-2*r-LC*sin(qC)))*(IEzz*qA'+(IExx-IEyy)*(wy+qA'))+IEzz*
+         cos(qB)*(LB*r*cos(qB)-(2*r+LC*sin(qC))*(LB*cos(qB)+LC*cos(qC))-LC*cos(
+         qC)*(LB*sin(qB)-2*r-LC*sin(qC)))*(LB*cos(qB)*qB'^2+LC*cos(qC)*qC'^2)-r^2
+         *cos(qB)*(LB*cos(qB)+LC*cos(qC))*(IEzz*wx*qA'+LB*mE*r*cos(qB)*qA'^2+(
+         IExx-IEyy)*wx*(wy+qA')+LB*LC*mE*sin(qC)*cos(qB)*qA'^2-mE*(g*LC*cos(qC)
+         -LB*r*cos(qB)*qB'^2-LC*r*cos(qC)*qC'^2-LB*LC*sin(qB+qC)*qB'^2))-(IEzz*
+         sin(qB)*((2*r+LC*sin(qC))*(LB*cos(qB)+LC*cos(qC))+LC*cos(qC)*(LB*sin(
+         qB)-2*r-LC*sin(qC)))-IEzz*LB*r*sin(qB)*cos(qB)-mE*r^2*(LC*cos(qC)*(r*
+         sin(qB)-LB-LC*cos(qB+qC))-(LB*cos(qB)+LC*cos(qC))*(r*sin(qB)-LC*cos(
+         qB+qC))))*(LB*sin(qB)*qB'^2-LC*sin(qC)*qC'^2))/(LC*(IEzz*sin(qB+qC)*((
+         2*r+LC*sin(qC))*(LB*cos(qB)+LC*cos(qC))+LC*cos(qC)*(LB*sin(qB)-2*r-LC*
+         sin(qC)))+mE*r^2*cos(qB)*((LC+r*sin(qC))*(LB*cos(qB)+LC*cos(qC))-LC*
+         cos(qC)*(LC+r*sin(qC)+LB*cos(qB+qC)))-IEzz*LB*r*cos(qB)*sin(qB+qC)-mE*r^2
+         *cos(qC)*(LC*cos(qC)*(r*sin(qB)-LB-LC*cos(qB+qC))-(LB*cos(qB)+LC*cos(
+         qC))*(r*sin(qB)-LC*cos(qB+qC))))) - r^2*cos(qB)*cos(qC)*(LB*mE*sin(qB)
+         *(LB*cos(qB)+LC*cos(qC))*qA'^2-TB-IEzz*wx*qA'-(IExx-IEyy)*wx*(wy+qA')-
+         mE*(LB*r*cos(qB)*qB'^2+LC*r*cos(qC)*qC'^2+LB*LC*sin(qB+qC)*qB'^2-g*LB*
+         cos(qB)-g*LC*cos(qC)-LB*LC*sin(qB+qC)*qC'^2))/(IEzz*sin(qB+qC)*((2*r+
+         LC*sin(qC))*(LB*cos(qB)+LC*cos(qC))+LC*cos(qC)*(LB*sin(qB)-2*r-LC*sin(
+         qC)))+mE*r^2*cos(qB)*((LC+r*sin(qC))*(LB*cos(qB)+LC*cos(qC))-LC*cos(
+         qC)*(LC+r*sin(qC)+LB*cos(qB+qC)))-IEzz*LB*r*cos(qB)*sin(qB+qC)-mE*r^2*
+         cos(qC)*(LC*cos(qC)*(r*sin(qB)-LB-LC*cos(qB+qC))-(LB*cos(qB)+LC*cos(
+         qC))*(r*sin(qB)-LC*cos(qB+qC))))
+
+-> (212) wx' = (mE*r*(LC^2*cos(qC)^2+LB*cos(qB)*(LB*cos(qB)+2*LC*cos(qC)))*qA'*
+         (LB*sin(qB)*qB'+LC*sin(qC)*qC')-wz*(LB*cos(qB)+LC*cos(qC))^2*(IExx*qA'
+         -(IEyy-IEzz)*(wy+qA'))-r*(LB*cos(qB)+LC*cos(qC))*(TA+2*LB*mE*cos(qB)*
+         qA'*(LB*sin(qB)*qB'+LC*sin(qC)*qC')+2*LC*mE*cos(qC)*qA'*(LB*sin(qB)*
+         qB'+LC*sin(qC)*qC')))/(IExx*(LB*cos(qB)+LC*cos(qC))^2+mE*r^2*(LC^2*cos
+         (qC)^2+LB*cos(qB)*(LB*cos(qB)+2*LC*cos(qC))))
+
+-> (213) wy' = -(IExx-IEzz)*wx*wz*(IExx*(LB*cos(qB)+LC*cos(qC))^2+r^2*(IEyy+mE*LC^2
+         *cos(qC)^2+LB*mE*cos(qB)*(LB*cos(qB)+2*LC*cos(qC))))/(IEyy*(IExx*(LB*
+         cos(qB)+LC*cos(qC))^2+mE*r^2*(LC^2*cos(qC)^2+LB*cos(qB)*(LB*cos(qB)+2*
+         LC*cos(qC))))) - (IExx*(LB*cos(qB)+LC*cos(qC))*qA'*(LB*sin(qB)*qB'+LC*
+         sin(qC)*qC')+r*wz*(LB*cos(qB)+LC*cos(qC))*(IExx*qA'-(IEyy-IEzz)*(wy+
+         qA'))-r^2*((IExx-IEzz)*wx*wz-TA-2*LB*mE*cos(qB)*qA'*(LB*sin(qB)*qB'+
+         LC*sin(qC)*qC')-2*LC*mE*cos(qC)*qA'*(LB*sin(qB)*qB'+LC*sin(qC)*qC')))/
+         (IExx*(LB*cos(qB)+LC*cos(qC))^2+mE*r^2*(LC^2*cos(qC)^2+LB*cos(qB)*(LB*
+         cos(qB)+2*LC*cos(qC))))
+
+-> (214) wz' = -(r*sin(qB+qC)*(LB*cos(qB)+LC*cos(qC))*(IEzz*wx*qA'+LB*mE*r*cos(
+         qB)*qA'^2+(IExx-IEyy)*wx*(wy+qA')+LB*LC*mE*sin(qC)*cos(qB)*qA'^2-mE*(g
+         *LC*cos(qC)-LB*r*cos(qB)*qB'^2-LC*r*cos(qC)*qC'^2-LB*LC*sin(qB+qC)*qB'^2))
+         -wx*sin(qB+qC)*((2*r+LC*sin(qC))*(LB*cos(qB)+LC*cos(qC))+LC*cos(qC)*(
+         LB*sin(qB)-2*r-LC*sin(qC)))*(IEzz*qA'+(IExx-IEyy)*(wy+qA'))-mE*r*(cos(
+         qB)*((LC+r*sin(qC))*(LB*cos(qB)+LC*cos(qC))-LC*cos(qC)*(LC+r*sin(qC)+
+         LB*cos(qB+qC)))-cos(qC)*(LC*cos(qC)*(r*sin(qB)-LB-LC*cos(qB+qC))-(LB*
+         cos(qB)+LC*cos(qC))*(r*sin(qB)-LC*cos(qB+qC))))*(LB*cos(qB)*qB'^2+LC*
+         cos(qC)*qC'^2)-LC*r*(cos(qC)*sin(qB+qC)*(TB+IEzz*wx*qA'+(IExx-IEyy)*
+         wx*(wy+qA')+mE*(LB*r*cos(qB)*qB'^2+LC*r*cos(qC)*qC'^2+LB*LC*sin(qB+qC)
+         *qB'^2-g*LB*cos(qB)-g*LC*cos(qC)-LB*LC*sin(qB+qC)*qC'^2))-LB*mE*(sin(
+         qB)*cos(qC)*sin(qB+qC)*(LB*cos(qB)+LC*cos(qC))*qA'^2-(sin(qB)*(cos(qB)
+         -cos(qC)*cos(qB+qC))-sin(qC)*(cos(qC)-cos(qB)*cos(qB+qC)))*(LB*sin(qB)
+         *qB'^2-LC*sin(qC)*qC'^2))))/(IEzz*sin(qB+qC)*((2*r+LC*sin(qC))*(LB*cos
+         (qB)+LC*cos(qC))+LC*cos(qC)*(LB*sin(qB)-2*r-LC*sin(qC)))+mE*r^2*cos(
+         qB)*((LC+r*sin(qC))*(LB*cos(qB)+LC*cos(qC))-LC*cos(qC)*(LC+r*sin(qC)+
+         LB*cos(qB+qC)))-IEzz*LB*r*cos(qB)*sin(qB+qC)-mE*r^2*cos(qC)*(LC*cos(
+         qC)*(r*sin(qB)-LB-LC*cos(qB+qC))-(LB*cos(qB)+LC*cos(qC))*(r*sin(qB)-
+         LC*cos(qB+qC))))
+
+-> (215) Td = (IEzz*(wx*sin(qB+qC)*((2*r+LC*sin(qC))*(LB*cos(qB)+LC*cos(qC))+
+         LC*cos(qC)*(LB*sin(qB)-2*r-LC*sin(qC)))*(IEzz*qA'+(IExx-IEyy)*(wy+qA'))
+         -mE*r*(cos(qB)*((LC-r*sin(qC))*(LB*cos(qB)+LC*cos(qC))+LC*cos(qC)*(r*
+         sin(qC)-LC-LB*cos(qB+qC)))+cos(qC)*(LC*cos(qC)*(LB+r*sin(qB)+LC*cos(
+         qB+qC))+(LB*cos(qB)+LC*cos(qC))*(r*sin(qB)-LC*cos(qB+qC))))*(LB*cos(
+         qB)*qB'^2+LC*cos(qC)*qC'^2))+r*(IEzz*sin(qB+qC)*(LB*cos(qB)+LC*cos(qC))
+         *(IEzz*wx*qA'+LB*mE*r*cos(qB)*qA'^2+(IExx-IEyy)*wx*(wy+qA')+LB*LC*mE*
+         sin(qC)*cos(qB)*qA'^2-mE*(g*LC*cos(qC)-LB*r*cos(qB)*qB'^2-LC*r*cos(qC)
+         *qC'^2-LB*LC*sin(qB+qC)*qB'^2))+2*wx*(LB*LC*mE*r*cos(qB)*(cos(qB)-cos(
+         qC)*cos(qB+qC))-IEzz*LB*cos(qB)*sin(qB+qC)-mE*r*cos(qC)*(LC*cos(qC)*(r
+         *sin(qB)-LB-LC*cos(qB+qC))-(LB*cos(qB)+LC*cos(qC))*(r*sin(qB)-LC*cos(
+         qB+qC))))*(IEzz*qA'+(IExx-IEyy)*(wy+qA'))-IEzz*LC*(cos(qC)*sin(qB+qC)*
+         (TB+IEzz*wx*qA'+(IExx-IEyy)*wx*(wy+qA')+mE*(LB*r*cos(qB)*qB'^2+LC*r*
+         cos(qC)*qC'^2+LB*LC*sin(qB+qC)*qB'^2-g*LB*cos(qB)-g*LC*cos(qC)-LB*LC*
+         sin(qB+qC)*qC'^2))-LB*mE*(sin(qB)*cos(qC)*sin(qB+qC)*(LB*cos(qB)+LC*
+         cos(qC))*qA'^2-(sin(qB)*(cos(qB)-cos(qC)*cos(qB+qC))-sin(qC)*(cos(qC)-
+         cos(qB)*cos(qB+qC)))*(LB*sin(qB)*qB'^2-LC*sin(qC)*qC'^2))))-mE*r*sin(
+         qC)*(IEzz*LB*cos(qB)*(r*cos(qB)-LC*sin(qB+qC))*(LB*cos(qB)*qB'^2+LC*
+         cos(qC)*qC'^2)+LB*LC*r*wx*cos(qB)*(sin(qC)*cos(qB)+2*sin(qB)*cos(qC))*
+         (IEzz*qA'+(IExx-IEyy)*(wy+qA'))-r^2*cos(qB)*(LB*cos(qB)+LC*cos(qC))*(
+         IEzz*wx*qA'+LB*mE*r*cos(qB)*qA'^2+(IExx-IEyy)*wx*(wy+qA')+LB*LC*mE*sin
+         (qC)*cos(qB)*qA'^2-mE*(g*LC*cos(qC)-LB*r*cos(qB)*qB'^2-LC*r*cos(qC)*qC'^2
+         -LB*LC*sin(qB+qC)*qB'^2))-LC*r^2*cos(qB)*cos(qC)*(2*LB*mE*sin(qB)*(LB*
+         cos(qB)+LC*cos(qC))*qA'^2-TB-IEzz*wx*qA'-(IExx-IEyy)*wx*(wy+qA')-mE*(
+         LB*r*cos(qB)*qB'^2+LC*r*cos(qC)*qC'^2+LB*LC*sin(qB+qC)*qB'^2-g*LB*cos(
+         qB)-g*LC*cos(qC)-LB*LC*sin(qB+qC)*qC'^2))-(IEzz*sin(qB)*((2*r+LC*sin(
+         qC))*(LB*cos(qB)+LC*cos(qC))+LC*cos(qC)*(LB*sin(qB)-2*r-LC*sin(qC)))-
+         IEzz*LB*r*sin(qB)*cos(qB)-mE*r^2*(LC*cos(qC)*(r*sin(qB)-LB-LC*cos(qB+
+         qC))-(LB*cos(qB)+LC*cos(qC))*(r*sin(qB)-LC*cos(qB+qC))))*(LB*sin(qB)*qB'^2
+         -LC*sin(qC)*qC'^2))-mE*r*sin(qB)*(LB*(r^2*wx*cos(qB)*cos(qC)*(IEzz*qA'
+         +(IExx-IEyy)*(wy+qA'))+IEzz*cos(qB)*cos(qC)*(LB*r*cos(qB)-(2*r+LC*sin(
+         qC))*(LB*cos(qB)+LC*cos(qC)))*qB'^2-mE*r^3*cos(qB)*cos(qC)*(LB*cos(qB)
+         *qB'^2+(LB*cos(qB)+LC*cos(qC))*qA'^2)-sin(qB)*(IEzz*LB*r*sin(qC)*cos(
+         qB)-mE*r^2*((LC+r*sin(qC))*(LB*cos(qB)+LC*cos(qC))-LC*cos(qC)*(LC+r*
+         sin(qC)+LB*cos(qB+qC)))-IEzz*sin(qC)*((2*r+LC*sin(qC))*(LB*cos(qB)+LC*
+         cos(qC))+LC*cos(qC)*(LB*sin(qB)-2*r-LC*sin(qC))))*qB'^2)+LC*(IEzz*LB*r
+         *cos(qB)*qC'^2+LB*r*wx*sin(qB)*cos(qC)^2*(IEzz*qA'+(IExx-IEyy)*(wy+qA'))
+         +r^2*cos(qC)^2*(TB-LB*LC*mE*sin(qB+qC)*qC'^2-LB*mE*sin(qB)*(LB*cos(qB)
+         +LC*cos(qC))*qA'^2)-LB*mE*r^3*cos(qB)*cos(qC)^2*qC'^2-mE*LB^2*r^2*cos(
+         qB)*cos(qC)*sin(qB+qC)*qB'^2-IEzz*(2*r+LC*sin(qC))*(LB*cos(qB)+LC*cos(
+         qC))*qC'^2-IEzz*cos(qC)^2*(LB*sin(qB)-LC*sin(qC))*(LB*cos(qB)*qB'^2+
+         LC*cos(qC)*qC'^2)-sin(qC)*(IEzz*LC*sin(qC)*cos(qC)*(LB*sin(qB)-2*r-LC*
+         sin(qC))+mE*r^2*((LC+r*sin(qC))*(LB*cos(qB)+LC*cos(qC))-LC*cos(qC)*(
+         LC+r*sin(qC)+LB*cos(qB+qC))))*qC'^2)))/(IEzz*sin(qB+qC)*((2*r+LC*sin(
+         qC))*(LB*cos(qB)+LC*cos(qC))+LC*cos(qC)*(LB*sin(qB)-2*r-LC*sin(qC)))+
+         mE*r^2*cos(qB)*((LC+r*sin(qC))*(LB*cos(qB)+LC*cos(qC))-LC*cos(qC)*(LC+
+         r*sin(qC)+LB*cos(qB+qC)))-IEzz*LB*r*cos(qB)*sin(qB+qC)-mE*r^2*cos(qC)*
+         (LC*cos(qC)*(r*sin(qB)-LB-LC*cos(qB+qC))-(LB*cos(qB)+LC*cos(qC))*(r*
+         sin(qB)-LC*cos(qB+qC)))) - IEzz*wx*qA' - (IExx-IEyy)*wx*(wy+qA')
+         - mE*r*(LB*cos(qB)+LC*cos(qC))*qA'^2 - mE*r*(LB*cos(qB)*qB'^2+LC*cos(
+         qC)*qC'^2)
+
+-> (216) Fx = -(IEzz*sin(qB+qC)*(LB*cos(qB)+LC*cos(qC))*(IEzz*wx*qA'+LB*mE*r*
+         cos(qB)*qA'^2+(IExx-IEyy)*wx*(wy+qA')+LB*LC*mE*sin(qC)*cos(qB)*qA'^2-
+         mE*(g*LC*cos(qC)-LB*r*cos(qB)*qB'^2-LC*r*cos(qC)*qC'^2-LB*LC*sin(qB+
+         qC)*qB'^2))+wx*(mE*r*cos(qB)*((LC+r*sin(qC))*(LB*cos(qB)+LC*cos(qC))-
+         LC*cos(qC)*(LC+r*sin(qC)+LB*cos(qB+qC)))-IEzz*LB*cos(qB)*sin(qB+qC)-
+         mE*r*cos(qC)*(LC*cos(qC)*(r*sin(qB)-LB-LC*cos(qB+qC))-(LB*cos(qB)+LC*
+         cos(qC))*(r*sin(qB)-LC*cos(qB+qC))))*(IEzz*qA'+(IExx-IEyy)*(wy+qA'))-
+         IEzz*mE*(cos(qB)*((LC+r*sin(qC))*(LB*cos(qB)+LC*cos(qC))-LC*cos(qC)*(
+         LC+r*sin(qC)+LB*cos(qB+qC)))-cos(qC)*(LC*cos(qC)*(r*sin(qB)-LB-LC*cos(
+         qB+qC))-(LB*cos(qB)+LC*cos(qC))*(r*sin(qB)-LC*cos(qB+qC))))*(LB*cos(
+         qB)*qB'^2+LC*cos(qC)*qC'^2)-IEzz*LC*(cos(qC)*sin(qB+qC)*(TB+IEzz*wx*
+         qA'+(IExx-IEyy)*wx*(wy+qA')+mE*(LB*r*cos(qB)*qB'^2+LC*r*cos(qC)*qC'^2+
+         LB*LC*sin(qB+qC)*qB'^2-g*LB*cos(qB)-g*LC*cos(qC)-LB*LC*sin(qB+qC)*qC'^2))
+         -LB*mE*(sin(qB)*cos(qC)*sin(qB+qC)*(LB*cos(qB)+LC*cos(qC))*qA'^2-(sin(
+         qB)*(cos(qB)-cos(qC)*cos(qB+qC))-sin(qC)*(cos(qC)-cos(qB)*cos(qB+qC)))
+         *(LB*sin(qB)*qB'^2-LC*sin(qC)*qC'^2))))/(IEzz*sin(qB+qC)*((2*r+LC*sin(
+         qC))*(LB*cos(qB)+LC*cos(qC))+LC*cos(qC)*(LB*sin(qB)-2*r-LC*sin(qC)))+
+         mE*r^2*cos(qB)*((LC+r*sin(qC))*(LB*cos(qB)+LC*cos(qC))-LC*cos(qC)*(LC+
+         r*sin(qC)+LB*cos(qB+qC)))-IEzz*LB*r*cos(qB)*sin(qB+qC)-mE*r^2*cos(qC)*
+         (LC*cos(qC)*(r*sin(qB)-LB-LC*cos(qB+qC))-(LB*cos(qB)+LC*cos(qC))*(r*
+         sin(qB)-LC*cos(qB+qC))))
+
+-> (217) Fy = -(IEzz*mE*(LB*r*cos(qB)*cos(qB+qC)-LB*r*cos(qC)-cos(qB)*((2*r+LC*
+         sin(qC))*(LC+r*sin(qC)+LB*cos(qB+qC))+(LC+r*sin(qC))*(LB*sin(qB)-2*r-
+         LC*sin(qC)))-cos(qC)*((2*r+LC*sin(qC))*(r*sin(qB)-LB-LC*cos(qB+qC))+(r
+         *sin(qB)-LC*cos(qB+qC))*(LB*sin(qB)-2*r-LC*sin(qC))))*(LB*cos(qB)*qB'^2
+         +LC*cos(qC)*qC'^2)+(IEzz*sin(qB+qC)*(LB*sin(qB)-r-LC*sin(qC))-mE*r^2*
+         cos(qB)*(LC+r*sin(qC)+LB*cos(qB+qC))-mE*r^2*cos(qC)*(r*sin(qB)-LB-LC*
+         cos(qB+qC)))*(IEzz*wx*qA'+(IExx-IEyy)*wx*(wy+qA')+mE*r*(LB*cos(qB)+LC*
+         cos(qC))*qA'^2+LC*mE*sin(qC)*(LB*cos(qB)+LC*cos(qC))*qA'^2-mE*(g*LC*
+         cos(qC)-LB*r*cos(qB)*qB'^2-LC*r*cos(qC)*qC'^2-LB*LC*sin(qB+qC)*qB'^2))
+         -wx*(IEzz*LB*sin(qB)*sin(qB+qC)-mE*r*cos(qB)*((2*r+LC*sin(qC))*(LC+r*
+         sin(qC)+LB*cos(qB+qC))+(LC+r*sin(qC))*(LB*sin(qB)-2*r-LC*sin(qC)))-mE*
+         r*cos(qC)*((2*r+LC*sin(qC))*(r*sin(qB)-LB-LC*cos(qB+qC))+(r*sin(qB)-
+         LC*cos(qB+qC))*(LB*sin(qB)-2*r-LC*sin(qC))))*(IEzz*qA'+(IExx-IEyy)*(
+         wy+qA'))-mE*(IEzz*sin(qB)*(LC*(LB*sin(qB)-2*r-LC*sin(qC))+(2*r+LC*sin(
+         qC))*(LC+LB*cos(qB+qC)))+IEzz*sin(qC)*((2*r+LC*sin(qC))*(LB+LC*cos(qB+
+         qC))+LC*cos(qB+qC)*(LB*sin(qB)-2*r-LC*sin(qC)))-IEzz*LB*r*sin(qC)-IEzz
+         *LB*r*sin(qB)*cos(qB+qC)-mE*r^2*((LC+r*sin(qC))*(r*sin(qB)-LB-LC*cos(
+         qB+qC))-(LC+r*sin(qC)+LB*cos(qB+qC))*(r*sin(qB)-LC*cos(qB+qC))))*(LB*
+         sin(qB)*qB'^2-LC*sin(qC)*qC'^2)-(IEzz*sin(qB+qC)*(r+LC*sin(qC))+mE*r^2
+         *cos(qB)*(LC+r*sin(qC))+mE*r^2*cos(qC)*(r*sin(qB)-LC*cos(qB+qC)))*(LB*
+         mE*sin(qB)*(LB*cos(qB)+LC*cos(qC))*qA'^2-TB-IEzz*wx*qA'-(IExx-IEyy)*
+         wx*(wy+qA')-mE*r*(LB*cos(qB)+LC*cos(qC))*qA'^2-LC*mE*sin(qC)*(LB*cos(
+         qB)+LC*cos(qC))*qA'^2-mE*(LB*r*cos(qB)*qB'^2+LC*r*cos(qC)*qC'^2+LB*LC*
+         sin(qB+qC)*qB'^2-g*LB*cos(qB)-g*LC*cos(qC)-LB*LC*sin(qB+qC)*qC'^2)))/(
+         IEzz*sin(qB+qC)*((2*r+LC*sin(qC))*(LB*cos(qB)+LC*cos(qC))+LC*cos(qC)*(
+         LB*sin(qB)-2*r-LC*sin(qC)))+mE*r^2*cos(qB)*((LC+r*sin(qC))*(LB*cos(qB)
+         +LC*cos(qC))-LC*cos(qC)*(LC+r*sin(qC)+LB*cos(qB+qC)))-IEzz*LB*r*cos(
+         qB)*sin(qB+qC)-mE*r^2*cos(qC)*(LC*cos(qC)*(r*sin(qB)-LB-LC*cos(qB+qC))
+         -(LB*cos(qB)+LC*cos(qC))*(r*sin(qB)-LC*cos(qB+qC))))
+
+-> (218) Fz = -(IExx*mE*(LC^2*cos(qC)^2+LB*cos(qB)*(LB*cos(qB)+2*LC*cos(qC)))*
+         qA'*(LB*sin(qB)*qB'+LC*sin(qC)*qC')+mE*r*wz*(LC^2*cos(qC)^2+LB*cos(qB)
+         *(LB*cos(qB)+2*LC*cos(qC)))*(IExx*qA'-(IEyy-IEzz)*(wy+qA'))-IExx*(LB*
+         cos(qB)+LC*cos(qC))*(TA+2*LB*mE*cos(qB)*qA'*(LB*sin(qB)*qB'+LC*sin(qC)
+         *qC')+2*LC*mE*cos(qC)*qA'*(LB*sin(qB)*qB'+LC*sin(qC)*qC')))/(IExx*(LB*
+         cos(qB)+LC*cos(qC))^2+mE*r^2*(LC^2*cos(qC)^2+LB*cos(qB)*(LB*cos(qB)+2*
+         LC*cos(qC))))
+
+   (219) Input  tFinal = 16 sec,  tStep = 0.02 sec,  absError = 1.0E-07
+   (220) Variable KE = System.GetKineticEnergy()
+-> (221) KE = 0.5*IExx*wx^2 + 0.5*IEzz*wz^2 + 0.5*IEyy*(wy+qA')^2 - 0.5*mE*(2*
+         LB*LC*cos(qB+qC)*qB'*qC'-LB^2*qB'^2-LC^2*qC'^2-LB^2*cos(qB)^2*qA'^2-LC^2
+         *cos(qC)^2*qA'^2-2*LB*LC*cos(qB)*cos(qC)*qA'^2) - 0.5*mm*(2*LB*LC*cos(
+         qB+qC)*qB'*qC'-LB^2*qB'^2-LC^2*qC'^2-LB^2*cos(qB)^2*qA'^2-LC^2*cos(qC)^2
+         *qA'^2-2*LB*LC*cos(qB)*cos(qC)*qA'^2)
+
+   (222) Variable Work' = System.GetPower()
+-> (223) Work' = r*Fx*wz + TA*qA' + TB*qB' + Td*qC' + LB*Fy*cos(qB)*qB' - LB*
+         Fx*sin(qB)*qB' - LC*Fx*sin(qC)*qC' - LC*Fy*cos(qC)*qC' - LC*Fz*cos(qC)*qA'
+         - Fz*(r*wx+LB*cos(qB)*qA') - g*mE*(LB*cos(qB)*qB'-LC*cos(qC)*qC')
+         - g*mm*(LB*cos(qB)*qB'-LC*cos(qC)*qC')
+
+   (224) Variable KEMinusWork = KE - Work
+-> (225) KEMinusWork = KE - Work
+
+   (226) Input  qA = 0 deg,  qA' = 0 rad/sec, qB = 20 deg,  qB' = 0 rad/sec, qC' = 0 rad/sec, wx = 0, wy = 0, wz = 0, Work = 0
+   (227) SolveSetInput(   Dot(pseudoLoop>, Ny>) = 0,	qC  = -pi/6 rad ) % I think it gives the wrong initial qC.
+
+->    %  INPUT has been assigned as follows:
+->    %   qC                        0.06138530652139596     rad
+
+   (228) Output x m, z m, t sec, KEMinusWork
+   (229) ODE ()
+
+   (230) OutputPlot x m, z m
+   (231) Plot ODE.1
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

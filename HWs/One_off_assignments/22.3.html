@@ -1,0 +1,148 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 22.3.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">22.3.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  22.3.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  A                % Example: Earth.
+   (6) RigidFrame      B                % Rotates Simply in A
+   (7) RigidFrame      C                % Rotates Simply in B
+   (8) RigidBody       D                % Disk is in contact with A
+   (9) Point           DA( D )           % Point DA is a point of D in contact with A.
+   (10) Point           AD( A )           % Point AD is a point of A in contact with D.
+   (11) Point		P		  % Path Point of contact
+   (12) %--------------------------------------------------------------------
+   (13) %   Mathematical declarations.
+   (14) Variable    qH''	% Heading of disk
+   (15) Variable    qL''	% Lean of disk
+   (16) Variable    qS''	% Spin of disk
+   (17) Variable    x'', y''	% Ax> and Ay> measure of path point P in from Ao.
+   (18) Variable    wx', wy', wz'	% Derivatives of Ci> measures of D angular velocity in A
+   (19) Constant    g = 9.80665 m/s^2 	% Earth's gravitational acceleration.
+   (20) Constant    m = 2 kg  	  	% Mass of D
+   (21) Constant    r = 34.29 cm  	% Radius of D
+   (22) %Constant    I = 0.5*m*r^2  	% D's axial moment of inertia.
+   (23) %Constant    J = 0.25*m*r^2  	% D's tranverse moment of inertia.
+   (24) Constant    I  	% D's axial moment of inertia.
+   (25) Constant    J 	% D's tranverse moment of inertia.
+   (26) %--------------------------------------------------------------------
+   (27) %   Mass and inertia properties.
+   (28) D.SetMass( m )
+   (29) D.SetInertia( Dcm,  J,  I,  J )
+   (30) %--------------------------------------------------------------------
+   (31) %   Rotational kinematics.
+   (32) B.RotateZ( A, qH )
+-> (33) B_A = [cos(qH), sin(qH), 0;  -sin(qH), cos(qH), 0;  0, 0, 1]
+-> (34) w_B_A> = qH'*Bz>
+-> (35) alf_B_A> = qH''*Bz>
+
+   (36) C.RotateX( B, -qL )
+-> (37) C_B = [1, 0, 0;  0, cos(qL), -sin(qL);  0, sin(qL), cos(qL)]
+-> (38) w_C_B> = -qL'*Cx>
+-> (39) w_C_A> = qH'*Bz> - qL'*Cx>
+-> (40) alf_C_B> = -qL''*Cx>
+-> (41) alf_C_A> = -qH'*qL'*By> + qH''*Bz> - qL''*Cx>
+
+   (42) D.RotateY( C, qS )
+-> (43) D_C = [cos(qS), 0, -sin(qS);  0, 1, 0;  sin(qS), 0, cos(qS)]
+-> (44) w_D_C> = qS'*Dy>
+-> (45) w_D_A> = qH'*Bz> - qL'*Cx> + qS'*Dy>
+-> (46) alf_D_C> = qS''*Dy>
+-> (47) alf_D_A> = -qH'*qL'*By> + qH''*Bz> + (-cos(qL)*qH'*qS'-qL'')*Cx> - qL'*
+        qS'*Cz> + qS''*Dy>
+
+   (48) ChangeVariables[1] = Dot(D.getAngularVelocity(A), Cx>) -wx
+-> (49) ChangeVariables[1] = -wx - qL'
+
+   (50) ChangeVariables[2] = Dot(D.getAngularVelocity(A), Cy>) -wy
+-> (51) ChangeVariables[2] = qS' - wy - sin(qL)*qH'
+
+   (52) ChangeVariables[3] = Dot(D.getAngularVelocity(A), Cz>) -wz
+-> (53) ChangeVariables[3] = cos(qL)*qH' - wz
+
+   (54) SolveDT(ChangeVariables = 0, qL', qS', qH')
+-> (55) qL' = -wx
+-> (56) qS' = wy + wz*tan(qL)
+-> (57) qH' = wz/cos(qL)
+-> (58) qL'' = -wx'
+-> (59) qS'' = wy' + cos(qL)*qH'*qL' + tan(qL)*(wz'+sin(qL)*qH'*qL')
+-> (60) qH'' = (wz'+sin(qL)*qH'*qL')/cos(qL)
+
+   (61) %D.SetAngularVelocity( A, wx*Cx> + wy*Cy> + wz*Cz> )
+   (62) %stop
+   (63) %--------------------------------------------------------------------
+   (64) %   Translational kinematics.
+   (65) P.SetPositionVelocityAcceleration( Ao, x*Ax> + y*Ay> )
+-> (66) p_Ao_P> = x*Ax> + y*Ay>
+-> (67) v_P_A> = x'*Ax> + y'*Ay>
+-> (68) a_P_A> = x''*Ax> + y''*Ay>
+
+   (69) Dcm.SetPositionVelocityAcceleration( P, r*Cz> )
+-> (70) p_P_Dcm> = r*Cz>
+-> (71) v_Dcm_A> = x'*Ax> + y'*Ay> - r*sin(qL)*qH'*Cx> + r*qL'*Cy>
+-> (72) a_Dcm_A> = x''*Ax> + y''*Ay> - r*sin(qL)*qH'^2*By> - r*(2*cos(qL)*qH'*
+        qL'+sin(qL)*qH'')*Cx> + r*qL''*Cy> - r*qL'^2*Cz>
+
+   (73) DA.SetPositionVelocityAcceleration( Dcm, -r*Cz> )
+-> (74) p_Dcm_DA> = -r*Cz>
+-> (75) v_DA_A> = x'*Ax> + y'*Ay> - r*qS'*Cx>
+-> (76) a_DA_A> = x''*Ax> + y''*Ay> - r*qH'*qS'*By> - r*qS''*Cx> - r*cos(qL)*
+        qH'*qS'*Cy> + r*qS'*(qS'-sin(qL)*qH')*Cz>
+
+   (77) %--------------------------------------------------------------------
+   (78) %   Motion constraints (if any).
+   (79) MotionConstraint[1] = Dot( DA.GetVelocity(A), Ax> )
+-> (80) MotionConstraint[1] = x' - r*cos(qH)*qS'
+
+   (81) MotionConstraint[2] = Dot( DA.GetVelocity(A), Ay> )
+-> (82) MotionConstraint[2] = y' - r*sin(qH)*qS'
+
+   (83) SolveDt( MotionConstraint = 0, x', y' ) % Why does this work instead, and why does it stop at only 2 derivatives?
+-> (84) x' = r*cos(qH)*qS'
+-> (85) y' = r*sin(qH)*qS'
+-> (86) x'' = -r*(sin(qH)*qH'*qS'-cos(qH)*qS'')
+-> (87) y'' = r*(cos(qH)*qH'*qS'+sin(qH)*qS'')
+
+   (88) %--------------------------------------------------------------------
+   (89) Vel> = Express(Explicit(Dcm.GetVelocity( A ), wx, wy, wz), C)
+-> (90) Vel> = r*wy*Cx> - r*wx*Cy>
+
+   (91) Accel> = Express(Explicit(Dcm.GetAcceleration( A ), wx, wy, wz), C)
+-> (92) Accel> = r*(wx*wz+wy')*Cx> + r*(wy*wz+qL'')*Cy> - r*(wx^2-wy*wz*tan(qL))*Cz>
+
+   (93) % These two came out correct as shown in the HW...^^^
+   (94) System.AddForceGravity( -g*Az> )
+-> (95) Force_Dcm> = -g*m*Az>
+
+   (96) %--------------------------------------------------------------------
+   (97) %   Rotational dynamic equations (M = DH/Dt + ...).
+   (98) %   For static analysis, use  B.GetStatics( aboutPoint ).
+   (99) Dynamics[1] = Explicit(Dot(  System(B,C,D).GetDynamics( DA ),  Az> ), qH, qL, qS )
+-> (100) Dynamics[1] = J*cos(qL)*wz' - I*sin(qL)*wy' - I*wy*cos(qL)*qL' - J*wz*
+         sin(qL)*qL' - m*r^2*sin(qL)*(wy'-wz*qL')
+
+   (101) Dynamics[2] = Explicit(Dot(  System(C,D).GetDynamics( DA ),  Bx> ), qH, qL, qS )
+-> (102) Dynamics[2] = m*r*(g*sin(qL)-r*qL'') - I*wy*wz - m*r^2*wy*wz - J*(wz^2
+         *tan(qL)+qL'')
+
+   (103) Dynamics[3] = Explicit(Dot(  D.GetDynamics( DA ),  Cy>  ), qH, qL, qS )
+-> (104) Dynamics[3] = I*wy' + m*r^2*(wy'-wz*qL')
+
+   (105) %--------------------------------------------------------------------
+   (106) %   Solve algebraic equations for list of unknowns.
+   (107) %Solve( [Dynamics; MotionConstraint] = 0,   qH'', qL'', qS'' )
+   (108) %Solve( Dynamics = 0,   qH'', qL'', qS'' )
+   (109) % These take on the same answer with a couple of substitutions I cannot change^
+   (110) setGeneralizedSpeeds(wx, wy, wz)
+   (111) Equations = System.GetDynamicsKane()
+-> (112) Equations[1] = g*m*r*sin(qL) + (J+m*r^2)*wx' - wz*(J*qS'-m*r^2*(tan(
+         qL)*wz-qS')-(I-J)*(tan(qL)*wz-qS'))
+
+-> (113) Equations[2] = m*r^2*wx*wz + (I+m*r^2)*wy'
+-> (114) Equations[3] = wx*(J*qS'-(I-J)*(tan(qL)*wz-qS')) + J*wz'
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

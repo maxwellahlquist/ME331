@@ -1,0 +1,42 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: SetRigidTransform from a rotation matrix and position matrix.
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame A, B, C, D
+   (5) Variable   Rxx, Rxy, Rxz,  Ryx, Ryy, Ryz,  Rzx, Rzy, Rzz
+   (6) rotationMatrix = [Rxx, Rxy, Rxz;  Ryx, Ryy, Ryz;  Rzx, Rzy, Rzz]
+-> (7) rotationMatrix = [Rxx, Rxy, Rxz;  Ryx, Ryy, Ryz;  Rzx, Rzy, Rzz]
+
+   (8) positionMatrix = [7;  8;  9]
+-> (9) positionMatrix = [7;  8;  9]
+
+   (10) B.SetRigidTransform( A,  rotationMatrix,  positionMatrix )
+-> (11) B_A = [Rxx, Rxy, Rxz;  Ryx, Ryy, Ryz;  Rzx, Rzy, Rzz]
+-> (12) p_Ao_Bo> = 7*Ax> + 8*Ay> + 9*Az>
+
+   (13) X_AB = GetRigidTransform34( A, B )
+-> (14) X_AB = [Rxx, Ryx, Rzx, 7;  Rxy, Ryy, Rzy, 8;  Rxz, Ryz, Rzz, 9]
+
+   (15) %--------------------------------------------------------------------
+   (16) % Example: SetRigidTransform from a 3x4 (or 4x4) matrix
+   (17) %--------------------------------------------------------------------
+   (18) matrix34 = [Rxx, Rxy, Rxz, 7;  Ryx, Ryy, Ryz, 8;  Rzx, Rzy, Rzz, 9]
+-> (19) matrix34 = [Rxx, Rxy, Rxz, 7;  Ryx, Ryy, Ryz, 8;  Rzx, Rzy, Rzz, 9]
+
+   (20) C.SetRigidTransform( B,  matrix34 )
+-> (21) C_B = [Rxx, Rxy, Rxz;  Ryx, Ryy, Ryz;  Rzx, Rzy, Rzz]
+-> (22) p_Bo_Co> = 7*Bx> + 8*By> + 9*Bz>
+
+   (23) X_BC = GetRigidTransform44( B, C )
+-> (24) X_BC = [Rxx, Ryx, Rzx, 7;  Rxy, Ryy, Rzy, 8;  Rxz, Ryz, Rzz, 9;  0, 0, 0, 1]
+
+   (25) %--------------------------------------------------------------------
+   (26) % Example: SetRigidTransform 
+   (27) %--------------------------------------------------------------------
+   (28) Variable   x,  y, z
+   (29) D.SetRigidTransform( C,  BodyXYZ(pi, pi/2, pi/3),  x*Cx> + y*Cy> + z*Cz> )
+-> (30) D_C = [0, -0.8660254, 0.5;  0, -0.5, -0.8660254;  1, 0, 0]
+-> (31) p_Co_Do> = x*Cx> + y*Cy> + z*Cz>
+
+   (32) X_CD = GetRigidTransform34( C, D )
+-> (33) X_CD = [0, 0, 1, x;  -0.8660254, -0.5, 0, y;  0.5, -0.8660254, 0, z]
+

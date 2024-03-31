@@ -1,0 +1,15 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: NewtonianFrame
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) Particle  Q
+   (6) Q.SetMass( m )
+   (7) Q.SetVelocity( N,  2*Nx> + 4*Ny> )
+-> (8) v_Q_N> = 2*Nx> + 4*Ny>
+
+   (9) KE = Q.GetKineticEnergy()
+-> (10) KE = 10*m
+
+   (11) a_Q_#NewtonianFrame#> = Dt( Q.GetVelocity(#NewtonianFrame#), #NewtonianFrame# )
+-> (12) a_Q_N> = 0>
+

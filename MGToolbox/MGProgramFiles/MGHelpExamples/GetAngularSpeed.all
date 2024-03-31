@@ -1,0 +1,14 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetAngularSpeed  and  GetAngularSpeedSquared
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame A, B
+   (5) Variable   wx, wy
+   (6) B.SetAngularVelocity( A, wx*Ax> + wy*Ay> )
+-> (7) w_B_A> = wx*Ax> + wy*Ay>
+
+   (8) angularSpeed = B.GetAngularSpeed( A ) 
+-> (9) angularSpeed = sqrt(wx^2+wy^2)
+
+   (10) angularSpeedSquared = B.GetAngularSpeedSquared( A )  
+-> (11) angularSpeedSquared = wx^2 + wy^2
+

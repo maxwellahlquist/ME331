@@ -1,0 +1,24 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: cosh, sinh, tanh   (real scalar expressions)
+   (3) %--------------------------------------------------------------------
+   (4) A = sinh(2) + cosh(3) + tanh(4)
+-> (5) A = 14.69385
+
+   (6) B = sinh(1+2*t) + cosh(3+4*t) + tanh(5+6*t)
+-> (7) B = sinh(1+2*t) + cosh(3+4*t) + tanh(5+6*t)
+
+   (8) %--------------------------------------------------------------------
+   (9) % Example 2: cosh, sinh, tanh   (complex scalar expressions)
+   (10) %--------------------------------------------------------------------
+   (11) C = cosh( 2 + 3*GetImaginaryNumber() ) 
+-> (12) C = -3.724546 + 0.5118226*imaginary
+
+   (13) D = sinh( 2 + 3*GetImaginaryNumber() )
+-> (14) D = -3.590565 + 0.5309211*imaginary
+
+   (15) E = tanh( 2 + 3*GetImaginaryNumber() )
+-> (16) E = 0.9653859 - 0.009884375*imaginary
+
+   (17) F = sinh(3*imaginary+t) + cosh(3*imaginary+t)
+-> (18) F = sinh(3*imaginary+t) + cosh(3*imaginary+t)
+

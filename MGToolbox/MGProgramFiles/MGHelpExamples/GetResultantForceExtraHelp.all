@@ -1,0 +1,51 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  GetResultantForce  GetNetForce
+   (3) %--------------------------------------------------------------------
+   (4) RigidBody  B
+   (5) Bo.AddForce( 888*Bz> )                      % Add external force on Bo.
+-> (6) Force_Bo> = 888*Bz>
+
+   (7) %--------------------------------------------------------------------
+   (8) % ExtraExample:  GetResultantForce  GetNetForce
+   (9) % As of now, 888*Bz> is not regarded as being from NewtonianFrame N.
+   (10) % Perhaps another frame is welded to the NewtonianFrame so the force comes
+   (11) % from the other frame, but not the NewtonianFrame.
+   (12) %--------------------------------------------------------------------
+   (13) NewtonianFrame N                            % Newtonian frame is external to system.
+   (14) Specified      Rx, Ry
+   (15) No.AddForce( Rx*Bx> )                       % Add external force on No.
+-> (16) Force_No> = Rx*Bx>
+
+   (17) No.AddForce( Bo,  Ry*By> )                  % Add action/reaction force on No from Bo.
+-> (18) Force_No_Bo> = Ry*By>
+
+   (19) NetForceOnNoFromBcm> = No.GetNetForce( Bo ) % Net action/reaction force on No from Bo.
+-> (20) NetForceOnNoFromBcm> = Ry*By>
+
+   (21) NetForceOnNo> = No.GetResultantForce()      % Net force on No.
+-> (22) NetForceOnNo> = Rx*Bx> + Ry*By>
+
+   (23) NetForceOnN> = N.GetResultantForce()        % Net force on NewtonianFrame N.
+-> (24) NetForceOnN> = Rx*Bx> + Ry*By>
+
+   (25) NetForceOnB> := B.GetResultantForce()       % Net force on body B.
+-> (26) NetForceOnB> = -Ry*By> + 888*Bz>
+
+   (27) NetForceOnS> := System.GetResultantForce()  % Net force on System -- which is just B.
+-> (28) NetForceOnS> = -Ry*By> + 888*Bz>
+
+   (29) %--------------------------------------------------------------------
+   (30) % Example 3:  GetInherentlyExternalForce
+   (31) %--------------------------------------------------------------------
+   (32) ExternalForceOnBo> = Bo.GetInherentlyExternalForce()     % External force on point Bo.
+-> (33) ExternalForceOnBo> = 888*Bz>
+
+   (34) ExternalForceOnN> = N.GetInherentlyExternalForce()       % Net external force on frame N.
+-> (35) ExternalForceOnN> = Rx*Bx>
+
+   (36) ExternalForceOnB> = B.GetInherentlyExternalForce()       % Net external force on body B.
+-> (37) ExternalForceOnB> = 888*Bz>
+
+   (38) ExternalForceOnS> = System.GetInherentlyExternalForce()  % Net external force on System -- which is just B.
+-> (39) ExternalForceOnS> = 888*Bz>
+

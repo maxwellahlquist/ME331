@@ -1,0 +1,114 @@
+% MotionGenesis file:  MGTemplateBasic.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N                % Earth
+RigidBody       B                % Wheelchair Frame
+RigidBody       C                % Wheel 1
+RigidBody       D                % Wheel 2
+
+RigidFrame      E                % Strut 1 Frame
+RigidFrame      F                % Strut 2 Frame
+Particle        Q                % Body CoM
+
+Point           CN( C )		 % Contact point of C on N
+Point           DN( D )		 % Contact point of C on N
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    	theta''     	% The heading of the wheelchair
+Variable	vx', vy'	% The (What is this called?) Velocity of Bo in N
+%Variable	x'', y'', z''	% The position of the body (Q) CoM from Bo
+Specified	x'', y'', z''	% The position of the body (Q) CoM from Bo
+Variable	wC', wD'	% The angular velocity scalars of each wheel
+	
+Constant	L1 = 20 cm, L2 = 10 cm
+Constant 	R = 35 cm	% radius of the wheelchair wheel
+Constant	cant = 15 deg
+
+SetDt( x = 0 )
+SetDt( y = 0 )
+SetDt( z = 0 )
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+Q.SetMass( mQ = 70 kg )	% Human Mass
+B.SetMass( mB = 10 kg ) % Wheelchair mass
+C.SetMass( mC = 1 kg ) % Wheel mass
+D.SetMass( mD = 1 kg ) % Wheel mass
+
+%SetPauseOnWarning( 0 )
+%B.SetInertia( Bcm,  IBxx = 0 kg*m^2,  IByy = 0 kg*m^2,  IBzz = 4 kg*m^2 )
+%C.SetInertia( Ccm, E, ICxx = 0 kg*m^2, ICyy = 0.5 kg*m^2, ICzz = 0 kg*m^2 )
+%D.SetInertia( Dcm, F, IDxx = 0 kg*m^2, IDyy = 0.5 kg*m^2, IDzz = 0 kg*m^2)
+
+% Inertias which don't have warning notes...
+B.SetInertia( Bcm,  IBxx = 2 kg*m^2,  IByy = 2 kg*m^2,  IBzz = 4 kg*m^2 )
+C.SetInertia( Ccm, E, ICxx = 2 kg*m^2, ICyy = 0.5 kg*m^2, ICzz = 2 kg*m^2 )
+D.SetInertia( Dcm, F, IDxx = 2 kg*m^2, IDyy = 0.5 kg*m^2, IDzz = 2 kg*m^2)
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+B.RotateZ( N, theta )
+E.RotateX( B, cant )
+F.RotateX( B, -cant )
+C.SetAngularVelocityAcceleration( E, wC*ey> )
+D.SetAngularVelocityAcceleration( F, wD*fy> )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+Bcm.SetVelocityAcceleration(N, vx*bx> + vy*by> )
+Q.Translate( Bcm, x*bx> + y*by>) % Start without including bz> change in the CoM
+Ccm.Translate( Bcm, L1*by> + L2*ey> )
+CN.SetPositionVelocity( Ccm, -R*ez> )
+Dcm.Translate( Bcm, -L1*by> - L2*fy> )
+DN.SetPositionVelocity( Dcm, -R*fz> )
+%--------------------------------------------------------------------
+%   Motion constraints (if any).
+MotionConstraint[1] = Dot( CN.GetVelocity(N), bx>)
+MotionConstraint[2] = Dot( CN.GetVelocity(N), by>)
+MotionConstraint[3] = Dot( DN.GetVelocity(N), bx>)
+%SolveDT( Explicit(MotionConstraint, vx, qC') = 0, qA', wB, wD, vy )
+%SolveDT( MotionConstraint = 0, wC, wD, vy, vx )
+SolveDT( MotionConstraint = 0, theta', vy, vx )
+
+Constant	Tf = 1 N*m
+
+%C.AddTorque( B, -Tf*sign(wC)*ey> )
+C.AddTorque( B, -Tf*ey> )
+stop
+
+
+
+
+
+% Future implementations need to be friction in the wheel 
+% A way to back out coordinates from the wC and wD generalized speeds
+% Specified motion of the center of mass (possibly)
+
+
+
+
+
+SetGeneralizedSpeeds( vx, theta' )
+%SetGeneralizedSpeeds( wC, wD ) % This gives a longer equation
+Dynamics = System.GetDynamicsKane()
+solve(Dynamics = 0, wC', wD')
+Output      t sec,  wC, wD, vx
+OutputPlot  t sec,  wC, wD
+
+
+% I will have to back substitute to get the analytical values from this problem
+
+
+% substitute in the rolling constraint to get just vx'
+%stop
+%solve(Dynamics, vx', theta'')
+%explicit(Dynamics, vx, theta)
+%stop
+%solve(vx', wD')
+
+%Output      t sec,  vx, theta
+%OutputPlot  t sec,  vx, theta
+%--------------------------------------------------------------------
+%   Set numerical integration parameters and solve ODEs.
+%   Or auto-generate MATLAB, C, or Fortran code.
+Input  tFinal = 10 sec,  tStep = 0.05 sec,  absError = 1.0E-07
+%Input	vx = -5 m/sec
+ODE()  Filename    % or ODE( Zero = 0, listOfVariablesToSolve ) Filename.m

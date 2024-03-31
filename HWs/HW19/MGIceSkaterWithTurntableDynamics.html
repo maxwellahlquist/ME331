@@ -1,0 +1,109 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: MGIceSkaterWithTurntableDynamics.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">MGIceSkaterWithTurntableDynamics.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file: MGIceSkaterWithTurntableDynamics.txt
+   (2) % Copyright (c) 2015 Motion Genesis LLC.  All rights reserved.
+   (3) %------------------------------------------------------------
+   (4) NewtonianFrame N           % Earth.
+   (5) RigidBody      A           % Head, torsion, legs.
+   (6) RigidFrame     B           % Arms.
+   (7) Particle       Q           % Heavy dumbbell.
+   (8) %------------------------------------------------------------
+   (9) Specified   qB''           % Arm angle.
+   (10) Variable    wA'            % Ay> measure of A's angular velocity in N.
+   (11) Constant    g = 9.8 m/s^2  % Earth's gravitational acceleration.
+   (12) Constant    hA             % Distance between Acm and Bo.
+   (13) Constant    L = 0.7 m      % Distance between Bo and Q.
+   (14) Q.SetMass( m = 12 kg )
+   (15) A.SetInertia( Acm,  Ixx = 18.6 kg*m^2,  Iyy = 0.6 kg*m^2,  Izz = 18 kg*m^2 )
+   (16) %------------------------------------------------------------
+   (17) %   Rotational kinematics.
+   (18) A.SetAngularVelocity(  N,  wA*Ay> )
+-> (19) w_A_N> = wA*Ay>
+
+   (20) B.RotateZ(  A,  qB )
+-> (21) B_A = [cos(qB), sin(qB), 0;  -sin(qB), cos(qB), 0;  0, 0, 1]
+-> (22) w_B_A> = qB'*Bz>
+-> (23) w_B_N> = wA*Ay> + qB'*Bz>
+-> (24) alf_B_A> = qB''*Bz>
+
+   (25) %------------------------------------------------------------
+   (26) %   Translational kinematics.
+   (27) Acm.SetVelocity(  N,  0>  )
+-> (28) v_Acm_N> = 0>
+
+   (29) Bo.Translate(  Acm,  hA*Ay>  )
+-> (30) p_Acm_Bo> = hA*Ay>
+-> (31) v_Bo_N> = 0>
+-> (32) a_Bo_N> = 0>
+
+   (33) Q.Translate(  Bo,  -L*By>  )
+-> (34) p_Bo_Q> = -L*By>
+-> (35) v_Q_N> = L*qB'*Bx> - L*sin(qB)*wA*Bz>
+-> (36) a_Q_N> = -L*sin(qB)*wA^2*Ax> + L*qB''*Bx> + L*qB'^2*By> - L*(2*cos(qB)*
+        qB'*wA+sin(qB)*wA')*Bz>
+
+   (37) %------------------------------------------------------------
+   (38) %   Add relevant contact and distance forces.
+   (39) Q.AddForceGravity(  -g*Ay>  )
+-> (40) Force_Q> = -m*g*Ay>
+
+   (41) %------------------------------------------------------------
+   (42) %   Equation of motion with angular momentum principle (MG road-maps).
+   (43) Dynamics = Dot( Ay>,  System(A,B,Q).GetDynamics(Bo)  )
+-> (44) Dynamics = Iyy*wA' + m*L^2*sin(qB)*(2*cos(qB)*qB'*wA+sin(qB)*wA')
+
+   (45) %------------------------------------------------------------
+   (46) %   Optional: Equation of motion with Kane's method.
+   (47) SetGeneralizedSpeed( wA )
+   (48) KaneDynamics = System.GetDynamicsKane()
+-> (49) KaneDynamics = [2*m*L^2*sin(qB)*cos(qB)*qB'*wA + (Iyy+m*L^2*sin(qB)^2)*wA']
+
+   (50) %------------------------------------------------------------
+   (51) %   Angular momentum (Ay> measure is constant, magnitude not constant).
+   (52) SystemAngularMomentumAboutBo> = System.GetAngularMomentum(Bo)
+-> (53) SystemAngularMomentumAboutBo> = Iyy*wA*Ay> + m*L^2*sin(qB)*wA*Bx> + m*L^2*qB'*Bz>
+
+   (54) Hy = Dot(  SystemAngularMomentumAboutBo>,  Ay>  )
+-> (55) Hy = (Iyy+m*L^2*sin(qB)^2)*wA
+
+   (56) HMag = GetMagnitude(  SystemAngularMomentumAboutBo>  )
+-> (57) HMag = sqrt(m^2*L^4*qB'^2+Iyy^2*wA^2+m*L^2*(2*Iyy+m*L^2)*sin(qB)^2*wA^2)
+
+   (58) %------------------------------------------------------------
+   (59) %   Sum of kinetic and potential energy (not constant).
+   (60) KineticEnergy = System.GetKineticEnergy()
+-> (61) KineticEnergy = 0.5*Iyy*wA^2 + 0.5*m*L^2*(qB'^2+sin(qB)^2*wA^2)
+
+   (62) GravityPotentialEnergy = Q.GetForceGravityPotentialEnergy(  -g*Ay>,  Bo  )
+-> (63) GravityPotentialEnergy = -m*g*L*cos(qB)
+
+   (64) MechanicalEnergy = KineticEnergy + GravityPotentialEnergy
+-> (65) MechanicalEnergy = GravityPotentialEnergy + KineticEnergy
+
+   (66) %------------------------------------------------------------
+   (67) %   Integration parameters and initial value of wA.
+   (68) Input  tFinal = 4 sec,  tStep = 0.02 sec,  absError = 1.0E-08
+   (69) Input  wA = 6 rad/sec
+   (70) %------------------------------------------------------------
+   (71) %   Specified expressions
+   (72) SetDt( qB = pi/4*t )
+-> (73) qB = 0.7853982*t
+-> (74) qB' = 0.7853982
+-> (75) qB'' = 0
+
+   (76) %--------------------------------------------------------------------
+   (77) %   Solve equation of motion for wA'.
+   (78) Solve( Dynamics = 0,  wA' )
+-> (79) wA' = -2*m*L^2*sin(qB)*cos(qB)*qB'*wA/(Iyy+m*L^2*sin(qB)^2)
+
+   (80) %------------------------------------------------------------
+   (81) %   List output quantities and solve ODE for wA(t).
+   (82) Output  t sec,  wA rad/sec,  qB degrees,  HMag kg*m^2/sec,  Hy kg*m^2/sec,  MechanicalEnergy Joules
+   (83) ODE() MGIceSkaterWithTurntableDynamics
+
+   (84) %------------------------------------------------------------
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

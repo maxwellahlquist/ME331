@@ -1,0 +1,12 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetAngularAcceleration 
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame N             
+   (5) RigidBody  B
+   (6) Variable   wx', wy', wz'
+   (7) B.SetAngularAcceleration( N, wx'*Bx> + wy'*By> + wz'*Bz> )
+-> (8) alf_B_N> = wx'*Bx> + wy'*By> + wz'*Bz>
+
+   (9) BAngularAccelerationInN> = B.GetAngularAcceleration( N )
+-> (10) BAngularAccelerationInN> = wx'*Bx> + wy'*By> + wz'*Bz>
+

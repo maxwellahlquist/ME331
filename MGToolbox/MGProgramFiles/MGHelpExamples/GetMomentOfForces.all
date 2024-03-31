@@ -1,0 +1,66 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetMomentOfForces  (moment of forces on Ao about No)
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame N                                
+   (5) RigidBody  A    
+   (6) Variable   x, y
+   (7) Ao.SetPosition( No, x*Nx> )             
+-> (8) p_No_Ao> = x*Nx>
+
+   (9) Ao.AddForce( 2*Nx> + 3*Ny> )               
+-> (10) Force_Ao> = 2*Nx> + 3*Ny>
+
+   (11) MomentOfForcesOnAoAboutNo> = Ao.GetMomentOfForces( No )
+-> (12) MomentOfForcesOnAoAboutNo> = 3*x*Nz>
+
+   (13) %--------------------------------------------------------------------
+   (14) % Example 2: GetMomentOfForces  (moment of forces on A about various points)
+   (15) %--------------------------------------------------------------------
+   (16) Acm.SetPosition( No, y*Ny> )             
+-> (17) p_No_Acm> = y*Ny>
+
+   (18) Acm.AddForce( 4*Nx> + 5*Ny> )  
+-> (19) Force_Acm> = 4*Nx> + 5*Ny>
+
+   (20) MomentOfForcesOnAAboutAcm> = A.GetMomentOfForces( Acm )
+-> (21) MomentOfForcesOnAAboutAcm> = (2*y+3*x)*Nz>
+
+   (22) MomentOfForcesOnAAboutAo> = A.GetMomentOfForces( Ao )
+-> (23) MomentOfForcesOnAAboutAo> = (-5*x-4*y)*Nz>
+
+   (24) MomentOfForcesOnAAboutNo> = A.GetMomentOfForces( No )
+-> (25) MomentOfForcesOnAAboutNo> = (3*x-4*y)*Nz>
+
+   (26) %--------------------------------------------------------------------
+   (27) % Example 3: GetMomentOfForces (action/reaction)
+   (28) %--------------------------------------------------------------------
+   (29) RigidBody  B
+   (30) Variable   Fx, Fy
+   (31) Ao.SetPosition( Bo, 2*x*Nx> )                                   
+-> (32) p_Bo_Ao> = 2*x*Nx>
+
+   (33) Ao.AddForce( Bo, Fx*Nx> ) 
+-> (34) Force_Ao_Bo> = Fx*Nx>
+
+   (35) MomentOfForcesOnAAboutAo> := A.GetMomentOfForces( Ao )
+-> (36) MomentOfForcesOnAAboutAo> = (-5*x-4*y)*Nz>
+
+   (37) MomentOfForcesOnBAboutAo> := B.GetMomentOfForces( Ao )
+-> (38) MomentOfForcesOnBAboutAo> = 0>
+
+   (39) %--------------------------------------------------------------------
+   (40) % Example 4: GetMomentOfForces (action/reaction with RigidFrame N)
+   (41) %--------------------------------------------------------------------
+   (42) No.AddForce( Acm, Fy*Ny> )
+-> (43) Force_No_Acm> = Fy*Ny>
+
+   (44) MomentOfForcesOnSystemAboutNo> := System.GetMomentOfForces( Ao )
+-> (45) MomentOfForcesOnSystemAboutNo> = (-5*x-4*y)*Nz>
+
+   (46) %--------------------------------------------------------------------
+   (47) % Example 5: GetMomentOfForces (NewtonianFrame is external to system)
+   (48) %--------------------------------------------------------------------
+   (49) NewtonianFrame  N
+   (50) MomentOfForcesOnSystemAboutNo> := System.GetMomentOfForces( Ao )
+-> (51) MomentOfForcesOnSystemAboutNo> = (Fy*x-5*x-4*y)*Nz>
+

@@ -1,0 +1,20 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: SolveQuadraticPositiveRoot  (root of quadratic equation) 
+   (3) %--------------------------------------------------------------------
+   (4) Constant a, b, c
+   (5) Variable x, y
+   (6) SolveQuadraticPositiveRoot( a*x^2 + b*x + c = 0,  x )  
+-> (7) x = -0.5*(b-sqrt(b^2-4*a*c))/a
+
+   (8) SolveQuadraticNegativeRoot( a*y^2 + b*y + c = 0,  y )
+-> (9) y = -0.5*(b+sqrt(b^2-4*a*c))/a
+
+   (10) %--------------------------------------------------------------------
+   (11) % Example 2: SolveQuadraticPositiveRootDt  (roots with differentiation)
+   (12) %--------------------------------------------------------------------
+   (13) Variable z''
+   (14) SolveQuadraticPositiveRootDt( a*z^2 = sin(t),  z )  
+-> (15) z = sqrt(sin(t)/a)
+-> (16) z' = 0.5*cos(t)/(a*z)
+-> (17) z'' = -0.5*(sin(t)+2*a*z'^2)/(a*z)
+

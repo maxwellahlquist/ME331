@@ -1,0 +1,27 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  RotateY   (with angle)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) RigidFrame     A
+   (6) Variable       qA''
+   (7) A.RotateY( N, qA )
+-> (8) A_N = [cos(qA), 0, -sin(qA);  0, 1, 0;  sin(qA), 0, cos(qA)]
+-> (9) w_A_N> = qA'*Ay>
+-> (10) alf_A_N> = qA''*Ay>
+
+   (11) %--------------------------------------------------------------------
+   (12) % Example 2:  RotateNegativeY   (with angle and rate)
+   (13) %--------------------------------------------------------------------
+   (14) RigidFrame    B
+   (15) Variable      qB'', wB'
+   (16) B.RotateNegativeY( A, qB, wB )
+-> (17) B_A = [cos(qB), 0, sin(qB);  0, 1, 0;  -sin(qB), 0, cos(qB)]
+-> (18) qB' = wB + qA'
+-> (19) w_B_A> = -qB'*By>
+-> (20) w_B_N> = -wB*Ay>
+-> (21) qB'' = wB' + qA''
+-> (22) alf_B_A> = -qB''*By>
+-> (23) alf_B_N> = -wB'*By>
+
+   (24) %--------------------------------------------------------------------
+   (25) % Note: For more HELP, try:   Rotate   RotateX   RotateY   RotateZ

@@ -1,0 +1,116 @@
+% MotionGenesis file:  VehicleDynamicsMipsi.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N                % Example: Earth.
+RigidBody       A
+RigidBody       B
+RigidFrame      C
+RigidBody       D
+
+Point           BN( B )
+Point           DN( D )
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    qA'', qC''
+Variable    vx', vy'
+Variable    wB', wD'
+Variable    x'', y''
+
+
+Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+Constant    R = 0.25 m
+Constant    L = 1 m
+Constant    mA = 600 kg
+Constant    m = 25 kg
+
+Constant    IAzz = 150 kg*m^2
+Constant    J = 2.4 kg*m^2
+Constant    K = 1.2 kg*m^2
+
+Variable   TB % This may be specified, but they said variable
+Variable   Tsteer % This may be specified, but they said variable
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+A.SetMass( mA )
+B.SetMass( m )
+D.SetMass( m )
+
+A.SetInertia( Acm,  0,  0,  IAzz )
+B.SetInertia( Bcm, A, K, J, K )
+D.SetInertia( Dcm, C, K, J, K )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+A.RotateZ( N, qA )
+B.SetAngularVelocityAcceleration( A, wB*Ay> )
+C.RotateZ( A, qC )
+D.SetAngularVelocityAcceleration( C, wD*Cy> )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+Bcm.SetVelocityAcceleration( N, vx*Ax> + vy*Ay> )
+BN.SetPositionVelocity( Bcm, -R*Az> )
+
+Acm.Translate( Bcm, L*Ax> )
+Dcm.Translate( Acm, L*Ax> )
+DN.SetPositionVelocity( Dcm, -R*Cz> )
+
+%--------------------------------------------------------------------
+%   Motion constraints (if any).
+BcmPositionBasedVelocityinN> = x'*Nx> + y'*Ny>
+VelocityRelationship[1] = Dot ( Bcm.GetVelocity(N) - BcmPositionBasedVelocityinN>, Ax> )
+VelocityRelationship[2] = Dot ( Bcm.GetVelocity(N) - BcmPositionBasedVelocityinN>, Ay> )
+SolveDt( VelocityRelationship = 0, x', y' )
+
+MotionConstraint[1] = Dot( BN.GetVelocity(N), Nx>)
+MotionConstraint[2] = Dot( BN.GetVelocity(N), Ny>)
+MotionConstraint[3] = Dot( DN.GetVelocity(N), Cx>)
+MotionConstraint[4] = Dot( DN.GetVelocity(N), Cy>)
+SolveDT( Explicit(MotionConstraint, vx, qC') = 0, qA', wB, wD, vy )
+
+%--------------------------------------------------------------------
+%   Add relevant torques.
+System.AddForceGravity(-g*Az>)
+B.AddTorque( A, TB*Ay> )
+D.AddTorque( A, Tsteer*Az> )
+%--------------------------------------------------------------------
+%   Translational dynamic equations (F = m*a)
+SetGeneralizedSpeeds( vx, qC' )
+Dynamics = System.GetDynamicsKane()
+
+% Solve for all necessary ODEs
+Solve( Dynamics = 0, vx', qC'' )
+Solve( [vx', qC''], TB, Tsteer )
+
+M_matrix = GetCoefficientMatrix( Dynamics, vx', qC'')
+N_matrix = GetCoefficient(Exclude( Dynamics, vx', qC'' ), TB, Tsteer)
+% Must exclude the above (or I get zeros)
+
+% Desired Motion
+Specified vxDes' 
+SetDt( vxDes = 2*t)
+Specified qCDes'' 
+SetDt( qCDes = (15*pi/180)*sin(t) )
+
+% Control Law
+Constant	Kp = 2 s^-1, zeta = 1 noUnits, wn = 2 rad/s
+Specified controlLawvx' = vxDes' + Kp*(vxDes - vx)
+Specified controlLawqC'' = qCDes'' + 2*zeta*wn*(qCDes' - qC') + wn^2*(qCDes - qC)
+
+% Solve Setup
+Input tfinal = 20 sec, absError = 1.0E-05, tStep = 0.05 sec
+Input qA = 0 deg, vx = 0 m/s, qC = 0.1 deg, x = 0 m, y = 0 m % Given Explicitly
+
+% Less Explicitly given
+Input qC' = 0 rad/s, controlLawqC = EvaluateAtInput(qC), controlLawqC' = EvaluateAtInput(qC')
+Input controlLawvx = EvaluateAtInput(vx)
+
+vx' := controlLawvx'
+qC'' := controlLawqc''
+
+OutputPlot x m, y m
+OutputPlot t sec, qC deg
+OutputPlot t sec, TB N*m
+OutputPlot t sec, Tsteer N*m
+ODE()
+Save VehicleDynamicsMipsi.html
+quit

@@ -1,0 +1,28 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: AddForceElectrostatic  (horizontal 1D)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) Particle  A
+   (6) Variable  xA
+   (7) Constant  k
+   (8) No.SetCharge( chargeN )
+   (9) A.SetCharge(  chargeA )
+   (10) A.SetPosition( No, xA*Nx> )
+-> (11) p_No_A> = xA*Nx>
+
+   (12) A.AddForceElectrostatic( No, k )
+-> (13) Force_A_No> = chargeA*chargeN*k*xA/abs(xA)^3*Nx>
+
+   (14) %--------------------------------------------------------------------
+   (15) % Example 2: AddForceElectrostatic  (planar 2D)
+   (16) %--------------------------------------------------------------------
+   (17) Particle  P, Q
+   (18) Variable  x, y
+   (19) P.SetCharge( 10 )
+   (20) Q.SetCharge( 20 )
+   (21) Q.SetPosition( P, x*Nx> + y*Ny> )
+-> (22) p_P_Q> = x*Nx> + y*Ny>
+
+   (23) Q.AddForceElectrostatic( P, k )
+-> (24) Force_Q_P> = 200*k*x/(x^2+y^2)^1.5*Nx> + 200*k*y/(x^2+y^2)^1.5*Ny>
+

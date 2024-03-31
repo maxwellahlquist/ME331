@@ -1,0 +1,118 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 7.4.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">7.4.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  7.4.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N
+   (6) RigidFrame      A
+   (7) RigidBody      B
+   (8) Particle        Q
+   (9) Point           Qi( N ), Qf( N )
+   (10) %--------------------------------------------------------------------
+   (11) %   Mathematical declarations.
+   (12) Constant	xi = 10 cm, yi = 1 cm, xf = 20 cm, yf = 2 cm                
+   (13) Constant	wr = (2*pi / 4) rad/s
+   (14) Constant	R = 40 cm
+   (15) Constant	A = sqrt( (xf - xi)^2 + (yf - yi)^2 )
+-> (16) A = sqrt((xf-xi)^2+(yf-yi)^2)
+
+   (17) Specified	s' = DT( 0.5*A*( 1 - cos(wr*t) ) )
+-> (18) s' = 0.5*A*wr*sin(wr*t)
+
+   (19) %Specified	s = 0.5*A*( 1 - cos(wr*t) )	% Distance between Qi and Q 
+   (20) Specified	qA' = (2*pi/360)
+-> (21) qA' = 0.01745329
+
+   (22) %Specified	qA = (2*pi/360)*t %rad/sec
+   (23) Variable	qB
+   (24) Variable	d	% Distance between Bo and Q
+   (25) %--------------------------------------------------------------------
+   (26) %   Rotational kinematics.
+   (27) A.RotateZ( N, qA )
+-> (28) A_N = [cos(qA), sin(qA), 0;  -sin(qA), cos(qA), 0;  0, 0, 1]
+-> (29) w_A_N> = qA'*Az>
+
+   (30) B.RotateZ( N, -qB )
+-> (31) B_N = [cos(qB), -sin(qB), 0;  sin(qB), cos(qB), 0;  0, 0, 1]
+
+   (32) %--------------------------------------------------------------------
+   (33) %   Translational kinematics.
+   (34) Qi.SetPosition( No, xi*Nx> + yi*Ny> )
+-> (35) p_No_Qi> = xi*Nx> + yi*Ny>
+
+   (36) Qf.SetPosition( No, xf*Nx> + yf*Ny> )
+-> (37) p_No_Qf> = xf*Nx> + yf*Ny>
+
+   (38) u> = GetUnitVector( Qf.GetPosition( Qi ) )
+-> (39) u> = (xf-xi)/sqrt((xf-xi)^2+(yf-yi)^2)*Nx> + (yf-yi)/sqrt((xf-xi)^2+(
+        yf-yi)^2)*Ny>
+
+   (40) Q.SetPosition( Qi, s*u> )
+-> (41) p_Qi_Q> = (xf-xi)*s/sqrt((xf-xi)^2+(yf-yi)^2)*Nx> + (yf-yi)*s/sqrt((xf-
+        xi)^2+(yf-yi)^2)*Ny>
+
+   (42) Bo.SetPosition( No, -R*Ay> )
+-> (43) p_No_Bo> = -R*Ay>
+
+   (44) Q.SetPosition( Bo, d*By> )
+-> (45) p_Bo_Q> = d*By>
+
+   (46) NoQi> = Qi.GetPosition( No )
+-> (47) NoQi> = xi*Nx> + yi*Ny>
+
+   (48) QiQ> = Q.GetPosition( Qi )
+-> (49) QiQ> = (xf-xi)*s/sqrt((xf-xi)^2+(yf-yi)^2)*Nx> + (yf-yi)*s/sqrt((xf-xi)^2
+        +(yf-yi)^2)*Ny>
+
+   (50) NoBo> = Bo.GetPosition( No )
+-> (51) NoBo> = -R*Ay>
+
+   (52) BoQ> = NoQi> + QiQ> - NoBo>
+-> (53) BoQ> = R*Ay> + (xi+(xf-xi)*s/sqrt((xf-xi)^2+(yf-yi)^2))*Nx> + (yi+(yf-
+        yi)*s/sqrt((xf-xi)^2+(yf-yi)^2))*Ny>
+
+   (54) v> = GetUnitVector( BoQ> )
+-> (55) v> = R/sqrt(R^2+(xi+(xf-xi)*s/sqrt((xf-xi)^2+(yf-yi)^2))^2+(yi+(yf-yi)*
+        s/sqrt((xf-xi)^2+(yf-yi)^2))^2+2*R*cos(qA)*(yi+(yf-yi)*s/sqrt((xf-xi)^2
+        +(yf-yi)^2))-2*R*sin(qA)*(xi+(xf-xi)*s/sqrt((xf-xi)^2+(yf-yi)^2)))*Ay>
+        + (xi+(xf-xi)*s/sqrt((xf-xi)^2+(yf-yi)^2))/sqrt(R^2+(xi+(xf-xi)*s/sqrt(
+        (xf-xi)^2+(yf-yi)^2))^2+(yi+(yf-yi)*s/sqrt((xf-xi)^2+(yf-yi)^2))^2+2*R*
+        cos(qA)*(yi+(yf-yi)*s/sqrt((xf-xi)^2+(yf-yi)^2))-2*R*sin(qA)*(xi+(xf-
+        xi)*s/sqrt((xf-xi)^2+(yf-yi)^2)))*Nx> + (yi+(yf-yi)*s/sqrt((xf-xi)^2+(
+        yf-yi)^2))/sqrt(R^2+(xi+(xf-xi)*s/sqrt((xf-xi)^2+(yf-yi)^2))^2+(yi+(yf-
+        yi)*s/sqrt((xf-xi)^2+(yf-yi)^2))^2+2*R*cos(qA)*(yi+(yf-yi)*s/sqrt((xf-
+        xi)^2+(yf-yi)^2))-2*R*sin(qA)*(xi+(xf-xi)*s/sqrt((xf-xi)^2+(yf-yi)^2)))*Ny>
+
+   (56) qB = acos( Dot( Ny>, v> ) )
+-> (57) qB = acos((yi+R*cos(qA)+(yf-yi)*s/sqrt((xf-xi)^2+(yf-yi)^2))/sqrt(R^2+(
+        xi+(xf-xi)*s/sqrt((xf-xi)^2+(yf-yi)^2))^2+(yi+(yf-yi)*s/sqrt((xf-xi)^2+
+        (yf-yi)^2))^2+2*R*cos(qA)*(yi+(yf-yi)*s/sqrt((xf-xi)^2+(yf-yi)^2))-2*R*
+        sin(qA)*(xi+(xf-xi)*s/sqrt((xf-xi)^2+(yf-yi)^2))))
+
+   (58) Variable qB' = DT( qB )
+-> (59) qB' = -((2*R*sin(qA)*(xi+(xf-xi)*s/sqrt((xf-xi)^2+(yf-yi)^2))-R^2-(xi+(
+        xf-xi)*s/sqrt((xf-xi)^2+(yf-yi)^2))^2-(yi+(yf-yi)*s/sqrt((xf-xi)^2+(yf-
+        yi)^2))^2-2*R*cos(qA)*(yi+(yf-yi)*s/sqrt((xf-xi)^2+(yf-yi)^2)))*(R*sin(
+        qA)*qA'-(yf-yi)*s'/sqrt((xf-xi)^2+(yf-yi)^2))+(yi+R*cos(qA)+(yf-yi)*s/
+        sqrt((xf-xi)^2+(yf-yi)^2))*(R*sin(qA)*(yi+(yf-yi)*s/sqrt((xf-xi)^2+(yf-
+        yi)^2))*qA'+R*cos(qA)*(xi+(xf-xi)*s/sqrt((xf-xi)^2+(yf-yi)^2))*qA'+(R*(
+        xf-xi)*sin(qA)-R*(yf-yi)*cos(qA)-(xf-xi)*(xi+(xf-xi)*s/sqrt((xf-xi)^2+(
+        yf-yi)^2))-(yf-yi)*(yi+(yf-yi)*s/sqrt((xf-xi)^2+(yf-yi)^2)))*s'/sqrt((
+        xf-xi)^2+(yf-yi)^2)))/((R^2+(xi+(xf-xi)*s/sqrt((xf-xi)^2+(yf-yi)^2))^2+
+        (yi+(yf-yi)*s/sqrt((xf-xi)^2+(yf-yi)^2))^2+2*R*cos(qA)*(yi+(yf-yi)*s/
+        sqrt((xf-xi)^2+(yf-yi)^2))-2*R*sin(qA)*(xi+(xf-xi)*s/sqrt((xf-xi)^2+(
+        yf-yi)^2)))^1.5*sqrt(1+(yi+R*cos(qA)+(yf-yi)*s/sqrt((xf-xi)^2+(yf-yi)^2))^2
+        /(2*R*sin(qA)*(xi+(xf-xi)*s/sqrt((xf-xi)^2+(yf-yi)^2))-R^2-(xi+(xf-xi)*
+        s/sqrt((xf-xi)^2+(yf-yi)^2))^2-(yi+(yf-yi)*s/sqrt((xf-xi)^2+(yf-yi)^2))^2
+        -2*R*cos(qA)*(yi+(yf-yi)*s/sqrt((xf-xi)^2+(yf-yi)^2)))))
+
+   (60) Input tFinal = 360 sec, qA = 0 rad, s = 0 m
+   (61) OutputPlot t sec, qB deg
+   (62) ODE()
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

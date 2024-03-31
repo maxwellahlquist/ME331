@@ -1,0 +1,110 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 22.19.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">22.19.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  22.19.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N                % Example: Earth.
+   (6) RigidBody       A
+   (7) RigidBody      	B
+   (8) RigidBody      	C
+   (9) Point           BN( B )
+   (10) Point           CN( C )
+   (11) %--------------------------------------------------------------------
+   (12) %   Mathematical declarations.
+   (13) Variable    v', w'
+   (14) Variable    wB', wC'
+   (15) Constant	R = 0.35 m
+   (16) Constant	b = 0.75 m
+   (17) Constant	a = 1.64 m
+   (18) Constant	mA = 640 kg
+   (19) Constant	m = 30 kg
+   (20) Constant	IA = 166.6 kg*m^2
+   (21) Constant	J = 2 kg*m^2
+   (22) Constant	K = 1 kg*m^2
+   (23) %--------------------------------------------------------------------
+   (24) %   Mass and inertia properties.
+   (25) A.SetMass( mA )
+   (26) B.SetMass( m )
+   (27) C.SetMass( m )
+   (28) A.SetInertia( Acm,  0,  0,  IA )
+   (29) B.SetInertia( Bcm, A, K, J, K )
+   (30) C.SetInertia( Ccm, A, K, J, K )
+   (31) %--------------------------------------------------------------------
+   (32) %   Rotational kinematics.
+   (33) A.SetAngularVelocity( N, w*Az> )
+-> (34) w_A_N> = w*Az>
+
+   (35) B.SetAngularVelocity( A, wB*Ay> )
+-> (36) w_B_A> = wB*Ay>
+
+   (37) C.SetAngularVelocity( A, wC*Ay> )
+-> (38) w_C_A> = wC*Ay>
+
+   (39) %--------------------------------------------------------------------
+   (40) %   Translational kinematics.
+   (41) Ao.SetVelocityAcceleration( N, v*Ax> )
+-> (42) v_Ao_N> = v*Ax>
+-> (43) a_Ao_N> = v'*Ax> + v*w*Ay>
+
+   (44) Acm.Translate( Ao, a*Ax> )
+-> (45) p_Ao_Acm> = a*Ax>
+-> (46) v_Acm_N> = v*Ax> + a*w*Ay>
+-> (47) a_Acm_N> = (v'-a*w^2)*Ax> + (v*w+a*w')*Ay>
+
+   (48) Bcm.Translate( Ao, -b*Ay> )
+-> (49) p_Ao_Bcm> = -b*Ay>
+-> (50) v_Bcm_N> = (v+b*w)*Ax>
+-> (51) a_Bcm_N> = (v'+b*w')*Ax> + w*(v+b*w)*Ay>
+
+   (52) Ccm.Translate( Ao, b*Ay> )
+-> (53) p_Ao_Ccm> = b*Ay>
+-> (54) v_Ccm_N> = (v-b*w)*Ax>
+-> (55) a_Ccm_N> = (v'-b*w')*Ax> + w*(v-b*w)*Ay>
+
+   (56) BN.SetPositionVelocity( Bcm, -r*Az> )
+-> (57) p_Bcm_BN> = -R*Az>
+-> (58) v_BN_N> = (v+b*w-R*wB)*Ax>
+
+   (59) CN.SetPositionVelocity( Ccm, -r*Az> )
+-> (60) p_Ccm_CN> = -R*Az>
+-> (61) v_CN_N> = (v-b*w-R*wC)*Ax>
+
+   (62) %--------------------------------------------------------------------
+   (63) %   Motion constraints (if any).
+   (64) MotionConstraint[1] = Dot( BN.GetVelocity(N), Ax> )
+-> (65) MotionConstraint[1] = v + b*w - R*wB
+
+   (66) MotionConstraint[2] = Dot( CN.GetVelocity(N), Ax> )
+-> (67) MotionConstraint[2] = v - b*w - R*wC
+
+   (68) SolveDT(MotionConstraint = 0, wB, wC)
+-> (69) wB = (v+b*w)/R
+-> (70) wC = (v-b*w)/R
+-> (71) wB' = (v'+b*w')/R
+-> (72) wC' = (v'-b*w')/R
+
+   (73) %--------------------------------------------------------------------
+   (74) SetGeneralizedSpeeds( v, w )
+   (75) Eq = System.GetDynamicsKane()
+-> (76) Eq[1] = (mA+2*m+2*J/R^2)*v' - a*mA*w^2
+-> (77) Eq[2] = a*mA*v*w + (IA+2*K+mA*a^2+2*m*b^2+2*J*b^2/R^2)*w'
+
+   (78) Solve(System.GetGeneralizedEffectiveForce() = 0, w', v' ) % This gave the correct answer...
+-> (79) w' = -a*mA*v*w/(IA+2*K+mA*a^2+2*m*b^2+2*J*b^2/R^2)
+-> (80) v' = a*mA*w^2/(mA+2*m+2*J/R^2)
+
+   (81) Input  tFinal = 1 sec,  tStep = 0.02 sec,  absError = 1.0E-07
+   (82) Input  v = 25 m/sec, w = 0.01 rad/sec
+   (83) OutputPlot t sec, v m/s
+   (84) OutputPlot t sec, w rad/sec
+   (85) ODE (Eq := 0, v', w')
+
+   (86) Input  v := -25 m/sec, w = 0.01 rad/sec
+   (87) ODE (Eq := 0, v', w')
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

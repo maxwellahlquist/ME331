@@ -1,0 +1,17 @@
+oneOverMagAB := 1 / sqrt( magSquared(#1#) * magSquared(#2#) )
+dotUnitVectorsAB := Dot(#1#, #2#) * oneOverMagAB
+crossUnitVectorsAB> := Cross( #1#, #2# ) * oneOverMagAB
+crossUnitVectorsAB2X>> := crossUnitVectorsAB> * crossUnitVectorsAB>
+RAB>> := dotUnitVectorsAB*1>> + crossUnitVectorsAB2X>> /(1 + dotUnitVectorsAB) - Cross( 1>>, crossUnitVectorsAB>)
+%RAB := Matrix( #3#, RAB>> )
+b1> := Dot( #3#x>, RAB>> )
+b2> := Dot( #3#y>, RAB>> )
+b3> := Dot( #3#z>, RAB>> )
+col1 := Matrix( #3#, b1> )
+col2 := Matrix( #3#, b2> )
+col3 := Matrix( #3#, b3> )
+RAB := [ col1, col2, col3 ]
+% RAB := [ Transpose(col1); Transpose(col2); Transpose(col3) ]
+
+
+

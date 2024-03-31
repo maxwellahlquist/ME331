@@ -1,0 +1,14 @@
+% MotionGenesis file:  7.7.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+theta1 = pi/2	%For Body XYZ sequence
+theta2 = pi/4
+theta3 = -pi/2
+e0 = cos(theta1/2)*cos(theta2/2)*cos(theta3/2) - sin(theta1/2)*sin(theta2/2)*sin(theta3/2)
+e1 = sin(theta1/2)*cos(theta2/2)*cos(theta3/2) + sin(theta2/2)*sin(theta3/2)*cos(theta1/2)
+e2 = sin(theta2/2)*cos(theta1/2)*cos(theta3/2) - sin(theta1/2)*sin(theta3/2)*cos(theta2/2)
+e3 = sin(theta1/2)*sin(theta2/2)*cos(theta3/2) + sin(theta3/2)*cos(theta1/2)*cos(theta2/2)
+
+Save  7.7.html
+Quit
+

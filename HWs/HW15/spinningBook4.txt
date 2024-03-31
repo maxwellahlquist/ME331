@@ -1,0 +1,35 @@
+% MotionGenesis file:  spinningBook4.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N                % Example: Earth.
+RigidBody       B
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    wx', wy', wz'        % Angular Speeds
+Variable	b		% Damping
+Constant Ixx = 1 kg*m^2, Iyy = 2 kg*m^2, Izz = 3 kg*m^2 % Create a body with different moments
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+B.SetInertia( Bcm,  Ixx, Iyy, Izz )
+%--------------------------------------------------------------------
+% Translational
+Bcm.SetPosition(No, 0>)
+Bcm.SetVelocityAcceleration(N, 0>)
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+B.SetAngularVelocity( N, wx*Bx> + wy*By> + wz*Bz> )
+%--------------------------------------------------------------------
+
+B.AddTorque(-b*B.GetAngularVelocity( N ))
+
+% Set equations of motion
+
+Dynamics[1] = Dot(B.GetDynamics(Bo), Bx>)
+Dynamics[2] = Dot(B.GetDynamics(Bo), By>)
+Dynamics[3] = Dot(B.GetDynamics(Bo), Bz>)
+
+Solve(Dynamics = 0, wx', wy', wz')
+
+Save spinningBook4.html
+Quit

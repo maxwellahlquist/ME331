@@ -1,0 +1,21 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetElongation 
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame N             
+   (5) Point      P, Q
+   (6) Variable   xP', xQ', yQ'
+   (7) P.SetPosition( No, xP*Nx> )
+-> (8) p_No_P> = xP*Nx>
+
+   (9) ElongationBetweenPAndNo = P.GetElongation( No )
+-> (10) ElongationBetweenPAndNo = xP*xP'/abs(xP)
+
+   (11) %--------------------------------------------------------------------
+   (12) % Example 2: GetElongation 
+   (13) %--------------------------------------------------------------------
+   (14) Q.SetPosition( P,  xQ*Nx> + yQ*Ny> )
+-> (15) p_P_Q> = xQ*Nx> + yQ*Ny>
+
+   (16) ElongationBetweenQAndP = Q.GetElongation( P )
+-> (17) ElongationBetweenQAndP = (xQ*xQ'+yQ*yQ')/sqrt(xQ^2+yQ^2)
+

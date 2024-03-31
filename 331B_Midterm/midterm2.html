@@ -1,0 +1,565 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: midterm2.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">midterm2.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file: midterm.txt
+   (2) % Problem: Analysis of a hexapod (6-legged Stewart platform).
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  A       % Earth-fixed rigid planar base.
+   (6) RigidBody       D       % Top platform with rigidly attached equipment.
+   (7) Point    A{1:6}(A)      % Points A1, A2, ... A6 are fixed to frame A.
+   (8) Point    D{1:6}(D)      % Points D1, D2, ... D6 are fixed to body  D.
+   (9) %--------------------------------------------------------------------
+   (10) %   Physical dimensions for planar base and top platform.
+   (11) Constant  a1 =  0.0 m,  b1 = 0.0 m
+   (12) Constant  a2 =  0.0 m,  b2 = 4.0 m
+   (13) Constant  a3 =  4.0 m,  b3 = 8.0 m
+   (14) Constant  a4 =  6.0 m,  b4 = 6.0 m
+   (15) Constant  a5 =  7.0 m,  b5 = -1.0 m
+   (16) Constant  a6 =  3.0 m,  b6 = -3.0 m
+   (17) Constant  d1 =  0.0 m,  e1 =  0.0 m
+   (18) Constant  d2 =  0.0 m,  e2 =  0.0 m
+   (19) Constant  d3 =  0.0 m,  e3 =  7.0 m
+   (20) Constant  d4 =  0.0 m,  e4 =  7.0 m
+   (21) Constant  d5 =  7.0 m,  e5 =  0.0 m
+   (22) Constant  d6 =  7.0 m,  e6 =  0.0 m
+   (23) Constant  dcmx = 3.5 m,  dcmy = 1.0 m
+   (24) %--------------------------------------------------------------------
+   (25) %   Mass and inertia properties of D (similar to a thin plate).
+   (26) Constant  xWidth = 7.0 m, yWidth = 9.0 m
+   (27) D.SetMass( m = 300 kg )
+   (28) D.SetInertia( Dcm, Ixx = 1/12*m*yWidth^2, Iyy = 1/12*m*xWidth^2, Ixx + Iyy )
+-> (29) Ixx = 0.08333333*m*yWidth^2
+-> (30) Iyy = 0.08333333*m*xWidth^2
+
+   (31) %--------------------------------------------------------------------
+   (32) %   Earth's uniform gravitational constant.
+   (33) Constant g = 9.8 m/sec^2
+   (34) %--------------------------------------------------------------------
+   (35) %   Leg lengths and their time-derivatives (extension-rates).
+   (36) Specified  L{1:6}''
+   (37) %--------------------------------------------------------------------
+   (38) %   Constants associated with leg length functions of time.
+   (39) Constant  tF = 5 seconds
+   (40) Constant  L10 = 9.0 m,  L20 = 9.848857801796104 m,  L30 = 10.81246272045341 m
+   (41) Constant  L40 = 11.86840052102587 m,  L50 = 8.604678226878441 m,  L60 = 10.07836745277638 m
+   (42) L1F = L10 + 1.6;  SetDt( L1 = Spline( Transition, t, 0, tF, L10, L1F ) )
+-> (43) L1F = 1.6 + L10
+-> (44) L1 = L10 + 0.1591549*(L10-L1F)*sin(6.283185*t/tF) - (L10-L1F)*t/tF
+-> (45) L1' = (L10-L1F)*(-1+cos(6.283185*t/tF))/tF
+-> (46) L1'' = -6.283185*(L10-L1F)*sin(6.283185*t/tF)/tF^2
+
+   (47) L2F = L20 + 1.5;  SetDt( L2 = Spline( Transition, t, 0, tF, L20, L2F ) )
+-> (48) L2F = 1.5 + L20
+-> (49) L2 = L20 + 0.1591549*(L20-L2F)*sin(6.283185*t/tF) - (L20-L2F)*t/tF
+-> (50) L2' = (L20-L2F)*(-1+cos(6.283185*t/tF))/tF
+-> (51) L2'' = -6.283185*(L20-L2F)*sin(6.283185*t/tF)/tF^2
+
+   (52) L3F = L30 + 1.4;  SetDt( L3 = Spline( Transition, t, 0, tF, L30, L3F ) )
+-> (53) L3F = 1.4 + L30
+-> (54) L3 = L30 + 0.1591549*(L30-L3F)*sin(6.283185*t/tF) - (L30-L3F)*t/tF
+-> (55) L3' = (L30-L3F)*(-1+cos(6.283185*t/tF))/tF
+-> (56) L3'' = -6.283185*(L30-L3F)*sin(6.283185*t/tF)/tF^2
+
+   (57) L4F = L40 + 1.3;  SetDt( L4 = Spline( Transition, t, 0, tF, L40, L4F ) )
+-> (58) L4F = 1.3 + L40
+-> (59) L4 = L40 + 0.1591549*(L40-L4F)*sin(6.283185*t/tF) - (L40-L4F)*t/tF
+-> (60) L4' = (L40-L4F)*(-1+cos(6.283185*t/tF))/tF
+-> (61) L4'' = -6.283185*(L40-L4F)*sin(6.283185*t/tF)/tF^2
+
+   (62) L5F = L50 + 1.2;  SetDt( L5 = Spline( Transition, t, 0, tF, L50, L5F ) )
+-> (63) L5F = 1.2 + L50
+-> (64) L5 = L50 + 0.1591549*(L50-L5F)*sin(6.283185*t/tF) - (L50-L5F)*t/tF
+-> (65) L5' = (L50-L5F)*(-1+cos(6.283185*t/tF))/tF
+-> (66) L5'' = -6.283185*(L50-L5F)*sin(6.283185*t/tF)/tF^2
+
+   (67) L6F = L60 + 1.1;  SetDt( L6 = Spline( Transition, t, 0, tF, L60, L6F ) )
+-> (68) L6F = 1.1 + L60
+-> (69) L6 = L60 + 0.1591549*(L60-L6F)*sin(6.283185*t/tF) - (L60-L6F)*t/tF
+-> (70) L6' = (L60-L6F)*(-1+cos(6.283185*t/tF))/tF
+-> (71) L6'' = -6.283185*(L60-L6F)*sin(6.283185*t/tF)/tF^2
+
+   (72) %--------------------------------------------------------------------
+   (73) Variable qX'', qY'', qZ''	% Euler Angles of D in A
+   (74) Variable x'', y'', z''		% A basis positions of Do from Ao
+   (75) % 6 variables to describe the (theoretical) 6 DoF of D in A
+   (76) %--------------------------------------------------------------------
+   (77) %   Rotational kinematics.
+   (78) D.Rotate( A, BodyXYZ, qX, qY, qZ )
+-> (79) D_A[1,1] = cos(qY)*cos(qZ)
+-> (80) D_A[1,2] = sin(qZ)*cos(qX) + sin(qX)*sin(qY)*cos(qZ)
+-> (81) D_A[1,3] = sin(qX)*sin(qZ) - sin(qY)*cos(qX)*cos(qZ)
+-> (82) D_A[2,1] = -sin(qZ)*cos(qY)
+-> (83) D_A[2,2] = cos(qX)*cos(qZ) - sin(qX)*sin(qY)*sin(qZ)
+-> (84) D_A[2,3] = sin(qX)*cos(qZ) + sin(qY)*sin(qZ)*cos(qX)
+-> (85) D_A[3,1] = sin(qY)
+-> (86) D_A[3,2] = -sin(qX)*cos(qY)
+-> (87) D_A[3,3] = cos(qX)*cos(qY)
+-> (88) w_D_A> = (sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')*Dx> + (cos(qZ)*qY'-sin(qZ)*
+        cos(qY)*qX')*Dy> + (qZ'+sin(qY)*qX')*Dz>
+
+-> (89) alf_D_A> = (cos(qZ)*qY'*qZ'+sin(qZ)*qY''+cos(qY)*cos(qZ)*qX''-sin(qY)*
+        cos(qZ)*qX'*qY'-sin(qZ)*cos(qY)*qX'*qZ')*Dx> + (sin(qY)*sin(qZ)*qX'*qY'
+        +cos(qZ)*qY''-sin(qZ)*qY'*qZ'-cos(qY)*cos(qZ)*qX'*qZ'-sin(qZ)*cos(qY)*
+        qX'')*Dy> + (cos(qY)*qX'*qY'+qZ''+sin(qY)*qX'')*Dz>
+
+   (90) %--------------------------------------------------------------------
+   (91) %   Translational kinematics.
+   (92) A1.Translate( Ao, a1*Ax> + b1*Ay> )
+-> (93) p_Ao_A1> = a1*Ax> + b1*Ay>
+-> (94) v_A1_A> = 0>
+-> (95) a_A1_A> = 0>
+
+   (96) A2.Translate( Ao, a2*Ax> + b2*Ay> )
+-> (97) p_Ao_A2> = a2*Ax> + b2*Ay>
+-> (98) v_A2_A> = 0>
+-> (99) a_A2_A> = 0>
+
+   (100) A3.Translate( Ao, a3*Ax> + b3*Ay> )
+-> (101) p_Ao_A3> = a3*Ax> + b3*Ay>
+-> (102) v_A3_A> = 0>
+-> (103) a_A3_A> = 0>
+
+   (104) A4.Translate( Ao, a4*Ax> + b4*Ay> )
+-> (105) p_Ao_A4> = a4*Ax> + b4*Ay>
+-> (106) v_A4_A> = 0>
+-> (107) a_A4_A> = 0>
+
+   (108) A5.Translate( Ao, a5*Ax> + b5*Ay> )
+-> (109) p_Ao_A5> = a5*Ax> + b5*Ay>
+-> (110) v_A5_A> = 0>
+-> (111) a_A5_A> = 0>
+
+   (112) A6.Translate( Ao, a6*Ax> + b6*Ay> )
+-> (113) p_Ao_A6> = a6*Ax> + b6*Ay>
+-> (114) v_A6_A> = 0>
+-> (115) a_A6_A> = 0>
+
+   (116) Do.Translate( Ao, x*Ax> + y*Ay> + z*Az> )
+-> (117) p_Ao_Do> = x*Ax> + y*Ay> + z*Az>
+-> (118) v_Do_A> = x'*Ax> + y'*Ay> + z'*Az>
+-> (119) a_Do_A> = x''*Ax> + y''*Ay> + z''*Az>
+
+   (120) D1.Translate( Do, d1*Dx> + e1*Dy> )
+-> (121) p_Do_D1> = d1*Dx> + e1*Dy>
+-> (122) v_D1_A> = x'*Ax> + y'*Ay> + z'*Az> - e1*(qZ'+sin(qY)*qX')*Dx> + d1*(
+         qZ'+sin(qY)*qX')*Dy> + (e1*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-d1*(cos(
+         qZ)*qY'-sin(qZ)*cos(qY)*qX'))*Dz>
+
+-> (123) a_D1_A> = x''*Ax> + y''*Ay> + z''*Az> + ((cos(qZ)*qY'-sin(qZ)*cos(qY)*
+         qX')*(e1*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-d1*(cos(qZ)*qY'-sin(qZ)*cos
+         (qY)*qX'))-d1*(qZ'+sin(qY)*qX')^2-e1*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX
+         ''))*Dx> + (d1*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX'')-e1*(qZ'+sin(qY)*qX')^2
+         -(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')*(e1*(sin(qZ)*qY'+cos(qY)*cos(qZ)*
+         qX')-d1*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX')))*Dy> + ((qZ'+sin(qY)*qX')*(
+         d1*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')+e1*(cos(qZ)*qY'-sin(qZ)*cos(qY)*
+         qX'))-d1*(sin(qY)*sin(qZ)*qX'*qY'+cos(qZ)*qY''-sin(qZ)*qY'*qZ'-cos(qY)
+         *cos(qZ)*qX'*qZ'-sin(qZ)*cos(qY)*qX'')-e1*(sin(qY)*cos(qZ)*qX'*qY'+sin
+         (qZ)*cos(qY)*qX'*qZ'-cos(qZ)*qY'*qZ'-sin(qZ)*qY''-cos(qY)*cos(qZ)*qX''))*Dz>
+
+   (124) D2.Translate( Do, d2*Dx> + e2*Dy> )
+-> (125) p_Do_D2> = d2*Dx> + e2*Dy>
+-> (126) v_D2_A> = x'*Ax> + y'*Ay> + z'*Az> - e2*(qZ'+sin(qY)*qX')*Dx> + d2*(
+         qZ'+sin(qY)*qX')*Dy> + (e2*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-d2*(cos(
+         qZ)*qY'-sin(qZ)*cos(qY)*qX'))*Dz>
+
+-> (127) a_D2_A> = x''*Ax> + y''*Ay> + z''*Az> + ((cos(qZ)*qY'-sin(qZ)*cos(qY)*
+         qX')*(e2*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-d2*(cos(qZ)*qY'-sin(qZ)*cos
+         (qY)*qX'))-d2*(qZ'+sin(qY)*qX')^2-e2*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX
+         ''))*Dx> + (d2*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX'')-e2*(qZ'+sin(qY)*qX')^2
+         -(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')*(e2*(sin(qZ)*qY'+cos(qY)*cos(qZ)*
+         qX')-d2*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX')))*Dy> + ((qZ'+sin(qY)*qX')*(
+         d2*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')+e2*(cos(qZ)*qY'-sin(qZ)*cos(qY)*
+         qX'))-d2*(sin(qY)*sin(qZ)*qX'*qY'+cos(qZ)*qY''-sin(qZ)*qY'*qZ'-cos(qY)
+         *cos(qZ)*qX'*qZ'-sin(qZ)*cos(qY)*qX'')-e2*(sin(qY)*cos(qZ)*qX'*qY'+sin
+         (qZ)*cos(qY)*qX'*qZ'-cos(qZ)*qY'*qZ'-sin(qZ)*qY''-cos(qY)*cos(qZ)*qX''))*Dz>
+
+   (128) D3.Translate( Do, d3*Dx> + e3*Dy> )
+-> (129) p_Do_D3> = d3*Dx> + e3*Dy>
+-> (130) v_D3_A> = x'*Ax> + y'*Ay> + z'*Az> - e3*(qZ'+sin(qY)*qX')*Dx> + d3*(
+         qZ'+sin(qY)*qX')*Dy> + (e3*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-d3*(cos(
+         qZ)*qY'-sin(qZ)*cos(qY)*qX'))*Dz>
+
+-> (131) a_D3_A> = x''*Ax> + y''*Ay> + z''*Az> + ((cos(qZ)*qY'-sin(qZ)*cos(qY)*
+         qX')*(e3*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-d3*(cos(qZ)*qY'-sin(qZ)*cos
+         (qY)*qX'))-d3*(qZ'+sin(qY)*qX')^2-e3*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX
+         ''))*Dx> + (d3*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX'')-e3*(qZ'+sin(qY)*qX')^2
+         -(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')*(e3*(sin(qZ)*qY'+cos(qY)*cos(qZ)*
+         qX')-d3*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX')))*Dy> + ((qZ'+sin(qY)*qX')*(
+         d3*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')+e3*(cos(qZ)*qY'-sin(qZ)*cos(qY)*
+         qX'))-d3*(sin(qY)*sin(qZ)*qX'*qY'+cos(qZ)*qY''-sin(qZ)*qY'*qZ'-cos(qY)
+         *cos(qZ)*qX'*qZ'-sin(qZ)*cos(qY)*qX'')-e3*(sin(qY)*cos(qZ)*qX'*qY'+sin
+         (qZ)*cos(qY)*qX'*qZ'-cos(qZ)*qY'*qZ'-sin(qZ)*qY''-cos(qY)*cos(qZ)*qX''))*Dz>
+
+   (132) D4.Translate( Do, d4*Dx> + e4*Dy> )
+-> (133) p_Do_D4> = d4*Dx> + e4*Dy>
+-> (134) v_D4_A> = x'*Ax> + y'*Ay> + z'*Az> - e4*(qZ'+sin(qY)*qX')*Dx> + d4*(
+         qZ'+sin(qY)*qX')*Dy> + (e4*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-d4*(cos(
+         qZ)*qY'-sin(qZ)*cos(qY)*qX'))*Dz>
+
+-> (135) a_D4_A> = x''*Ax> + y''*Ay> + z''*Az> + ((cos(qZ)*qY'-sin(qZ)*cos(qY)*
+         qX')*(e4*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-d4*(cos(qZ)*qY'-sin(qZ)*cos
+         (qY)*qX'))-d4*(qZ'+sin(qY)*qX')^2-e4*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX
+         ''))*Dx> + (d4*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX'')-e4*(qZ'+sin(qY)*qX')^2
+         -(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')*(e4*(sin(qZ)*qY'+cos(qY)*cos(qZ)*
+         qX')-d4*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX')))*Dy> + ((qZ'+sin(qY)*qX')*(
+         d4*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')+e4*(cos(qZ)*qY'-sin(qZ)*cos(qY)*
+         qX'))-d4*(sin(qY)*sin(qZ)*qX'*qY'+cos(qZ)*qY''-sin(qZ)*qY'*qZ'-cos(qY)
+         *cos(qZ)*qX'*qZ'-sin(qZ)*cos(qY)*qX'')-e4*(sin(qY)*cos(qZ)*qX'*qY'+sin
+         (qZ)*cos(qY)*qX'*qZ'-cos(qZ)*qY'*qZ'-sin(qZ)*qY''-cos(qY)*cos(qZ)*qX''))*Dz>
+
+   (136) D5.Translate( Do, d5*Dx> + e5*Dy> )
+-> (137) p_Do_D5> = d5*Dx> + e5*Dy>
+-> (138) v_D5_A> = x'*Ax> + y'*Ay> + z'*Az> - e5*(qZ'+sin(qY)*qX')*Dx> + d5*(
+         qZ'+sin(qY)*qX')*Dy> + (e5*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-d5*(cos(
+         qZ)*qY'-sin(qZ)*cos(qY)*qX'))*Dz>
+
+-> (139) a_D5_A> = x''*Ax> + y''*Ay> + z''*Az> + ((cos(qZ)*qY'-sin(qZ)*cos(qY)*
+         qX')*(e5*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-d5*(cos(qZ)*qY'-sin(qZ)*cos
+         (qY)*qX'))-d5*(qZ'+sin(qY)*qX')^2-e5*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX
+         ''))*Dx> + (d5*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX'')-e5*(qZ'+sin(qY)*qX')^2
+         -(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')*(e5*(sin(qZ)*qY'+cos(qY)*cos(qZ)*
+         qX')-d5*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX')))*Dy> + ((qZ'+sin(qY)*qX')*(
+         d5*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')+e5*(cos(qZ)*qY'-sin(qZ)*cos(qY)*
+         qX'))-d5*(sin(qY)*sin(qZ)*qX'*qY'+cos(qZ)*qY''-sin(qZ)*qY'*qZ'-cos(qY)
+         *cos(qZ)*qX'*qZ'-sin(qZ)*cos(qY)*qX'')-e5*(sin(qY)*cos(qZ)*qX'*qY'+sin
+         (qZ)*cos(qY)*qX'*qZ'-cos(qZ)*qY'*qZ'-sin(qZ)*qY''-cos(qY)*cos(qZ)*qX''))*Dz>
+
+   (140) D6.Translate( Do, d6*Dx> + e6*Dy> )
+-> (141) p_Do_D6> = d6*Dx> + e6*Dy>
+-> (142) v_D6_A> = x'*Ax> + y'*Ay> + z'*Az> - e6*(qZ'+sin(qY)*qX')*Dx> + d6*(
+         qZ'+sin(qY)*qX')*Dy> + (e6*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-d6*(cos(
+         qZ)*qY'-sin(qZ)*cos(qY)*qX'))*Dz>
+
+-> (143) a_D6_A> = x''*Ax> + y''*Ay> + z''*Az> + ((cos(qZ)*qY'-sin(qZ)*cos(qY)*
+         qX')*(e6*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-d6*(cos(qZ)*qY'-sin(qZ)*cos
+         (qY)*qX'))-d6*(qZ'+sin(qY)*qX')^2-e6*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX
+         ''))*Dx> + (d6*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX'')-e6*(qZ'+sin(qY)*qX')^2
+         -(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')*(e6*(sin(qZ)*qY'+cos(qY)*cos(qZ)*
+         qX')-d6*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX')))*Dy> + ((qZ'+sin(qY)*qX')*(
+         d6*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')+e6*(cos(qZ)*qY'-sin(qZ)*cos(qY)*
+         qX'))-d6*(sin(qY)*sin(qZ)*qX'*qY'+cos(qZ)*qY''-sin(qZ)*qY'*qZ'-cos(qY)
+         *cos(qZ)*qX'*qZ'-sin(qZ)*cos(qY)*qX'')-e6*(sin(qY)*cos(qZ)*qX'*qY'+sin
+         (qZ)*cos(qY)*qX'*qZ'-cos(qZ)*qY'*qZ'-sin(qZ)*qY''-cos(qY)*cos(qZ)*qX''))*Dz>
+
+   (144) Dcm.Translate( Do, dcmx*Dx> + dcmy*Dy> )
+-> (145) p_Do_Dcm> = dcmx*Dx> + dcmy*Dy>
+-> (146) v_Dcm_A> = x'*Ax> + y'*Ay> + z'*Az> - dcmy*(qZ'+sin(qY)*qX')*Dx>
+         + dcmx*(qZ'+sin(qY)*qX')*Dy> + (dcmy*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')
+         -dcmx*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))*Dz>
+
+-> (147) a_Dcm_A> = x''*Ax> + y''*Ay> + z''*Az> + ((cos(qZ)*qY'-sin(qZ)*cos(qY)
+         *qX')*(dcmy*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-dcmx*(cos(qZ)*qY'-sin(
+         qZ)*cos(qY)*qX'))-dcmx*(qZ'+sin(qY)*qX')^2-dcmy*(cos(qY)*qX'*qY'+qZ''+
+         sin(qY)*qX''))*Dx> + (dcmx*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX'')-dcmy*(
+         qZ'+sin(qY)*qX')^2-(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')*(dcmy*(sin(qZ)*
+         qY'+cos(qY)*cos(qZ)*qX')-dcmx*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX')))*Dy>
+         + ((qZ'+sin(qY)*qX')*(dcmx*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')+dcmy*(cos
+         (qZ)*qY'-sin(qZ)*cos(qY)*qX'))-dcmx*(sin(qY)*sin(qZ)*qX'*qY'+cos(qZ)*
+         qY''-sin(qZ)*qY'*qZ'-cos(qY)*cos(qZ)*qX'*qZ'-sin(qZ)*cos(qY)*qX'')-dc
+         my*(sin(qY)*cos(qZ)*qX'*qY'+sin(qZ)*cos(qY)*qX'*qZ'-cos(qZ)*qY'*qZ'-
+         sin(qZ)*qY''-cos(qY)*cos(qZ)*qX''))*Dz>
+
+   (148) %--------------------------------------------------------------------
+   (149) %   Motion constraints (if any).
+   (150) % 6 Constraint Equations relating the dot of links with themselves which equals length squared
+   (151) MotionConstraint[1] = Dot( D1.GetPosition( A1 ), D1.GetPosition( A1 ) ) - L1^2
+-> (152) MotionConstraint[1] = d1^2 + e1^2 + z^2 + (a1-x)^2 + (b1-y)^2 + 2*e1*
+         sin(qZ)*cos(qY)*(a1-x) + 2*e1*z*(sin(qX)*cos(qZ)+sin(qY)*sin(qZ)*cos(
+         qX)) + 2*d1*z*(sin(qX)*sin(qZ)-sin(qY)*cos(qX)*cos(qZ)) - L1^2 - 2*d1*
+         cos(qY)*cos(qZ)*(a1-x) - 2*d1*(b1-y)*(sin(qZ)*cos(qX)+sin(qX)*sin(qY)*
+         cos(qZ)) - 2*e1*(b1-y)*(cos(qX)*cos(qZ)-sin(qX)*sin(qY)*sin(qZ))
+
+   (153) MotionConstraint[2] = Dot( D2.GetPosition( A2 ), D2.GetPosition( A2 ) ) - L2^2
+-> (154) MotionConstraint[2] = d2^2 + e2^2 + z^2 + (a2-x)^2 + (b2-y)^2 + 2*e2*
+         sin(qZ)*cos(qY)*(a2-x) + 2*e2*z*(sin(qX)*cos(qZ)+sin(qY)*sin(qZ)*cos(
+         qX)) + 2*d2*z*(sin(qX)*sin(qZ)-sin(qY)*cos(qX)*cos(qZ)) - L2^2 - 2*d2*
+         cos(qY)*cos(qZ)*(a2-x) - 2*d2*(b2-y)*(sin(qZ)*cos(qX)+sin(qX)*sin(qY)*
+         cos(qZ)) - 2*e2*(b2-y)*(cos(qX)*cos(qZ)-sin(qX)*sin(qY)*sin(qZ))
+
+   (155) MotionConstraint[3] = Dot( D3.GetPosition( A3 ), D3.GetPosition( A3 ) ) - L3^2
+-> (156) MotionConstraint[3] = d3^2 + e3^2 + z^2 + (a3-x)^2 + (b3-y)^2 + 2*e3*
+         sin(qZ)*cos(qY)*(a3-x) + 2*e3*z*(sin(qX)*cos(qZ)+sin(qY)*sin(qZ)*cos(
+         qX)) + 2*d3*z*(sin(qX)*sin(qZ)-sin(qY)*cos(qX)*cos(qZ)) - L3^2 - 2*d3*
+         cos(qY)*cos(qZ)*(a3-x) - 2*d3*(b3-y)*(sin(qZ)*cos(qX)+sin(qX)*sin(qY)*
+         cos(qZ)) - 2*e3*(b3-y)*(cos(qX)*cos(qZ)-sin(qX)*sin(qY)*sin(qZ))
+
+   (157) MotionConstraint[4] = Dot( D4.GetPosition( A4 ), D4.GetPosition( A4 ) ) - L4^2
+-> (158) MotionConstraint[4] = d4^2 + e4^2 + z^2 + (a4-x)^2 + (b4-y)^2 + 2*e4*
+         sin(qZ)*cos(qY)*(a4-x) + 2*e4*z*(sin(qX)*cos(qZ)+sin(qY)*sin(qZ)*cos(
+         qX)) + 2*d4*z*(sin(qX)*sin(qZ)-sin(qY)*cos(qX)*cos(qZ)) - L4^2 - 2*d4*
+         cos(qY)*cos(qZ)*(a4-x) - 2*d4*(b4-y)*(sin(qZ)*cos(qX)+sin(qX)*sin(qY)*
+         cos(qZ)) - 2*e4*(b4-y)*(cos(qX)*cos(qZ)-sin(qX)*sin(qY)*sin(qZ))
+
+   (159) MotionConstraint[5] = Dot( D5.GetPosition( A5 ), D5.GetPosition( A5 ) ) - L5^2
+-> (160) MotionConstraint[5] = d5^2 + e5^2 + z^2 + (a5-x)^2 + (b5-y)^2 + 2*e5*
+         sin(qZ)*cos(qY)*(a5-x) + 2*e5*z*(sin(qX)*cos(qZ)+sin(qY)*sin(qZ)*cos(
+         qX)) + 2*d5*z*(sin(qX)*sin(qZ)-sin(qY)*cos(qX)*cos(qZ)) - L5^2 - 2*d5*
+         cos(qY)*cos(qZ)*(a5-x) - 2*d5*(b5-y)*(sin(qZ)*cos(qX)+sin(qX)*sin(qY)*
+         cos(qZ)) - 2*e5*(b5-y)*(cos(qX)*cos(qZ)-sin(qX)*sin(qY)*sin(qZ))
+
+   (161) MotionConstraint[6] = Dot( D6.GetPosition( A6 ), D6.GetPosition( A6 ) ) - L6^2
+-> (162) MotionConstraint[6] = d6^2 + e6^2 + z^2 + (a6-x)^2 + (b6-y)^2 + 2*e6*
+         sin(qZ)*cos(qY)*(a6-x) + 2*e6*z*(sin(qX)*cos(qZ)+sin(qY)*sin(qZ)*cos(
+         qX)) + 2*d6*z*(sin(qX)*sin(qZ)-sin(qY)*cos(qX)*cos(qZ)) - L6^2 - 2*d6*
+         cos(qY)*cos(qZ)*(a6-x) - 2*d6*(b6-y)*(sin(qZ)*cos(qX)+sin(qX)*sin(qY)*
+         cos(qZ)) - 2*e6*(b6-y)*(cos(qX)*cos(qZ)-sin(qX)*sin(qY)*sin(qZ))
+
+   (163) MotionConstraintDT = DT(MotionConstraint) % Get Constraints linear in derivatives
+-> (164) MotionConstraintDT[1] = 2*z*z' + 2*d1*cos(qY)*cos(qZ)*x' + 2*d1*sin(
+         qY)*cos(qZ)*(a1-x)*qY' + 2*d1*sin(qZ)*cos(qY)*(a1-x)*qZ' + 2*e1*cos(
+         qY)*cos(qZ)*(a1-x)*qZ' + 2*d1*(sin(qZ)*cos(qX)+sin(qX)*sin(qY)*cos(qZ))*y'
+         + 2*e1*(sin(qX)*cos(qZ)+sin(qY)*sin(qZ)*cos(qX))*z' + 2*d1*(sin(qX)*
+         sin(qZ)-sin(qY)*cos(qX)*cos(qZ))*z' + 2*e1*(cos(qX)*cos(qZ)-sin(qX)*
+         sin(qY)*sin(qZ))*y' + 2*d1*z*(sin(qX)*cos(qZ)*qZ'+sin(qZ)*cos(qX)*qX'+
+         sin(qX)*sin(qY)*cos(qZ)*qX'+sin(qY)*sin(qZ)*cos(qX)*qZ'-cos(qX)*cos(
+         qY)*cos(qZ)*qY') + 2*e1*(b1-y)*(sin(qX)*cos(qZ)*qX'+sin(qZ)*cos(qX)*
+         qZ'+sin(qX)*sin(qY)*cos(qZ)*qZ'+sin(qX)*sin(qZ)*cos(qY)*qY'+sin(qY)*
+         sin(qZ)*cos(qX)*qX') + 2*d1*(b1-y)*(sin(qX)*sin(qZ)*qX'+sin(qX)*sin(
+         qY)*sin(qZ)*qZ'-cos(qX)*cos(qZ)*qZ'-sin(qX)*cos(qY)*cos(qZ)*qY'-sin(
+         qY)*cos(qX)*cos(qZ)*qX') - 2*L1*L1' - 2*(a1-x)*x' - 2*(b1-y)*y' - 2*
+         e1*sin(qZ)*cos(qY)*x' - 2*e1*sin(qY)*sin(qZ)*(a1-x)*qY' - 2*e1*z*(sin(
+         qX)*sin(qZ)*qZ'+sin(qX)*sin(qY)*sin(qZ)*qX'-cos(qX)*cos(qZ)*qX'-sin(
+         qY)*cos(qX)*cos(qZ)*qZ'-sin(qZ)*cos(qX)*cos(qY)*qY')
+
+-> (165) MotionConstraintDT[2] = 2*z*z' + 2*d2*cos(qY)*cos(qZ)*x' + 2*d2*sin(
+         qY)*cos(qZ)*(a2-x)*qY' + 2*d2*sin(qZ)*cos(qY)*(a2-x)*qZ' + 2*e2*cos(
+         qY)*cos(qZ)*(a2-x)*qZ' + 2*d2*(sin(qZ)*cos(qX)+sin(qX)*sin(qY)*cos(qZ))*y'
+         + 2*e2*(sin(qX)*cos(qZ)+sin(qY)*sin(qZ)*cos(qX))*z' + 2*d2*(sin(qX)*
+         sin(qZ)-sin(qY)*cos(qX)*cos(qZ))*z' + 2*e2*(cos(qX)*cos(qZ)-sin(qX)*
+         sin(qY)*sin(qZ))*y' + 2*d2*z*(sin(qX)*cos(qZ)*qZ'+sin(qZ)*cos(qX)*qX'+
+         sin(qX)*sin(qY)*cos(qZ)*qX'+sin(qY)*sin(qZ)*cos(qX)*qZ'-cos(qX)*cos(
+         qY)*cos(qZ)*qY') + 2*e2*(b2-y)*(sin(qX)*cos(qZ)*qX'+sin(qZ)*cos(qX)*
+         qZ'+sin(qX)*sin(qY)*cos(qZ)*qZ'+sin(qX)*sin(qZ)*cos(qY)*qY'+sin(qY)*
+         sin(qZ)*cos(qX)*qX') + 2*d2*(b2-y)*(sin(qX)*sin(qZ)*qX'+sin(qX)*sin(
+         qY)*sin(qZ)*qZ'-cos(qX)*cos(qZ)*qZ'-sin(qX)*cos(qY)*cos(qZ)*qY'-sin(
+         qY)*cos(qX)*cos(qZ)*qX') - 2*L2*L2' - 2*(a2-x)*x' - 2*(b2-y)*y' - 2*
+         e2*sin(qZ)*cos(qY)*x' - 2*e2*sin(qY)*sin(qZ)*(a2-x)*qY' - 2*e2*z*(sin(
+         qX)*sin(qZ)*qZ'+sin(qX)*sin(qY)*sin(qZ)*qX'-cos(qX)*cos(qZ)*qX'-sin(
+         qY)*cos(qX)*cos(qZ)*qZ'-sin(qZ)*cos(qX)*cos(qY)*qY')
+
+-> (166) MotionConstraintDT[3] = 2*z*z' + 2*d3*cos(qY)*cos(qZ)*x' + 2*d3*sin(
+         qY)*cos(qZ)*(a3-x)*qY' + 2*d3*sin(qZ)*cos(qY)*(a3-x)*qZ' + 2*e3*cos(
+         qY)*cos(qZ)*(a3-x)*qZ' + 2*d3*(sin(qZ)*cos(qX)+sin(qX)*sin(qY)*cos(qZ))*y'
+         + 2*e3*(sin(qX)*cos(qZ)+sin(qY)*sin(qZ)*cos(qX))*z' + 2*d3*(sin(qX)*
+         sin(qZ)-sin(qY)*cos(qX)*cos(qZ))*z' + 2*e3*(cos(qX)*cos(qZ)-sin(qX)*
+         sin(qY)*sin(qZ))*y' + 2*d3*z*(sin(qX)*cos(qZ)*qZ'+sin(qZ)*cos(qX)*qX'+
+         sin(qX)*sin(qY)*cos(qZ)*qX'+sin(qY)*sin(qZ)*cos(qX)*qZ'-cos(qX)*cos(
+         qY)*cos(qZ)*qY') + 2*e3*(b3-y)*(sin(qX)*cos(qZ)*qX'+sin(qZ)*cos(qX)*
+         qZ'+sin(qX)*sin(qY)*cos(qZ)*qZ'+sin(qX)*sin(qZ)*cos(qY)*qY'+sin(qY)*
+         sin(qZ)*cos(qX)*qX') + 2*d3*(b3-y)*(sin(qX)*sin(qZ)*qX'+sin(qX)*sin(
+         qY)*sin(qZ)*qZ'-cos(qX)*cos(qZ)*qZ'-sin(qX)*cos(qY)*cos(qZ)*qY'-sin(
+         qY)*cos(qX)*cos(qZ)*qX') - 2*L3*L3' - 2*(a3-x)*x' - 2*(b3-y)*y' - 2*
+         e3*sin(qZ)*cos(qY)*x' - 2*e3*sin(qY)*sin(qZ)*(a3-x)*qY' - 2*e3*z*(sin(
+         qX)*sin(qZ)*qZ'+sin(qX)*sin(qY)*sin(qZ)*qX'-cos(qX)*cos(qZ)*qX'-sin(
+         qY)*cos(qX)*cos(qZ)*qZ'-sin(qZ)*cos(qX)*cos(qY)*qY')
+
+-> (167) MotionConstraintDT[4] = 2*z*z' + 2*d4*cos(qY)*cos(qZ)*x' + 2*d4*sin(
+         qY)*cos(qZ)*(a4-x)*qY' + 2*d4*sin(qZ)*cos(qY)*(a4-x)*qZ' + 2*e4*cos(
+         qY)*cos(qZ)*(a4-x)*qZ' + 2*d4*(sin(qZ)*cos(qX)+sin(qX)*sin(qY)*cos(qZ))*y'
+         + 2*e4*(sin(qX)*cos(qZ)+sin(qY)*sin(qZ)*cos(qX))*z' + 2*d4*(sin(qX)*
+         sin(qZ)-sin(qY)*cos(qX)*cos(qZ))*z' + 2*e4*(cos(qX)*cos(qZ)-sin(qX)*
+         sin(qY)*sin(qZ))*y' + 2*d4*z*(sin(qX)*cos(qZ)*qZ'+sin(qZ)*cos(qX)*qX'+
+         sin(qX)*sin(qY)*cos(qZ)*qX'+sin(qY)*sin(qZ)*cos(qX)*qZ'-cos(qX)*cos(
+         qY)*cos(qZ)*qY') + 2*e4*(b4-y)*(sin(qX)*cos(qZ)*qX'+sin(qZ)*cos(qX)*
+         qZ'+sin(qX)*sin(qY)*cos(qZ)*qZ'+sin(qX)*sin(qZ)*cos(qY)*qY'+sin(qY)*
+         sin(qZ)*cos(qX)*qX') + 2*d4*(b4-y)*(sin(qX)*sin(qZ)*qX'+sin(qX)*sin(
+         qY)*sin(qZ)*qZ'-cos(qX)*cos(qZ)*qZ'-sin(qX)*cos(qY)*cos(qZ)*qY'-sin(
+         qY)*cos(qX)*cos(qZ)*qX') - 2*L4*L4' - 2*(a4-x)*x' - 2*(b4-y)*y' - 2*
+         e4*sin(qZ)*cos(qY)*x' - 2*e4*sin(qY)*sin(qZ)*(a4-x)*qY' - 2*e4*z*(sin(
+         qX)*sin(qZ)*qZ'+sin(qX)*sin(qY)*sin(qZ)*qX'-cos(qX)*cos(qZ)*qX'-sin(
+         qY)*cos(qX)*cos(qZ)*qZ'-sin(qZ)*cos(qX)*cos(qY)*qY')
+
+-> (168) MotionConstraintDT[5] = 2*z*z' + 2*d5*cos(qY)*cos(qZ)*x' + 2*d5*sin(
+         qY)*cos(qZ)*(a5-x)*qY' + 2*d5*sin(qZ)*cos(qY)*(a5-x)*qZ' + 2*e5*cos(
+         qY)*cos(qZ)*(a5-x)*qZ' + 2*d5*(sin(qZ)*cos(qX)+sin(qX)*sin(qY)*cos(qZ))*y'
+         + 2*e5*(sin(qX)*cos(qZ)+sin(qY)*sin(qZ)*cos(qX))*z' + 2*d5*(sin(qX)*
+         sin(qZ)-sin(qY)*cos(qX)*cos(qZ))*z' + 2*e5*(cos(qX)*cos(qZ)-sin(qX)*
+         sin(qY)*sin(qZ))*y' + 2*d5*z*(sin(qX)*cos(qZ)*qZ'+sin(qZ)*cos(qX)*qX'+
+         sin(qX)*sin(qY)*cos(qZ)*qX'+sin(qY)*sin(qZ)*cos(qX)*qZ'-cos(qX)*cos(
+         qY)*cos(qZ)*qY') + 2*e5*(b5-y)*(sin(qX)*cos(qZ)*qX'+sin(qZ)*cos(qX)*
+         qZ'+sin(qX)*sin(qY)*cos(qZ)*qZ'+sin(qX)*sin(qZ)*cos(qY)*qY'+sin(qY)*
+         sin(qZ)*cos(qX)*qX') + 2*d5*(b5-y)*(sin(qX)*sin(qZ)*qX'+sin(qX)*sin(
+         qY)*sin(qZ)*qZ'-cos(qX)*cos(qZ)*qZ'-sin(qX)*cos(qY)*cos(qZ)*qY'-sin(
+         qY)*cos(qX)*cos(qZ)*qX') - 2*L5*L5' - 2*(a5-x)*x' - 2*(b5-y)*y' - 2*
+         e5*sin(qZ)*cos(qY)*x' - 2*e5*sin(qY)*sin(qZ)*(a5-x)*qY' - 2*e5*z*(sin(
+         qX)*sin(qZ)*qZ'+sin(qX)*sin(qY)*sin(qZ)*qX'-cos(qX)*cos(qZ)*qX'-sin(
+         qY)*cos(qX)*cos(qZ)*qZ'-sin(qZ)*cos(qX)*cos(qY)*qY')
+
+-> (169) MotionConstraintDT[6] = 2*z*z' + 2*d6*cos(qY)*cos(qZ)*x' + 2*d6*sin(
+         qY)*cos(qZ)*(a6-x)*qY' + 2*d6*sin(qZ)*cos(qY)*(a6-x)*qZ' + 2*e6*cos(
+         qY)*cos(qZ)*(a6-x)*qZ' + 2*d6*(sin(qZ)*cos(qX)+sin(qX)*sin(qY)*cos(qZ))*y'
+         + 2*e6*(sin(qX)*cos(qZ)+sin(qY)*sin(qZ)*cos(qX))*z' + 2*d6*(sin(qX)*
+         sin(qZ)-sin(qY)*cos(qX)*cos(qZ))*z' + 2*e6*(cos(qX)*cos(qZ)-sin(qX)*
+         sin(qY)*sin(qZ))*y' + 2*d6*z*(sin(qX)*cos(qZ)*qZ'+sin(qZ)*cos(qX)*qX'+
+         sin(qX)*sin(qY)*cos(qZ)*qX'+sin(qY)*sin(qZ)*cos(qX)*qZ'-cos(qX)*cos(
+         qY)*cos(qZ)*qY') + 2*e6*(b6-y)*(sin(qX)*cos(qZ)*qX'+sin(qZ)*cos(qX)*
+         qZ'+sin(qX)*sin(qY)*cos(qZ)*qZ'+sin(qX)*sin(qZ)*cos(qY)*qY'+sin(qY)*
+         sin(qZ)*cos(qX)*qX') + 2*d6*(b6-y)*(sin(qX)*sin(qZ)*qX'+sin(qX)*sin(
+         qY)*sin(qZ)*qZ'-cos(qX)*cos(qZ)*qZ'-sin(qX)*cos(qY)*cos(qZ)*qY'-sin(
+         qY)*cos(qX)*cos(qZ)*qX') - 2*L6*L6' - 2*(a6-x)*x' - 2*(b6-y)*y' - 2*
+         e6*sin(qZ)*cos(qY)*x' - 2*e6*sin(qY)*sin(qZ)*(a6-x)*qY' - 2*e6*z*(sin(
+         qX)*sin(qZ)*qZ'+sin(qX)*sin(qY)*sin(qZ)*qX'-cos(qX)*cos(qZ)*qX'-sin(
+         qY)*cos(qX)*cos(qZ)*qZ'-sin(qZ)*cos(qX)*cos(qY)*qY')
+
+   (170) KE = D.GetKineticEnergy() % Plot 1
+-> (171) KE = 0.5*(Ixx+Iyy)*(qZ'+sin(qY)*qX')^2 + 0.5*Ixx*(sin(qZ)*qY'+cos(qY)*
+         cos(qZ)*qX')^2 + 0.5*Iyy*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX')^2 - 0.5*m*(
+         2*dcmx*sin(qZ)*cos(qY)*qZ'*x'+2*dcmy*cos(qY)*cos(qZ)*qZ'*x'+2*sin(qY)*
+         (dcmx*cos(qZ)-dcmy*sin(qZ))*qY'*x'+2*dcmy*(sin(qZ)*cos(qX)+sin(qX)*sin
+         (qY)*cos(qZ))*y'*(qZ'+sin(qY)*qX')+2*dcmy*(sin(qX)*sin(qZ)-sin(qY)*cos
+         (qX)*cos(qZ))*z'*(qZ'+sin(qY)*qX')+2*sin(qX)*cos(qY)*y'*(dcmy*(sin(qZ)
+         *qY'+cos(qY)*cos(qZ)*qX')-dcmx*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))-x'^2
+         -y'^2-z'^2-dcmx^2*(qZ'+sin(qY)*qX')^2-dcmy^2*(qZ'+sin(qY)*qX')^2-2*dc
+         mx*(sin(qX)*cos(qZ)+sin(qY)*sin(qZ)*cos(qX))*z'*(qZ'+sin(qY)*qX')-2*
+         dcmx*(cos(qX)*cos(qZ)-sin(qX)*sin(qY)*sin(qZ))*y'*(qZ'+sin(qY)*qX')-(
+         dcmy*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-dcmx*(cos(qZ)*qY'-sin(qZ)*cos(
+         qY)*qX'))^2-2*cos(qX)*cos(qY)*z'*(dcmy*(sin(qZ)*qY'+cos(qY)*cos(qZ)*
+         qX')-dcmx*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX')))
+
+   (172) Flegs> =  D.GetMass()* (Dcm.GetAcceleration(A) + g*Az>) % See Proof of equivalence in analysis
+-> (173) Flegs> = m*x''*Ax> + m*y''*Ay> + m*(g+z'')*Az> + m*((cos(qZ)*qY'-sin(
+         qZ)*cos(qY)*qX')*(dcmy*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-dcmx*(cos(qZ)
+         *qY'-sin(qZ)*cos(qY)*qX'))-dcmx*(qZ'+sin(qY)*qX')^2-dcmy*(cos(qY)*qX'*
+         qY'+qZ''+sin(qY)*qX''))*Dx> - m*(dcmy*(qZ'+sin(qY)*qX')^2+(sin(qZ)*qY'
+         +cos(qY)*cos(qZ)*qX')*(dcmy*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-dcmx*(
+         cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))-dcmx*(cos(qY)*qX'*qY'+qZ''+sin(qY)*
+         qX''))*Dy> + m*((qZ'+sin(qY)*qX')*(dcmx*(sin(qZ)*qY'+cos(qY)*cos(qZ)*
+         qX')+dcmy*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))-dcmx*(sin(qY)*sin(qZ)*qX'
+         *qY'+cos(qZ)*qY''-sin(qZ)*qY'*qZ'-cos(qY)*cos(qZ)*qX'*qZ'-sin(qZ)*cos(
+         qY)*qX'')-dcmy*(sin(qY)*cos(qZ)*qX'*qY'+sin(qZ)*cos(qY)*qX'*qZ'-cos(
+         qZ)*qY'*qZ'-sin(qZ)*qY''-cos(qY)*cos(qZ)*qX''))*Dz>
+
+   (174) Variable FlegsMag = GetMagnitude(Flegs>) % Plot 2
+-> (175) FlegsMag = sqrt(-m^2*(2*(cos(qX)*cos(qZ)-sin(qX)*sin(qY)*sin(qZ))*y''*
+         (dcmy*(qZ'+sin(qY)*qX')^2+(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')*(dcmy*(sin
+         (qZ)*qY'+cos(qY)*cos(qZ)*qX')-dcmx*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))-
+         dcmx*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX''))+2*(sin(qX)*cos(qZ)+sin(qY)*
+         sin(qZ)*cos(qX))*(g+z'')*(dcmy*(qZ'+sin(qY)*qX')^2+(sin(qZ)*qY'+cos(
+         qY)*cos(qZ)*qX')*(dcmy*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-dcmx*(cos(qZ)
+         *qY'-sin(qZ)*cos(qY)*qX'))-dcmx*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX''))+2
+         *sin(qX)*cos(qY)*y''*((qZ'+sin(qY)*qX')*(dcmx*(sin(qZ)*qY'+cos(qY)*cos
+         (qZ)*qX')+dcmy*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))-dcmx*(sin(qY)*sin(
+         qZ)*qX'*qY'+cos(qZ)*qY''-sin(qZ)*qY'*qZ'-cos(qY)*cos(qZ)*qX'*qZ'-sin(
+         qZ)*cos(qY)*qX'')-dcmy*(sin(qY)*cos(qZ)*qX'*qY'+sin(qZ)*cos(qY)*qX'*
+         qZ'-cos(qZ)*qY'*qZ'-sin(qZ)*qY''-cos(qY)*cos(qZ)*qX''))-x''^2-y''^2-(g
+         +z'')^2-(dcmy*(qZ'+sin(qY)*qX')^2+(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')*(
+         dcmy*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-dcmx*(cos(qZ)*qY'-sin(qZ)*cos(
+         qY)*qX'))-dcmx*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX''))^2-((cos(qZ)*qY'-
+         sin(qZ)*cos(qY)*qX')*(dcmy*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-dcmx*(cos
+         (qZ)*qY'-sin(qZ)*cos(qY)*qX'))-dcmx*(qZ'+sin(qY)*qX')^2-dcmy*(cos(qY)*
+         qX'*qY'+qZ''+sin(qY)*qX''))^2-2*sin(qZ)*cos(qY)*x''*(dcmy*(qZ'+sin(qY)
+         *qX')^2+(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')*(dcmy*(sin(qZ)*qY'+cos(qY)*
+         cos(qZ)*qX')-dcmx*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))-dcmx*(cos(qY)*qX'
+         *qY'+qZ''+sin(qY)*qX''))-2*cos(qY)*cos(qZ)*x''*((cos(qZ)*qY'-sin(qZ)*
+         cos(qY)*qX')*(dcmy*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-dcmx*(cos(qZ)*qY'
+         -sin(qZ)*cos(qY)*qX'))-dcmx*(qZ'+sin(qY)*qX')^2-dcmy*(cos(qY)*qX'*qY'+
+         qZ''+sin(qY)*qX''))-2*(sin(qZ)*cos(qX)+sin(qX)*sin(qY)*cos(qZ))*y''*((
+         cos(qZ)*qY'-sin(qZ)*cos(qY)*qX')*(dcmy*(sin(qZ)*qY'+cos(qY)*cos(qZ)*
+         qX')-dcmx*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))-dcmx*(qZ'+sin(qY)*qX')^2-
+         dcmy*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX''))-2*(sin(qX)*sin(qZ)-sin(qY)*
+         cos(qX)*cos(qZ))*(g+z'')*((cos(qZ)*qY'-sin(qZ)*cos(qY)*qX')*(dcmy*(sin
+         (qZ)*qY'+cos(qY)*cos(qZ)*qX')-dcmx*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))-
+         dcmx*(qZ'+sin(qY)*qX')^2-dcmy*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX''))-((
+         qZ'+sin(qY)*qX')*(dcmx*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')+dcmy*(cos(qZ)
+         *qY'-sin(qZ)*cos(qY)*qX'))-dcmx*(sin(qY)*sin(qZ)*qX'*qY'+cos(qZ)*qY''-
+         sin(qZ)*qY'*qZ'-cos(qY)*cos(qZ)*qX'*qZ'-sin(qZ)*cos(qY)*qX'')-dcmy*(
+         sin(qY)*cos(qZ)*qX'*qY'+sin(qZ)*cos(qY)*qX'*qZ'-cos(qZ)*qY'*qZ'-sin(
+         qZ)*qY''-cos(qY)*cos(qZ)*qX''))^2-2*sin(qY)*x''*((qZ'+sin(qY)*qX')*(
+         dcmx*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')+dcmy*(cos(qZ)*qY'-sin(qZ)*cos(
+         qY)*qX'))-dcmx*(sin(qY)*sin(qZ)*qX'*qY'+cos(qZ)*qY''-sin(qZ)*qY'*qZ'-
+         cos(qY)*cos(qZ)*qX'*qZ'-sin(qZ)*cos(qY)*qX'')-dcmy*(sin(qY)*cos(qZ)*
+         qX'*qY'+sin(qZ)*cos(qY)*qX'*qZ'-cos(qZ)*qY'*qZ'-sin(qZ)*qY''-cos(qY)*
+         cos(qZ)*qX''))-2*cos(qX)*cos(qY)*(g+z'')*((qZ'+sin(qY)*qX')*(dcmx*(sin
+         (qZ)*qY'+cos(qY)*cos(qZ)*qX')+dcmy*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))-
+         dcmx*(sin(qY)*sin(qZ)*qX'*qY'+cos(qZ)*qY''-sin(qZ)*qY'*qZ'-cos(qY)*cos
+         (qZ)*qX'*qZ'-sin(qZ)*cos(qY)*qX'')-dcmy*(sin(qY)*cos(qZ)*qX'*qY'+sin(
+         qZ)*cos(qY)*qX'*qZ'-cos(qZ)*qY'*qZ'-sin(qZ)*qY''-cos(qY)*cos(qZ)*qX''))))
+
+   (176) dHdt> = DT( D.GetAngularMomentum( Dcm ), A )
+-> (177) dHdt> = -Ixx*(sin(qY)*cos(qZ)*qX'*qY'+sin(qZ)*cos(qY)*qX'*qZ'-cos(qZ)*
+         qY'*qZ'-(qZ'+sin(qY)*qX')*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX')-sin(qZ)*
+         qY''-cos(qY)*cos(qZ)*qX'')*Dx> + Iyy*(sin(qY)*sin(qZ)*qX'*qY'+cos(qZ)*
+         qY''-sin(qZ)*qY'*qZ'-cos(qY)*cos(qZ)*qX'*qZ'-(qZ'+sin(qY)*qX')*(sin(
+         qZ)*qY'+cos(qY)*cos(qZ)*qX')-sin(qZ)*cos(qY)*qX'')*Dy> + (Iyy*(sin(qZ)
+         *qY'+cos(qY)*cos(qZ)*qX')*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX')+(Ixx+Iyy)*
+         (cos(qY)*qX'*qY'+qZ''+sin(qY)*qX'')-Ixx*(sin(qZ)*qY'+cos(qY)*cos(qZ)*
+         qX')*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))*Dz>
+
+   (178) Power = Dot (Flegs>, Dcm.GetVelocity(A)) + Dot (dHdt>, D.GetAngularVelocity(A)) % See Proof of equivalence in analysis
+-> (179) Power = (Ixx+Iyy)*(qZ'+sin(qY)*qX')*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX'')
+         + Iyy*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX')*(sin(qY)*sin(qZ)*qX'*qY'+cos(
+         qZ)*qY''-sin(qZ)*qY'*qZ'-cos(qY)*cos(qZ)*qX'*qZ'-sin(qZ)*cos(qY)*qX'')
+         - Ixx*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')*(sin(qY)*cos(qZ)*qX'*qY'+sin(
+         qZ)*cos(qY)*qX'*qZ'-cos(qZ)*qY'*qZ'-sin(qZ)*qY''-cos(qY)*cos(qZ)*qX'')
+         - m*(dcmx*sin(qZ)*qX'*qY'*x'+dcmx*sin(qZ)*cos(qY)*qZ'*x''+dcmy*cos(qY)
+         *cos(qZ)*qZ'*x''+sin(qY)*(dcmx*cos(qZ)-dcmy*sin(qZ))*qY'*x''+cos(qY)*
+         cos(qZ)*x'*(dcmx*(qZ'+sin(qY)*qX')^2+dcmy*qZ'')+dcmy*(sin(qZ)*cos(qX)+
+         sin(qX)*sin(qY)*cos(qZ))*(qZ'+sin(qY)*qX')*y''+dcmy*(sin(qX)*sin(qZ)-
+         sin(qY)*cos(qX)*cos(qZ))*(qZ'+sin(qY)*qX')*(g+z'')+sin(qX)*cos(qY)*(
+         dcmy*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-dcmx*(cos(qZ)*qY'-sin(qZ)*cos(
+         qY)*qX'))*y''+(sin(qX)*cos(qZ)+sin(qY)*sin(qZ)*cos(qX))*z'*(dcmy*(qZ'+
+         sin(qY)*qX')^2+(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')*(dcmy*(sin(qZ)*qY'+
+         cos(qY)*cos(qZ)*qX')-dcmx*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))-dcmx*(cos
+         (qY)*qX'*qY'+qZ''+sin(qY)*qX''))+(cos(qX)*cos(qZ)-sin(qX)*sin(qY)*sin(
+         qZ))*y'*(dcmy*(qZ'+sin(qY)*qX')^2+(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')*(
+         dcmy*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-dcmx*(cos(qZ)*qY'-sin(qZ)*cos(
+         qY)*qX'))-dcmx*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX''))+(dcmy*(sin(qZ)*qY'
+         +cos(qY)*cos(qZ)*qX')-dcmx*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))*(dcmx*(
+         sin(qY)*sin(qZ)*qX'*qY'+cos(qZ)*qY''-sin(qZ)*qY'*qZ'-cos(qY)*cos(qZ)*
+         qX'*qZ'-sin(qZ)*cos(qY)*qX'')+dcmy*(sin(qY)*cos(qZ)*qX'*qY'+sin(qZ)*
+         cos(qY)*qX'*qZ'-cos(qZ)*qY'*qZ'-sin(qZ)*qY''-cos(qY)*cos(qZ)*qX''))+
+         sin(qX)*cos(qY)*y'*((qZ'+sin(qY)*qX')*(dcmx*(sin(qZ)*qY'+cos(qY)*cos(
+         qZ)*qX')+dcmy*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))-dcmx*(sin(qY)*sin(qZ)
+         *qX'*qY'+cos(qZ)*qY''-sin(qZ)*qY'*qZ'-cos(qY)*cos(qZ)*qX'*qZ'-sin(qZ)*
+         cos(qY)*qX'')-dcmy*(sin(qY)*cos(qZ)*qX'*qY'+sin(qZ)*cos(qY)*qX'*qZ'-
+         cos(qZ)*qY'*qZ'-sin(qZ)*qY''-cos(qY)*cos(qZ)*qX''))-cos(qY)*qY'*x'*(
+         dcmy*sin(qZ)*qY'-dcmx*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))-x'*x''-y'*y''
+         -z'*(g+z'')-sin(qZ)*cos(qY)*x'*(dcmy*(qZ'+sin(qY)*qX')^2-dcmx*qZ'')-dcmx^2
+         *(qZ'+sin(qY)*qX')*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX'')-dcmy^2*(qZ'+sin
+         (qY)*qX')*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX'')-dcmx*(cos(qX)*cos(qZ)-
+         sin(qX)*sin(qY)*sin(qZ))*(qZ'+sin(qY)*qX')*y''-dcmx*(sin(qX)*cos(qZ)+
+         sin(qY)*sin(qZ)*cos(qX))*(qZ'+sin(qY)*qX')*(g+z'')-cos(qX)*cos(qY)*(
+         dcmy*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-dcmx*(cos(qZ)*qY'-sin(qZ)*cos(
+         qY)*qX'))*(g+z'')-(sin(qZ)*cos(qX)+sin(qX)*sin(qY)*cos(qZ))*y'*((cos(
+         qZ)*qY'-sin(qZ)*cos(qY)*qX')*(dcmy*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')-
+         dcmx*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))-dcmx*(qZ'+sin(qY)*qX')^2-dcmy*
+         (cos(qY)*qX'*qY'+qZ''+sin(qY)*qX''))-(sin(qX)*sin(qZ)-sin(qY)*cos(qX)*
+         cos(qZ))*z'*((cos(qZ)*qY'-sin(qZ)*cos(qY)*qX')*(dcmy*(sin(qZ)*qY'+cos(
+         qY)*cos(qZ)*qX')-dcmx*(cos(qZ)*qY'-sin(qZ)*cos(qY)*qX'))-dcmx*(qZ'+sin
+         (qY)*qX')^2-dcmy*(cos(qY)*qX'*qY'+qZ''+sin(qY)*qX''))-sin(qY)*x'*((qZ'
+         +sin(qY)*qX')*(dcmx*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')+dcmy*(cos(qZ)*
+         qY'-sin(qZ)*cos(qY)*qX'))+dcmx*(sin(qZ)*qY'*qZ'+cos(qY)*cos(qZ)*qX'*
+         qZ'-cos(qZ)*qY'')-dcmy*(sin(qY)*cos(qZ)*qX'*qY'+sin(qZ)*cos(qY)*qX'*
+         qZ'-cos(qZ)*qY'*qZ'-sin(qZ)*qY''))-cos(qX)*cos(qY)*z'*((qZ'+sin(qY)*
+         qX')*(dcmx*(sin(qZ)*qY'+cos(qY)*cos(qZ)*qX')+dcmy*(cos(qZ)*qY'-sin(qZ)
+         *cos(qY)*qX'))-dcmx*(sin(qY)*sin(qZ)*qX'*qY'+cos(qZ)*qY''-sin(qZ)*qY'*
+         qZ'-cos(qY)*cos(qZ)*qX'*qZ'-sin(qZ)*cos(qY)*qX'')-dcmy*(sin(qY)*cos(
+         qZ)*qX'*qY'+sin(qZ)*cos(qY)*qX'*qZ'-cos(qZ)*qY'*qZ'-sin(qZ)*qY''-cos(
+         qY)*cos(qZ)*qX'')))
+
+   (180) Variable U = System.GetForceGravityPotentialEnergy(g*Az>, Ao)
+-> (181) U = -m*g*(z+dcmy*(sin(qX)*cos(qZ)+sin(qY)*sin(qZ)*cos(qX))+dcmx*(sin(
+         qX)*sin(qZ)-sin(qY)*cos(qX)*cos(qZ)))
+
+   (182) Variable Work = Ke + U % Plot 3
+-> (183) Work = U + KE
+
+   (184) Input  tFinal = 5 sec,  tStep = 0.02 sec,  absError = 1.0E-07%, Work = 0
+   (185) SolveSetInput(Evaluate(Expand(MotionConstraint), t = 0), qX = 0, qY = 0, qZ = 0, x = -1, y = 1, z = -1)
+
+->    %  INPUT has been assigned as follows:
+->    %   qX                       -0.05235987755982952
+->    %   qY                       -0.1047197551196611
+->    %   qZ                        0.1570796326794922
+->    %   x                         9.550698721186006E-15
+->    %   y                         1.964126157966836E-15
+->    %   z                        -9
+
+   (186) OutputPlot t sec, KE
+   (187) OutputPlot t sec, FlegsMag
+   (188) OutputPlot t sec, Work
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

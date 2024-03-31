@@ -1,0 +1,64 @@
+% MotionGenesis file:  GyroStickMipsi1.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N                % Example: Earth.
+RigidBody       A
+RigidBody       B
+RigidBody       C
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    wA', wC'
+Variable    TBy, TBz
+
+Specified   qB''
+
+Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+Constant    L = 1.2 m, R = 0.3 m
+Constant    mA = 70 kg, mC = 1.5 kg
+Constant    Ic = mc*R^2, Jc = 0.5*mc*R^2
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+A.SetMass( mA )
+B.SetMass( 0 )
+C.SetMass( mC )
+
+A.SetInertia( Acm, 0>> )
+B.SetInertia( Bcm,  0, 0, 0 )
+C.SetInertia( Ccm, B, Ic, Jc, Jc, 0, 0, 0 )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+A.SetAngularVelocityAcceleration( N, wA*Ay> )
+B.RotateZ( A, qB )
+C.SetAngularVelocityAcceleration( B, wC*Bx> )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+Bo.SetVelocityAcceleration(N, 0>)
+Ccm.Translate( Bo, L*Bx> )
+Dot( Ccm.GetAcceleration(N), By> )
+%--------------------------------------------------------------------
+%   Add relevant contact/distance forces.
+System.AddForceGravity( -g*Ay> )            % Add's gravity force to each massive object.
+%--------------------------------------------------------------------
+%   Add relevant torques.
+B.AddTorque( A, TBy*Ay> + TBz*Az> )
+%--------------------------------------------------------------------
+%   Translational dynamic equations (F = m*a).
+Dynamics[1] = Dot(  System(B,C).GetDynamics(Bo),  Bz>  )
+Dynamics[2] = Dot(  System(B,C).GetDynamics(Bo),  By>  )
+Solve( Dynamics = 0, TBz, TBy)
+
+Evaluate(TBy, qB = 0, qB' = 0, qB'' = 0, wA' = 0) % Why we ignore TBy, because for conditions which stay constant, it goes to zero.
+
+TB_static = Evaluate(TBz, qB = 0, qB' = 0, qB'' = 0, wA = 0, wA' = 0)
+TB_left = Evaluate(TBz, qB = 0, qB' = 0, qB'' = 0, wA' = 0)
+TB_right = Evaluate(TBz, qB = 0, qB' = 0, qB'' = 0, wA' = 0)
+
+ratio1 = Explicit(TB_left/TB_static, Ic, mC)
+ratio2 = Explicit(TB_right/TB_static, Ic, mC)
+
+EvaluateToNumber(ratio1, wC = 600*2*pi/60, wA = pi rad/s) % convert wC rpm to rad/s
+EvaluateToNumber(ratio2, wC = 600*2*pi/60, wA = -pi rad/s)
+
+Save GyroStickMipsi1.html
+quit

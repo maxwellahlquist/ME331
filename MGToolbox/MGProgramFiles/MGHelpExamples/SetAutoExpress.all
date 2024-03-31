@@ -1,0 +1,28 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  SetAutoExpress( OFF )
+   (3) %--------------------------------------------------------------------
+   (4) SetAutoExpress( OFF )
+   (5) NewtonianFrame N
+   (6) RigidBody B
+   (7) Variable  qB''
+   (8) B.SetRotationMatrixX( N, qB )
+-> (9) B_N = [1, 0, 0;  0, cos(qB), sin(qB);  0, -sin(qB), cos(qB)]
+
+   (10) B.SetAngularVelocityAcceleration( N, qB'*Nx> )
+-> (11) w_B_N> = qB'*Nx>
+-> (12) alf_B_N> = qB''*Nx>
+
+   (13) %--------------------------------------------------------------------
+   (14) % Example 2:  SetAutoExpress( ON )
+   (15) %--------------------------------------------------------------------
+   (16) SetAutoExpress( ON )
+   (17) RigidBody C
+   (18) Variable  qC''
+   (19) C.SetInertia( Ccm, 3, 2, 1 )
+   (20) C.SetRotationMatrixX( N, qC )
+-> (21) C_N = [1, 0, 0;  0, cos(qC), sin(qC);  0, -sin(qC), cos(qC)]
+
+   (22) C.SetAngularVelocityAcceleration( N, qC'*Nx> )
+-> (23) w_C_N> = qC'*Cx>
+-> (24) alf_C_N> = qC''*Cx>
+

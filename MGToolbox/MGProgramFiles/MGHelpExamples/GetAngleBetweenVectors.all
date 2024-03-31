@@ -1,0 +1,59 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetAngleBetweenVectors 
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame A
+   (5) v> = 2*Ax> + 3*Ay> + 4*Az>
+-> (6) v> = 2*Ax> + 3*Ay> + 4*Az>
+
+   (7) w> = 7*Ax> + 5*Ay> + 3*Az>
+-> (8) w> = 7*Ax> + 5*Ay> + 3*Az>
+
+   (9) thetaRadians = GetAngleBetweenVectors( v>, w> )
+-> (10) thetaRadians = 0.5814062
+
+   (11) thetaDegrees = GetAngleBetweenVectorsDegrees( v>, w> ) 
+-> (12) thetaDegrees = 33.31212
+
+   (13) thetaNegative = GetAngleBetweenVectors( v>, w>, Ax> )
+-> (14) thetaNegative = -0.5814062
+
+   (15) %--------------------------------------------------------------------
+   (16) % Example 2: GetAngleBetweenVectors  (with sense)
+   (17) %--------------------------------------------------------------------
+   (18) f> = Ax> + 2*Ay>
+-> (19) f> = Ax> + 2*Ay>
+
+   (20) g> = Ax> + t*Ay>
+-> (21) g> = Ax> + t*Ay>
+
+   (22) theta = GetAngleBetweenVectors( f>, g> )
+-> (23) theta = acos(0.4472136*(1+2*t)/sqrt(1+t^2))
+
+   (24) thetaWithSense = GetAngleBetweenVectors( f>, g>, Az> )
+-> (25) thetaWithSense = sign0IsPositive1(-2+t)*acos(0.4472136*(1+2*t)/sqrt(1+t^2))
+
+   (26) %--------------------------------------------------------------------
+   (27) % Example 3: GetAngleBetweenUnitVectors  
+   (28) %--------------------------------------------------------------------
+   (29) unitVector1> = Vector( A, 0.6, 0.8, 0 )
+-> (30) unitVector1> = 0.6*Ax> + 0.8*Ay>
+
+   (31) unitVector2> = Vector( A, 0,   0.6, 0.8 )
+-> (32) unitVector2> = 0.6*Ay> + 0.8*Az>
+
+   (33) angleRadians = GetAngleBetweenUnitVectors( unitVector1>, unitVector2> )
+-> (34) angleRadians = 1.070142
+
+   (35) angleDegrees = GetAngleBetweenUnitVectorsDegrees( unitVector1>, unitVector2> )
+-> (36) angleDegrees = 61.3146
+
+   (37) %--------------------------------------------------------------------
+   (38) % Example 4: GetAngleBetweenUnitVectors  (with sense)
+   (39) %--------------------------------------------------------------------
+   (40) RigidFrame B
+   (41) B.SetRotationMatrixZ( A, t )
+-> (42) B_A = [cos(t), sin(t), 0;  -sin(t), cos(t), 0;  0, 0, 1]
+
+   (43) angleWithSense = GetAngleBetweenUnitVectors( Bx>, unitVector2>, Az> )
+-> (44) angleWithSense = sign0IsPositive1(0.6*cos(t))*acos(0.6*sin(t))
+

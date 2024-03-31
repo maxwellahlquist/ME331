@@ -1,0 +1,57 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  GetResultantForce  or  GetNetForce
+   (3) %--------------------------------------------------------------------
+   (4) RigidBody  A, B
+   (5) Point      Bp( B )                          % Bp is a point of body B.
+   (6) Specified  Fx, Fy
+   (7) Bp.AddForce( Fx*Ax> )                       % Add external force on Bp.
+-> (8) Force_Bp> = Fx*Ax>
+
+   (9) Bp.AddForce( Ao,  888*Ax> )                 % Add action/reaction force on Bp from Ao.
+-> (10) Force_Bp_Ao> = 888*Ax>
+
+   (11) NetForceOnBpFromAo> = Bp.GetNetForce( Ao )  % Net action/reaction force on Bp from Ao.
+-> (12) NetForceOnBpFromAo> = 888*Ax>
+
+   (13) NetForceOnAoFromBp> = Ao.GetNetForce( Bp )  % Net action/reaction force on Ao from Bp.
+-> (14) NetForceOnAoFromBp> = -888*Ax>
+
+   (15) NetForceOnBp> = Bp.GetResultantForce()      % Net force on point Bp.
+-> (16) NetForceOnBp> = (888+Fx)*Ax>
+
+   (17) NetForceOnB> = B.GetResultantForce()        % Net force on body B.
+-> (18) NetForceOnB> = (888+Fx)*Ax>
+
+   (19) NetForceOnA> = A.GetResultantForce()        % Net force on body A.
+-> (20) NetForceOnA> = -888*Ax>
+
+   (21) NetForceOnS> = System.GetResultantForce()   % Net force on System(A, B, Bp).
+-> (22) NetForceOnS> = Fx*Ax>
+
+   (23) %--------------------------------------------------------------------
+   (24) % Example 2:  GetResultantForce  or  GetNetForce
+   (25) %--------------------------------------------------------------------
+   (26) Bo.AddForce( Fy*Ay> )                       % Add external force on Bo.
+-> (27) Force_Bo> = Fy*Ay>
+
+   (28) Bo.AddForce( Ao,  9*Ay> )                   % Add action/reaction force on Bo from Ao.
+-> (29) Force_Bo_Ao> = 9*Ay>
+
+   (30) Ao.AddForce( Bo,  2*Ay> )                   % Add action/reaction force on Ao from Bo.
+-> (31) Force_Ao_Bo> = 2*Ay>
+
+   (32) NetForceOnBoFromAo> = Bo.GetNetForce( Ao )  % Net action/reaction force on Bo from Ao.
+-> (33) NetForceOnBoFromAo> = 7*Ay>
+
+   (34) NetForceOnBo> = Bo.GetResultantForce()      % Net force on point Bo.
+-> (35) NetForceOnBo> = (7+Fy)*Ay>
+
+   (36) NetForceOnB> := B.GetResultantForce()       % Net force on body B.
+-> (37) NetForceOnB> = (888+Fx)*Ax> + (7+Fy)*Ay>
+
+   (38) NetForceOnA> := A.GetResultantForce()       % Net force on body A.
+-> (39) NetForceOnA> = -888*Ax> - 7*Ay>
+
+   (40) NetForceOnS> := System.GetResultantForce()  % Net force on System(A, B, Bp).
+-> (41) NetForceOnS> = Fx*Ax> + Fy*Ay>
+

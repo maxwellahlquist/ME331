@@ -1,0 +1,1307 @@
++---------------------------------------------------------------------------------------+
++ Copyright (c) 1988-2021 Paul Mitiguy and/or Motion Genesis LLC.  All rights reserved. +
++---------------------------------------------------------------------------------------+
+001
+002 \a\kWarning: Expression is not linear in #1#. \p
+003 \aWarning: Matrix may be nearly singular.\p
+004 \aWarning: #1#> may be unsuitable for use in conjunction with\w
+certain kinematic analysis functions. \p
+005 \aWarning: #1# has not been named in a Point or Particle declaration.
+006 \aWarning: #1# has not been named in a RigidFrame or RigidBody declaration.
+007 Note: Rotation matrix #1#_#2# is being differentiated with respect to #3#.
+to form the angular velocity of #1# in #2#.\n\p=1300
+008 \a\kError: Reference frame is missing in connection with a\e
+differentiation of a vector or a dyadic.\n
+009 #1#\n\a\kError: There are more than #2# characters in one input line.\e
+To input longer lines from a file, use a set of shorter lines\e
+(less than #2# characters) with all but the last short line\e
+ending with  &  (the line continuation symbol).
+010 Type  exit  to return to the program.\n
+011 \nNote: #1#'s velocity in #2# is being time-differentiated in #2#\i
+to form #1#'s acceleration in #2#.\n\p=1000
+012 \nNote: #1#'s angular velocity in #2# is being time-differentiated in #2#\i
+to form #1#'s angular acceleration in #2#.\n\p=1000
+013 \aWarning: Gaussian elimination is being used.\w
+Unexpected divisions by zero may occur.\p
+014 Note: #1# was named in a VARIABLE declaration but\i
+no kinematical differential equation has been entered.\i
+This can lead to incorrect partial velocities.\n\p
+015 \k\aWarning: SetAutoRhs is set to ALL and generalized speeds are present.\w
+This can lead to incorrect partial velocities.\w
+Change SetAutoRhs to ON or OFF.\n\p
+016 \nNote: It is unusual to set #2#'s inertia about point #1# (which seems to move on #2#)\i
+Perhaps this is an error?\n\p=2200
+017 \k\aError: Unable to use  SetAutoRhs(ALL)  with  SetAutoZee(ON).\e
+These settings conflict with each other.\n
+018 \nThe file  #1#  contains input lines.\n
+019 \nThe file  #1#  contains input lines and output responses.\n
+020 \aWarning: Non-zero return value for system command:\w
+#1#.
+021 \n\nNote: Use  #1#  to change the working directory.\n\n
+022 \nWarning: The #1# command assigns a numerical result for each unknown and\w
+a differentiable (symbolic) result for each unknowns' time-derivative.\w
+If instead, you want to assign an initial (INPUT) value to each\w
+unknown, consider using the #2# command.
+023 \k\aError: Ctrl-D (end of file marker) was entered. Input line ignored.\n
+024 \nNote: Attempting to calculate #1# of point  #2#  in  #3#\i
+via point  #4#  (both points are fixed to #5#).\n\p=400
+025 \k\aError: Coefficient of #1# is not linear in #2#.
+026 #1#\n\aWarning: Line ignored because it has too many characters.
+027 \nNote: No #1# declarations have been issued.\n
+028 \n\nNote: The following input has been set:\n
+029 \nNote: #1#  is superseded by  #2#.\n
+030 \k\aError: #1# is deprecated.  Use  #2#.\n
+031 \nNote: In this situation, consider #1#.#3#(...) instead of #1#.#2#(...)\n\p=3200
+032
+033
+034 \aWarning: #1# was named in a CONSTANT declaration, but is being\w
+set equal to a quantity that is not necessarily constant.\w
+Questionable calculations (e.g., time-derivatives) may result.\n\p
+035 Note: Single argument  #1#  in braces creates only one quantity.\i
+Maybe consider  1:#1#\n\p=2300
+036 \nNote: #1#  is a matrix argument of the #2# command.\i
+Although its matrix elements will be coded/evaluated, the matrix\i
+elements will not be output from C, Fortran, or MATLAB codes.\i
+To skip this note, instead use:   #3#  #1#\n\p=3000
+037 \nWarning: Blank space detected in filename #1#  \n\p=3000
+038 Note: No expression for  #1#  is available.\i
+#1# = 0  will be coded.\p
+039 \nNote: No expression or differential equation for #1#\i
+is available.   #1# = 0  will be coded.\p
+040 \k\aError: Invalid expression in program/code for  #1#\n
+041 \k\aRecursion error: in #1#.  See previous message.
+042 Note: Undocumented syntax; not recommended for use.\n\p=1000
+043 \k\aError: Unable to create  .#1#  code.\e
+Consider issuing a code filename with  #2#  extension.\n
+044
+045 \nEnter a file name with the extension c, m, f, or FOR: \0
+046 \nThe file #1#.#2# has been created for use with S functions.\&
+\nInvoke MATLAB and ensure #1#.#2# is in MATLAB's current working directory.\&
+\nType mex -startup \&
+\nType mex #1#.#2#  \&
+\nIn Simulink, ensure the name of the SFunction is #1# \n
+047 \nThe file #1#.dir contains a list of output files and their contents.
+048 \nThe file #1#.#2# has been created for use with S functions.\&
+\nTo change the input values, edit the file #1#.#2#\n
+049 \nAt the MATLAB prompt, type  #3#\&
+\nTo change input values, edit the file  #1#.#2#\n
+050 \n\k\aError: #1# is an invalid filename extension.\e
+Use:  .m for MATLAB,  .f, or .FOR for Fortran,  .c for C,  or \e
+no filename extension for immediate code execution.\n
+051 \nNote: Long expression encountered.\n
+052 \nNote: SetAutoZee( AUTO )  is being reset to  SetAutoZee( ON ).\i
+Consider issuing SetAutoZee( ON ) at the start of your\i
+session or before this long expression is encountered.\n
+053 \k\aWarning: Cannot differentiate to form an expression for #1#.\n\p
+054 \k\aError: Missing filename extension.  Use .c, .m, .f or .FOR.
+055 \k\aError: #1# is not allowed to appear on both sides of an equation.
+056 \nTo create an executable file, exit the program, then\ncompile and link \&
+#1#.#2#.\nEnter numerical values in the file #1#.in.\n
+057 \k\aError: No file name (or invalid file name) has been entered.
+058 \k\a\nError: #1# command expects to solve a set of algebraic equations\e
+or calculate #2#, #3#, or #4# statements.\n
+059 \aWarning: One argument of the #1# command represents a set of equations.\w
+Equation[#2#] is just 0 = 0.\n\p=1200
+060 \nNote: One syntax of the #1# command uses  :=  to automatically\i
+overwrite quantities such as #2# without query.\n\p=2300
+061 \k\aError: The presence of the #2# matrix in the workspace dictate\e
+an argument named #2# in the #1# command.
+062 \k\aError: The arguments of the  #1#  command dictate that\e
+the  #2#  matrix is in the workspace.  This matrix is missing.\n
+063 \k\aError: One of the arguments of the #1# command is a matrix that\e
+represents a set of equations.  This matrix must be a column\e
+matrix.\n
+064 \k\aError: One argument of the #1# command represents a set of equations.\e
+This set has fewer equations than unknowns (#2# equations, #3# unknowns).\e
+Consider using more equations or reducing the number of unknowns\e
+or writing MATLAB(r) code which uses a pseudo-inverse.\n
+065 \aError: One argument of the #1# command represents a set of equations.\e
+This set has more equations than unknowns (#2# equations, #3# unknowns).\e
+Consider reducing the number of equations or using more unknowns\e
+or writing MATLAB(r) code which uses a pseudo-inverse.\n
+066 Note: One argument of the #1# command represents a set of equations.\i
+This set has fewer equations than unknowns (#2# equations, #3# unknowns).\i
+Consider using more equations or reducing the number of unknowns.\i
+Solution will be attempted, e.g., with a pseudo-inverse.\n\p=1200
+067 Note: One argument of the #1# command represents a set of equations.\i
+This set has more equations than unknowns (#2# equations, #3# unknowns).\i
+Consider reducing the number of equations or using more unknowns.\i
+Solution will be attempted, e.g., with a pseudo-inverse.\n\p=1200
+068 \k\aError: #1#  is not a positive integer.
+069 \k\aError: #1#  is not a non-negative integer.
+070 \k\aError: #1#  is an integer larger than #2#.
+071 \k\aError: Unable to process the command #1#.#2#
+072 \k\aError: The number of variables in the #1# command must be equal to the\e
+number of auxiliary generalized speeds in the CONSTRAIN command.\n
+073 \k\aError: No free generalized speeds have been declared.
+074 \k\aError: Unable to solve for one or more arguments of the #1# command.
+075 \k\aError: Unable to make expression explicit to factor linearly.
+076 \k\aError: The #1# matrix is defective.
+077 \k\aError: Unable to complete the command  #1#.
+078 \k\a\nError: Unable to complete the command:\e
+#1#\n
+078 \k\aError: #1# is not a real number, but #2# has associated units.\e
+Code looping supports unit conversions only for numerical arguments.
+079 \k\aError: Units can be assigned only to scalars, #2#, #3#, #4#.\n
+080 \k\aError: #1#  contains something\e
+other than real numbers and declared constants.
+081 \k\aError: #1# is not a real number.
+082 \k\aError: INPUT cannot be assigned to #1#.\e
+Input can only be assigned to scalars, absError, relError,\e
+#2#, #3#, #4#, printIntScreen, printIntFile.\n
+083 \k\aError: #1# is an improper argument for INPUT.
+084 \k\aError: #1# is not a real number, but #2# has associated units.\e
+085 \k\aWarning: #1# has been assigned (i.e., it has a right-hand side).
+086 \k\a\nError: Invalid  INPUT  #1# = #2#.\e
+#2# is not 0 or a positive integer.\n
+087 \k\aError: #1# is an improper argument of the command UNITS.
+088 \k\aError: Unable to assign  INPUT  #1# = #2#.\e
+#2#  does not evaluate to a real number.\n
+089 \k\aError: Invalid INPUT  #1# = #2#
+090 \k\aError: #1# is an invalid argument of the  #2#  command.\e
+It should be a real number r with:   0.0 <= r < 0.5 \n
+091 \k\aError: No differential equations are in the workspace.\e
+To create a code that calculates Output, type Help #1#.\e
+To create a code that calculates a time-history of Output, type:\e
+    Variable dumb' = 0.1234\e
+Then reissue your #2# command.\n
+092 \k\aError: No differential equations are in the workspace.
+093 \k\aError: #1# appears on both sides of an equation.\p
+094 \k\aError: #1# cannot be named in a RigidFrame or RigidBody declaration.
+095 \k\aError: Unmatched brace in declaration beginning at #1#.
+096 \nNote: If #1# is a point of a RigidFrame or RigidBody, use #1#(nameOfFrameOrBody).\i
+To suppress this note, use:   Point #1#().\n
+%%\i OldExtra: Otherwise to skip this note, use #1#().\n
+097 \k\aError: #1# was declared as a Point or Particle; it\e
+cannot be also declared as a RigidFrame or RigidBody.
+098
+099 \k\aError: The constraint equations are defective.
+100 \k\aError: The command  #1#  could not be completed.\e
+#2# is not a positive number smaller than the current line number.
+101 \k\aError: Unable to open scratch file #1#.\e
+Possible reason: The folder containing scratch files is full or read-only.\n\&
+Note:  If you have run #2# several times while also plotting with\e
+#3#, close #3# to allow old scratch files to be deleted.\n
+102 \k\aError: #1# was already declared as a System.
+103 \k\aError: #1# refers to one or more line numbers not in the workspace.
+104 \k\aError: #1# must be followed by a file name.
+105 \nNote: Type #1# to continue running from filename.
+106 \k\aError: #1# is an invalid name.
+107 \k\aError: A name of zero length has been entered.
+108 \k\aError: The name #1# does not start with a letter.
+109 \k\aError: Unable to open the file #1#\e
+Possibly invalid ScratchDirectory  #2#\e
+named in the file  #3#\e
+ScratchDirectory will be reset to the current working directory.\n
+110 \k\aError: #1# must be followed by either ON or OFF.
+111 \k\aError: #1# was already declared as a RigidFrame or RigidBody.
+112 \k\aError: #1# was already declared as a Point or Particle.
+113 \k\aError: #1# cannot be attached (welded) to more than one object.
+114 \k\aError: #1# has already been defined or declared; it cannot be \&
+overwritten.
+115 \aNote: The #1# of #2# is being overwritten.\p=1200
+116 \k\a\nError: Program tries to create #1#> when #2# is declared.\e
+#1#> is already in use as a vector.  It cannot also be used\e
+for a unit vector associated with RigidBody or RigidFrame #2#.\n
+117 \k\aError: #1# is an invalid argument.
+118 \k\aError: #1# has not been named as a RigidFrame, RigidBody, or NewtonianFrame.
+119 \k\aError: #1# is invalid in the present context; a comma appears\e
+inappropriately in the string #2#.\n
+120 \k\aError: #1# must be followed by ON, OFF, or ALL.
+121 \k\aError: An expression that should be linear is nonlinear.
+122 \k\aError: #1# is not the name of a point or particle.
+123 \k\aError: #1# must be set to ON, OFF, or AUTO.
+124 \k\aError: #1# appears inappropriately in an expression\e
+for a vector or a dyadic.\n
+125 \k\a\nError: Program tries to create #2# when #1# is declared.\e
+#2# was already declared (or created automatically) with a Point,\e
+Particle, RigidBody, RigidFrame, or NewtonianFrame declaration.\n
+126 \k\aError: When a declaration has the form  X{J,L} or X{I:J,K:L}, the\e
+integers I, J, K, and L are not allowed to have values other\e
+than 0, ..., 9.\n
+127 \k\aError: #1# has not been defined.
+128 \k\aError: #1#  has not been defined.\e
+#1#> is a valid vector name.  Consider appending an arrow >.\n
+129 \k\a\nError: #1#  seems incorrect here.\n\&
+Try   Help #2#   (help exists).\n
+130 \k\aError: Unmatched right parenthesis ) :\e
+#2#       #1#       #3#\n
+131 \k\aError: Unmatched right bracket ] :\e
+#2#       #1#       #3#\n
+132 \k\aError: #1# is invalid for the #2# command.\e
+#1# has not been named in a RigidBody declaration.\n
+133 \k\aError: #1# has not been named in a RigidBody declaration.
+134 \k\aError: Unmatched right brace } :\e
+#2#       #1#       #3#\n
+135 \k\aError: Invalid character  "#1#"  found in  "#2#"
+136 \k\aError: The name #1# is too long (more than #2# characters).
+137 \k\aError: Improper juxtaposition of a matrix with a scalar.
+138 \k\aError: Unable to interpret #1# #2#.
+139 \k\aError:  #2#  is not valid for the  #1#  declaration.\e
+The  #3#  portion of the declaration is not correct.\n
+140 \k\aError: #1# has not been named in a VARIABLE or SPECIFIED declaration.
+141 \aWarning: No ODE associated with #1#.  It will be skipped.\p
+142 \k\aError: Syntax error in the following:\e
+#1#\n
+143
+144 \nNote: To declare a Constant and assign its INPUT value, use:\i
+Constant  #1# = #2#  someUnits  (e.g., #3# or noUnits)\n\p=2000
+%% Alternately, just assign  #1#  (skip Constant) and type only:\i
+%% #1# = #2#\n\p=2000
+145 \k\aError: Missing right parenthesis  ).
+146 \k\aError: Missing right bracket  ].
+147 \k\aError: Missing right brace  }.
+148 \k\aError: Invalid character  #1#  (or blank) in the following line:\e
+#2# #1# #3#\n
+149 \k\a\nError: Although  #1#  are valid units, units are usually only assigned\e
+in conjunction with the commands:  Constant, Input, Output.\e
+Otherwise use    ...  *  ConvertUnits( #1#, UnitSystem )\n
+150 \k\aError: #1# is invalid in the present context; a colon appears\e
+inappropriately in the string #2#.\n
+151 \k\aError: Improper juxtaposition of a dyadic with a scalar.
+152 \k\aError: Improper juxtaposition of a scalar with a vector,\e
+a scalar with a dyadic, or a vector with a dyadic.\n
+153 \k\aError: Inappropriate expression for a tensor (polyadic).
+154 \k\aError: Each argument of #1#  must be a vector, dyadic, or polyadic.
+155 \k\aError: A scalar was found when a vector or dyadic was expected.
+156 \k\aError: Unable to form  #1#\n
+157 \k\aError: Unable to ZEE an expression because it is nonlinear in #1#.
+158 \k\aError: Invalid expression for a vector or a dyadic.
+159 \k\aError: Unable to determine the rotation matrix relating #1# to #2#.
+160 \k\aError: Unable to perform the #1#-product of #2# with #3#.
+161 \k\aError: Improper juxtaposition of a scalar with a vector, a vector\e
+with a dyadic, or a dyadic with a scalar.\n
+162 \aNote: An INPUT value has already been assigned to #1#.\i
+Do you want to overwrite it? (Y/N): \0
+163 \aWarning: Units were previously assigned to #1#.\w
+Do you want to assign new units to #1#? (Y/N): \0
+164 Note: Overwriting previous input value for #1#.\p=500
+165 \k\aError: The command Cross(1>>,1>>) can be carried out only when an\e
+expression for 1>> in terms of basis vectors is available.\e
+The command EXPRESS can be used to create such an expression.\n
+166 \nPress ENTER to resume execution.\nPress any other key to proceed interactively.\0
+167 \k\aError: 0^0 and division by zero are undefined.
+168 \k\nScript stopped. To run subsequent lines in the file, type  #1#\n
+169 \k\aError: Division by zero.
+170 Note: The units for #1# are being overwritten.
+171 \k\aError: A \# symbol in a .R or .A file must not be followed by  #1# \&
+      Allowable items following a \# symbol in such a file are:\e
+    a positive integer followed by a # symbol\e
+    NUM_ARGS\#\e
+    NewtonianFrame\#\n
+This file contains a line in which no assignment is made.\e
+The offending line is:\e
+#1#\n
+172 \k\aError: Input line is too long. Argument of a command may have\e
+elongated the input line past the allowable length.\e
+Shortening the argument string(s) may be beneficial.\e
+If the command is in a user-created .A or .R file, use & for\e
+line continuation in that file.\n
+173 \k\aError: Syntax error in the command #1#.
+174 \aNote: #1# is a unit vector.  It is unusual to assign it.\p
+175 \k\a\nError: #1# has not been named as a Point,\e
+Particle, RigidFrame, or RigidBody.\n
+176 \k\aError: Unable to form #1# for #2#.
+177 \k\aError: #1# has not been named in a Particle or RigidBody declaration.
+178 \k\a is an invalid argument of the #1# command.\e
+This argument cannot be a number or an expression.\n
+179 \k\aError: The #2# argument of the command #1# is invalid.
+180 \k\aError: #1# is an invalid argument of #2#.
+181 \k\aError: The command #1# contains at least one invalid argument.
+182 \k\aError: A command having too few arguments has been encountered.\e
+This command requires at least #1# arguments.\n
+183 \k\aError: Ambiguous order of operations due to multiple exponents (powers) ^\e
+Use parentheses.  The error starts at the symbol #1# in #2#.\n
+184  cannot be differentiated.\n\k\a
+185 \k\aError: #1# is an invalid scalar quantity.
+186 \k\aError: Missing # symbol associated with the argument ##1## of a\e
+user-created .A or .R file.\n
+187 \k\aError: The command #1# contains the wrong number of arguments.
+188 \k\aError: The method  #1#  is not applicable for this type of System.
+189 \k\aError: The method  #1#  does not exist.
+190 \k\aError: The command  #1#  does not exist.
+191 \k\aError: Encountered an expression of the wrong type.\n
+192 \nNote: Do you want to set derivatives of the function  #1#()  to 0? (Y/N): \0
+193 \k\aError: The command  #1#  contains the wrong number of arguments\e
+for the  #2#  syntax of this command.\n
+194 \k\aError: The matrix argument  #1#  should resolve to\e
+three elements for the command #2#.\n
+195 \k\aError: #1# is an invalid argument of the #2# declaration.
+196 \k\aError: There is no HELP for #1#.
+197 \k\aError: The matrix #1#\e
+has the wrong number of elements for the command #2#.\n
+198 \k\aError: Invalid appearance of a matrix in an expression.
+199 Note: Equation #1# is nonlinear in #2#.
+200 \k\aError: Expression in #2# command is nonlinear in #1#.
+201 \k\aError: Unable to find coefficient of #1# in matrix of linear\e
+equations that are part of the code command.\n
+202 \k\aError: The dimensions of two matrices are incompatible for matrix addition.
+203 \k\aError: The dimensions of two matrices are incompatible for matrix multiplication.
+204 \k\aError: The dimensions of two matrices are incompatible for the command #1#.
+205 \n\k\aError: Unable to form a matrix due to a mismatched number of columns.\e
+Row #1# of the matrix-to-be-formed has #2# columns.\e
+However, an earlier row has #3# columns.\n
+206 \n\k\aError: Unable to form a matrix due to a mismatched number of rows.\e
+Element (#1#, #2#) of the matrix-to-be-formed has #3# rows.\e
+However, an earlier column has #4# rows.\n
+207 \k\aError: #1# is an invalid name for a matrix.
+208 \n\aWarning: The code language is not case-sensitive.\w
+Unable to find a unique name to code for symbols Z1, Z2, ...\w
+These symbols were created after AutoZee was turned ON.\w
+However, the user also introduced a symbol named z.\w
+There may be errors during compilation of the code,\w
+(e.g., during compiling FORTRAN code or running a MATLAB script).\n\p
+209 Note: Did you mean point #1# (origin of RigidFrame #2#)?\n
+210 \k\aError: #1# is invalid for the #2# command.\e
+#1# is not a point, e.g., it was not declared as a Point or Particle\e
+or created as a RigidFrame or RigidBody origin or body center of mass.\n
+211 Note: Did you mean  #1#  or  #2#  (a point of RigidBody #3#)?\n
+212 \k\aError: Invalid element number #1#  for the matrix #2#.\n
+213 \k\aError: #1# is not a matrix.
+214 \k\aError: Invalid index for dimensions of the matrix #1#.
+215 \k\aError: A matrix cannot be assigned to an element of a matrix.
+216 \k\aError: The determinant of a matrix to be inverted is equal to zero\e
+or it contains an error.\n
+217 \k\aError: The matrix argument #1# of the #2# command must be a square matrix.
+218 \k\aError: Invalid range  #1#:#2#  for the matrix #3#.
+219 \k\aError: #1# is greater than the number of rows in the matrix.\e
+Matrix  #2#  only has #3# rows.\n
+220 \k\aError: #1# is more than the number of columns in the matrix.\e
+Matrix  #2#  only has #3# columns.\n
+221 Note: Improper extension on filename #1#\i
+Use the extension  .al  or  .txt  in scripts.\n\p
+222 \nPrint: Open the text file #1#,\e
+in a text editor (e.g., Notepad, TextWrangler, TextEdit, Emacs, ...)\e
+or word-processor with Courier font (e.g., Microsoft Word)\e
+and print the file from within that program.\n
+223 \k\aError: #1# has not been declared; inappropriate entry in {}.
+224 \k\aError: #1#{#2#} is an improper expression.
+225 \k\aError: Invalid designation for a matrix element.
+226 \k\aError: The argument  #1#  of the  #2#  command\e
+must be a dyadic or square matrix (with scalar elements).\n
+227 \k\aError: #1# is already defined as a matrix and cannot be redefined as a scalar.
+228 \k\aError: #1# is already defined as a scalar and cannot be redefined as a matrix.
+229
+230 \k\aError: To solve nonlinear equations, use a syntax such as:\e
+#1#( yourEqns, #2# = yourNumericalGuess, ... ).\n
+231 \k\aError: The #1# command expects a real square matrix.
+232 \k\aError: Matrix element #1# is not a real number.\n
+233 \k\aError: QR algorithm failed to converge during eigenvalue computation.
+234 \k\aError: The #1# command is being used in a situation that\e
+requires numerical values (not symbolic expressions).\n
+235 \nNote: The eigenvectors are the rows of #1#.\n\p
+236 \k\aError: Unable to form the inertia dyadic of #1# about #2# because\e
+certain position vectors or rotation matrices are missing.\n
+237 \k\aError: Unable to form the inertia dyadic of #1# about #2# because\e
+the position vector from #2# to #1##3# is unavailable or\e
+required rotation matrices are missing.\n
+238 \k\aError: A function that is to be expanded in a Taylor series about a\e
+designated value of an independent variable cannot be evaluated\e
+when this variable has the designated value.\n
+239 Note: An attempt is being made to form the inertia dyadic of #1# about #2#.\p=1000
+240 \k\aError: The inertia dyadic of #1# about #2# cannot be formed.
+241 \k\aError: Unable to shift an inertia dyadic because unable to form\e
+position vector between #1# and #2#.
+242 \k\aError: Unable to form the inertia dyadic of #1# about #2#.\e
+No inertia properties for RigidBody #1# have been entered.\n
+243 \k\aError: Unable to form the inertia dyadic of #1# about #2# because\e
+the inertia dyadic of #1# about #3# has not been\e
+entered and cannot be created automatically.\n
+244 \k\aError: In the context used, the following string is too long:\e
+#1#\n
+245 Note: 0 is being assigned to each missing matrix element.\p
+246 \k\aError: Taylor series cannot be carried out.
+247 \k\aError: The matrix argument of the #1# command\e
+has inappropriate dimensions.\n
+248 \k\a\nWarning: #1#  is a matrix, not a command.\w
+For a matrix element, use square brackets[], not parentheses().\w
+Example: Use  #1#[ #2# ]  not  #1#( #2# ).\n
+249 \k\a\nWarning: #1#  is a matrix, not a command.\w
+For a matrix element, use square brackets[], not parentheses().\w
+Example: Use  #1#[ #2#, #3# ]  not  #1#( #2#, #3# ).\n
+250 \k\a\nError: #1# is an invalid name.\e
+If you are trying to assign a matrix element,\e
+use square brackets[], not parentheses().\e
+Example: fred[1] = 9  assigns the first element of the matrix fred.\n
+251 \k\a\nError: #1# is an invalid name.\e
+If you are trying to assign a matrix element,\e
+use square brackets[], not parentheses().\e
+Example: fred[1,2] = 9  assigns the element in row 1 and column 2.\n
+252 \k\aError: #1#  appears twice in an argument list.
+253 \k\aNote: Consider declaring #1# with an extra prime, i.e., #1#'\i
+as it is needed for differentiation of #1# with respect to #2#.\n
+254 \k\aError: The declaration #1#  must be followed by three\e
+distinct, comma delimited, alphanumeric characters.\n
+255 \k\aError: Unable to form the angular velocity or angular acceleration\e
+of #1# in the NewtonianFrame because the declaration\w
+NewtonianFrame is missing.\n\p
+256
+257 \k\a\nError: No charge has been assigned to #1#.\e
+To assign charges, use  #1#.#2#( ... )
+258 \k\a\nError: No mass has been assigned to #1#.\e
+To assign mass, use  #1#.#2#( ... )
+259 \k\aError: The inner dimensions of two matrices are incompatible\e
+for purposes of carrying out the #1# command.
+260        Matrices have dimension  #1# x #2#  and  #3# x #4#.
+261        Maybe transpose the first  matrix to form a matrix of size #1# x #2#.
+262        Maybe transpose the second matrix to form a matrix of size #1# x #2#.
+263 \nNote: INPUT of  absError = #1#  has been entered.\i
+Typically, absError is approximately  1E-8 * xSmall,  where xSmall\i
+is the smallest maximum absolute value of variables being solved.\n\p=2000
+264 \k\aWarning: #1# appears on both the left-hand-side and right-hand\w
+side of an equals sign, e.g., #1# = sin(#1#) + ...\n\p
+265 \nNote: Use the  #1#  command to assign input values.\p=1000
+266 \aNote: relError > 10^(-DIGITS)  (see help SetDigits).\n\p=2000
+267 No INPUT value was assigned to  #1#.  It is set to #2#.
+268 \k\aError:  #2# = #1#  assigns a negative value to #2#.
+269 \k\aError:  #2# = #1#  assigns a 0 value to #2#.
+270 \k\aError:  #2# = #1#  assigns a negative or 0 value to #2#.
+271 \aWarning: INPUT of  relError = #1#  has been entered.\w
+Typically, relError is a nonnegative value less than 0.1.\n\p
+272 \k\a\nError: Input( #1# )  is ambiguous as  #1# = #5# #2#.\e
+Its units of  #2#  have a conversion factor of #3#\e
+Use  Input( #1#,  #4# )  to return #5# #2#\e
+Use  Input( #1#, #6# )  to return #7# #8#\n
+273 Note: INPUT value assigned to  #1#  was  #2# #3#
+274 Enter INPUT value for  #1#  (press Enter for #2#): \0
+275 Enter GUESS value for  #1#  (press Enter for #2#): \0
+276 \aWarning:  #2# = #1#  assigns a negative value to #2#.
+277 \aWarning:  #2# = #1#  assigns a positive value to #2#.
+278 \k\aError: Missing character  #1#  in  #2#\n
+279 \k\aError: Unmatched  #1#  in  #2#\n
+280 \k\aError: Unable to attach (weld) #1# to #2#.\e
+Unable to attach objects declared as a NewtonianFrame or RigidBody.\n
+281 \k\aError: Unable to use #1# as a NewtonianFrame because it was\e
+attached (welded) to #2#, e.g., declared as #1#( #2# ).\n
+282 \k\aError: Unable to attach (weld) #1# to #2# as\e
+#2# is already directly or indirectly attached to #1#.\n
+283 \k\aError: #1# = #2# is an invalid use of a matrix element.
+284 \k\aError: #1# and #2# are not of the same type.
+285 \k\aError: #1# has not been declared.
+286 \k\aError: #1# does not resolve to a non-negative number.
+287 \k\aError: In attempting to carry out a Taylor series, a partial\e
+differentiation with respect to #1# could not be performed.\n
+288 \n\k\aError: No element of the #1# matrix can be an expression.
+289 \k\aError: Unable to ZEE a quantity.  With SetAutoZee(ON), the program attempts\e
+to ZEE certain forces, torques, inertia dyadics, position vectors\e
+velocities, accelerations, angular velocities, and angular accelerations.\n
+290 \nNote: #1# will be expressed in the #2# basis.\i
+With #5#(#6#), the program attempts to express\i
+#3#'s  #4# in #NEWTONIANFRAME#\i
+in terms of unit vectors fixed in #2#.\n\p=1300
+291 \k\aError: Unable to EXPRESS #1# in the #2# basis.\e
+With #5#(#6#), the program attempts to express\e
+#3#'s  #4# in #NEWTONIANFRAME#\e
+in terms of unit vectors fixed in #2#.\n
+292 \k\aError: Expression is not quadratic in #1#.
+293 \k\aError: Command cannot be carried out because an expression\e
+arising during execution of the command is defective.\n
+294 \k\aError: Expression is not linear in #1#.
+295 Note: #1# been named in #2#.
+296 \nNote: Use #1#( #2# = ... ) to overwrite previous assignment of #2#'.\n
+297 \k\aError: No input value was assigned to #1#.
+298 \nNote: Use #1#( #2# = ... ) to also assign #2#'.\n
+299 \nNote: Use  #1#  to also assign #2#\0
+300 \k\aError: #1# does not have an ordinary derivative.
+301 \nNote: To also assign #2#', use  #1#Dt()\i
+or subsequently enter   #3#.\n\p=2300
+302 \aWarning: No expression has been entered for #1#.\w
+#2#( #1# )  can only return #1#.\p
+303 \aWarning: Case-sensitive ambiguity. #1# is in the workspace.\w
+In #3# codes, the prime symbol ' is replaced with p.\w
+Thus, both #1# and #2# will appear, and may be regarded as equal\w
+to each other when, in fact, they differ from each other.\n\p
+304 \k\aError: Angular velocity of #1# in #2# is missing.  It is needed for\e
+the time-differentiation of #3# in reference frame #2#.\n
+305 \k\aError: The #1# command takes an argument that is a one-dimensional matrix.
+306 \k\aError: #1# was unable to set the #2# of  #3#  in  #4#.
+307 \k\aError: #1# was unable to set the #2# of  #3#  in  #4#.\e
+If you only want to set position and velocity, use the command\e
+#3#.#5#( #4#, ... )\n\p=2300
+308 \k\aError: Taylor series expansion about #1# = 0 cannot be performed.
+309 \n\aError: End of file detected. Input redirection cannot proceed.\n
+310 /********************************* LOGIC ERRORS **************************/
+311
+312 \k\aError: Braces { } missing from IF statement.
+313 \k\a#1#\nError: Defective logic in IF statement.
+314
+315 \k\aError: IF statements cannot be input online.
+316
+317
+318
+319
+320
+321
+322 \k\aError: Missing double quote following string literal.
+323
+324
+325 /******* External function exists, but there is no help message ********/
+326 \k\aError: #1# may exist, but there is no HELP for it.
+330 \k\aError: The zero matrix does not possess an inverse.
+331 \k\aError: Unable to form the inverse of the dyadic because the matrix\e
+that represents the dyadic in the #1# basis cannot be formed.\n
+332 \k\aError: Unable to form the inverse of the dyadic.  An error occurred\e
+during the inversion of the matrix that represents the dyadic\e
+in the #1# basis.\n
+333 It is needed for the #1# command.
+334 Unable to form  #1#'s  #2#  from  #3#.
+335 Unable to form  #1#'s  #2#  in  #3#.
+336 #1#'s  #2#  in  #3#  is not in the workspace.
+337 Unable to express #1# in the #2# basis.
+338 \k\aError: Diagonal matrix cannot be inverted due to zero in element #1#.
+339 \k\aError: Unable to return eigenvectors for zero or unit dyadic (no basis).
+340 \k\aError: #1# is a built-in quantity that cannot be overwritten.
+341 \k\aError: pi is a built-in number equal to 3.14159265358979 ...
+342 \aWarning: Imaginary number is being coded in a Fortran or C file\p
+343 \nNote: The default name of  sqrt(-1)  is  #1#.\i
+To change its name to i,  type  SetImaginaryNumber( i ).\n
+344 \k\aError: #1# was declared as the imaginary number sqrt(-1).
+***********************************************************************************
+380 \k\aError: #1# is one-element matrix (not a scalar, vector ...)\n
+381 \k\aError: Cannot assign  #1#  to one-element matrix.\e
+Consider  matrixName[1]  or  GetElement( matrixExpression, 1 )\n
+382 \nNote: Reinterpreting a one-element matrix as just its element, i.e.,
+383 \k\aError: #1# is a #2#-dimensional matrix.\e
+Expecting #2# (not #3#) arguments.\n
+384 \n\k\aError: #1#  was already declared in  #2#.\e
+Consider instead using  #3#.\n
+385 \nNote: #1# has been named in the command  #2#.\i
+Assigning generalized speeds can be useful for causing constraint\i
+force/torques to appear in static or dynamic equations.\n
+%Partial velocity calculations ignore the assignment of #1#.\i
+386 \n\nNote: Possible invalid MG computerID (e.g., too short):\n#1#\n\n
+387 \nNote: #1# is an experimental command (subject to change).\n\p=2400
+388 Warning: #1# is one of this program's reserved keywords.\w
+#1# is currently in experimental use by this program.
+389 Warning: #1# is an experimental command and is not recommended for use.\n\p=2000
+390 \k\aError: #1#  was already declared in  #2#.
+391 \n\k\aError: The name #1# is not valid for the #2# declaration.\e
+The prime symbol ' must appear as the last character of names\e
+appearing in the #2# declaration.  To declare #1#\e
+as a MotionVariable and #1#' as its time-derivative, type\n\e
+#2# #1#'\n\e
+To declare #1# as a MotionVariable without introducing #1#', type\n\e
+MotionVariable  #1#\n
+392 \nNote: #1# is the preferred way to declare generalized speeds.\n\p
+393 \k\aError: #1# cannot be declared after the CONSTRAIN command.
+394 \k\aError: Cannot mix declarations of #1# and their time-derivatives.
+395 \nNote: The  MotionVariable  declaration is useful for static analysis\i
+and calculations involving velocity and angular velocity.\i
+The  MotionVariable'  declaration is useful for dynamic analysis\i
+and calculations involving acceleration and angular acceleration.\n
+396 \n\k\aError: #2# has already been defined.\e
+To avoid confusion (duplicate data), do not also assign #1#.\n
+397 #1# #2# of #3#.  Close #4# to continue.
+398 \nClose program  #1#  to continue .....\n
+399 \nFor  #1#  to launch, the Java JDK (not just JRE)\i
+should already be installed on your computer.\i
+Download/install the Java JDK (not JRE) from Oracle's website.\n\p=1200
+400 \nFor  #1#  to launch, the plotting utility gnuplot\i
+should already be installed on your computer.\n\p=1200
+401 \k\a\nError: Child process failure for #1#.\p
+402 \k\a\nError: Unable to execute/spawn/run  #1# \p=2400
+402
+403
+404 \n\k\aError: #1# cannot declare #2# since #2#' also exists.\e
+Bad mix of  #1#  and their time-derivatives.\n
+405 \n\k\aError: #1# cannot declare #2# since #2#' does not exist.\e
+Bad mix of  #1#  and their time-derivatives.\n
+406 \k\aError: #1#'s generalized inertia/effective forces cannot be determined.
+407 \nWarning: The name  #1#'  has a prime symbol '.\w
+#1#' is an unusual name for #2#.\w
+Think carefully about whether you meant #1#.\n\p=2200
+408 \nWarning: The name  #1#'  has more than one prime symbol '.\w
+#1#' is an unusual name for #2#.\w
+Think carefully about whether you meant #1#.\n\p=2200
+409 \k\aError: Unable to calculate the dot product of #1#'s inertia dyadic about\e
+#2# with #1#'s angular acceleration in #NewtonianFrame#.\n
+410 \k\aError: Unable to calculate the dot product of #1#'s inertia dyadic about\e
+#2# with #1#'s angular velocity in #NewtonianFrame#.
+411 \k\aError: Unable to perform the following calculation:\e
+Cross( #1#.GetAngularVelocity(#NewtonianFrame#), Dot( #1#.GetInertiaDyadic(#2#), #1#.GetAngularVelocity(#NewtonianFrame#) ))\n
+412 \n\k\aError: Unable to express  #1#  in the  #2#  basis.\e
+This is needed for use in conjunction with:
+413 \nNote: Perhaps a syntax of  #1#  with additional second argument (name of\i
+RigidFrame or RigidBody) could be used to set  #2#'s  inertia about  #3#.\n
+414 \nNote: Perhaps this dyadic could be expressed differently.\n
+415 \nNote: RigidFrame #1# has origin-point #1#o and orthogonal\i
+unit vectors #1#x>, #1#y>, #1#z>.\n\p=400
+416 \nNote: RigidBody #1# has origin-point #1#o, center of mass #1#cm,\i
+and orthogonal unit vectors #1#x>, #1#y>, #1#z>.\i
+Related:  #1#.SetMass(...)   #1#.SetInertia(...)\n\p=400
+417 \n\k\aError: Center of mass point #1# was automatically\e
+created when RigidBody #2# was declared.\n
+418 \n\k\aError: Origin point #1# was automatically\e
+created when RigidBody #2# was declared.\n
+419 \n\k\aError: Origin point #1# was automatically\e
+created when RigidFrame #2# was declared.\n
+420 \k\aError: Incorrect syntax for Fortran DO-loop or C/MATLAB for-loop.
+421 Note: The INPUT value assigned to  #1#  will be ignored.\p=1200
+422 \k\aError: Unable to use command-line arguments for  .#1#  files.\n
+423 \k\aError: Unable to simplify #1#'s partial velocities/angular-velocities.\n
+424 \k\aError: Unable to form partial derivatives with respect to #1#.\n
+425 \k\aError: Unable to simplify partial derivatives.
+426 \k\aError: The command #1# currently does not allow partial\e
+differentiation of a 2D matrix with respect to more than one scalar name.\n
+427 \k\aError: The command #1# currently does not allow partial\e
+differentiation of a matrix with respect to 2D matrix of scalar names.\n
+428 \n\aNote: It is unusual to do a Taylor series expansion in #1# when\i
+#1# has been assigned and is a function of another variable\i
+(e.g., #2#) in the multi-variable Taylor series expansion.\i
+This may yield erroneous results (not what you expected).\n\p
+429 \k\aError: When expanding about a non-zero value of #1# in a Taylor\e
+series, it is inappropriate to also use #1# as a perturbation.\n
+430 Note: To generate code, previous assignment of #1# will be ignored.\p
+431 Note: To generate code, previous assignment of #1# will be ignored.\p=500
+432 Note: #1#, the first argument of #2#, is a unit\i
+vector.  Usually, the first argument is the product of a\i
+local gravitational acceleration constant and a unit vector.\n\p
+433
+434 \k\aWarning: Uniform gravity forces may have already been added.\n\p
+435 \nNote: #2#.#1#( #3# ) returns the rigid transform X_#3#_#2#.\n\p
+436
+437
+438 \k\aError: Unable to calculate inverse-square law force of #2# on #1#.
+439 Note: An approximation to the gravitational forces exerted by\i
+#1# on #2# is being made.\n\p
+440
+441 \k\aError: Unable to form generalized active forces for the\e
+#1# command.\n
+442
+443 \k\aError: Unable to form a differential equation for WChecki for the\e
+#1# command.\n
+444 \k\aError: Unable to form a variable WChecki for the\e
+#1# command due to existing declarations of WCheck1, WCheck2, ...\n
+445 \k\aError: Unable to form KE(2) for the #1# command.
+446 \k\aError: Disambiguate #1# by using one of the following:\e
+OunceMass        Ozm\e
+OunceForce       Ozf\e
+FluidOunce       FluidOunces\n
+447 \k\aError: Disambiguate #1# by using one of the following:\e
+PoundMass        Lbm\e
+PoundForce       Lbf\n
+448 Note: For efficient results, issue the command #1#(#1#).\p
+449 \k\aError: Missing time-derivative of #1#.
+450 \n No #1# has been declared.\n
+451 \n The following have been declared #1#:\n
+452 \n #1# has been declared as the NewtonianFrame.\n
+453 \n No NewtonianFrame has been declared.\n
+454 \k\aWarning: The UNITS command does not affect conversions from degrees\w
+to radians or vice-versa for the quantity #1#.\w
+Consider using the SetUnitSystem declaration.\n\p
+455 \k\aError:  #1#  is not a unit recognized by the program.
+456 \k\aError: The units #1# have dimension #2#,\e
+whereas the units #3# have dimension #4#.\n
+457 \a\nWarning: Assigning units with the old UNITS declaration is incompatible\w
+with assigning units in  #1#  or  #2#  commands.\w
+We recommend you discontinue using the old UNITS command\w
+since it allows for nonsensical units (e.g., Sheep) and\w
+does not properly convert most units (other than degrees).\n\p=3000
+458 \nAllowable units (may be combined, e.g., kg*cm/second^2):\n
+459 \nAllowable unit prefixes (with values):\n
+460 \nWarning: #1# was assigned units of dimension  #2#.\w
+The expected units were of dimension  #3#.
+461 Type  UNITS  to see a list of valid units.\n\p=3000
+462 \nWarning: Units were assigned to  #1#  for INPUT, but no units were\w
+assigned to an expression containing #1# in an OUTPUT command.\n\p
+463 \k\aError:  Disambiguate h by using hr, hour, or Henry.
+464 \nNote: Default calculations use  #1#  (not #2#).\n
+465 Note: The following commands allow assigning units for automatic conversion:\i
+Input,  Output,  Constant,  SetMass,  SetInertia.\n
+466
+467 \nNote: To code #1# to a file, use  #1#.\i
+To just code calculations (no output file or plot), use  #3#.\i
+To calculate #1# and plot, use  #2#.\n
+468 \nNote: To calculate #1# to a file, use  #1#.\i
+To calculate #1# and plot, use  #2#.\n
+469 \nNote: To code #1# to a file, use  #1#.\i
+To just code calculations (no output file or plot), use  #3#.\n
+470 \k\aError: Unable to form #1#'s generalized momenta in #NewtonianFrame#.
+471 \k\aError: #1#'s angular momentum about point #2#\e
+in reference frame #3# cannot be formed.\n
+472 \k\aError: #1#'s moment of effective forces about point #2#\e
+in reference frame #3# cannot be formed.\n
+473 \k\aError: #1#'s kinetic energy in reference frame #2# cannot be formed.\n
+474 \aWarning: #1# command has been issued and AutoEpsilon is 0.0\w
+If roundoff errors are encountered, consider setting AutoEpsilon to a small value, e.g.,\w
+SetAutoEpsilon( 1.0E-14 ).\p
+475
+476 \aWarning: When an #1# command is used in conjunction with an\w
+automatic Taylor series and automatic zeeing [i.e., SetAutoZee(ON)],\w
+the EXPLICIT command may fail to take effect.\n\p
+477 \k\aError: An automatic Taylor series is in effect.\e
+The function associated with the argument #2#\e
+of the command #1# should have been formed\e
+with the automatic Taylor series OFF.\n
+478 \k\aError: #1#(ON) is invalid because the variables\e
+associated with #1# have not been named.\n
+479 \a\nWarning: #1# seems to be a non-constant type.\p=1000
+480 \a\nWarning: #1# is being assigned - which may conflict with\w
+its previously assigned INPUT value of  #2#\n\p
+481 \a\nWarning: #1# is being assigned which may later cause #2# to be assigned.\w
+However, #2# was previously assigned an INPUT value of #3#.\n\p
+482 \a\nWarning: #1# has been assigned (i.e., it has a right-hand side).\w
+Also assigning INPUT to  #1#  is questionable.\n\p
+483 \a\nWarning: #1# may be indirectly assigned to a expression via a previous\w
+assignment of #2# (i.e., #2# has a right-hand side).\w
+Assigning INPUT to  #1#  is questionable.\n\p
+484 \nNote: The command #1# has a mismatched set of arguments:\i
+the 1st argument is a  #2#  whereas the 2nd argument is a  #3#.\n
+485 \nNote: The first and second arguments of the command #1#\i
+are matrices of difference sizes.\n\p=2900
+486 \nNote: #1# yields  false  on matrix element  #2#.\n
+487 \nNote: #1# yields  false  on the element in row #2# and column #3#.\n
+488
+489
+490
+491 \k\aError: The moment of the effective force of #1# about #2#\e
+in #3# cannot be formed.\n
+492
+493 \k\aError: Cannot form the moment of a force applied to #1# about #2#.\n
+494
+495
+496
+497
+498 \k\aError: Indicated operation on #1# cannot be performed.\e
+Improper use of +=, -=, *=, /=, ^=, or :=.\n
+499 \k\aError: No expression has been assigned to #1#.\e
+Improper use of *=, /=, or ^=.\n
+/************************** VERSION 4.0 MESSAGES *****************************/
+500 \k\aError: Unable to process the statement(s):\e
+#1#\e
+There was more than one input statement on a single line,\e
+but an error occured before finishing processing all of them.\n
+501 \nNote: Plotting is disabled due to the setting:  #1# OFF\i
+This may have been set in the folder/file MGToolbox/MGDefaultPreferences.txt.\p=1500\n
+502 \k\aError: #1# command is unable to multiply  element[#2#,#3#]  by  element[#3#,#4#].\n
+503 \k\aError: Unable to simplify element #1# of a matrix.\n
+504 \k\aError detected in element in row #1# and column #2#.\n
+505 \k\aError: Unable to perform #1# command on matrix element #2#.\n
+506 \k\aError: Unable to perform #1# command on the element in row #2# and column #3#.\n
+508
+509 \k\aError: The imaginary variable #1#\e
+is an invalid argument of #2#.\n
+510 \k\aError: The independent variable #1#\e
+is an invalid argument of #2#.\n
+511 \aWarning: INCLUDE command has named arguments that appear nonlinearly\w
+(one of the arguments associated with this nonlinearity is #1#.\p
+512 \k\aError: #1# is an invalid argument of #2#.\e
+Expecting a name declared as #3#.\n
+513 \n\k\aError: The scalar name #1# cannot be assigned to a vector.\e
+Perhaps assign with a vector name such as #1#> = ...\n
+514 \n\k\aError: The scalar name #1# cannot be assigned to a dyadic.\e
+Perhaps assign with a dyadic name such as #1#>> = ...\n
+515 \n\k\aError: The vector name #1#> cannot be assigned to a dyadic.\e
+Perhaps assign with a dyadic name such as #1#>> = ...\n
+516 \n\k\aError: The vector name #1#> cannot be assigned to a scalar expression.\e
+Perhaps assign with a scalar name such as #1# = ...\n
+517 \n\k\aError: The dyadic name #1#>> cannot be assigned to a scalar expression.\e
+Perhaps assign with a scalar name such as #1# = ...\n
+518 \n\k\aError: The dyadic name #1#>> cannot be assigned to a vector expression.\e
+Perhaps assign with a vector name such as #1#> = ...\n
+519
+520 \n\k\aError: #1# is the wrong type.\e
+It is a #2#, but expecting a #3#.\n
+521 \n\k\aError: Cannot assign a #2# to the #3# #1#.
+522 \k\aError: #1# cannot be assigned to the given expression.\e
+The expression type (scalar, matrix, vector, dyadic) is mismatched for #1#.
+523 \n\k\aWarning: Units cannot be assigned to #1#.\n
+524 \n Not all #1# have a time derivative.\n
+525 \n Not all #1# have a 2nd time-derivative.\n
+526 \k\a\nError: #1# constructor must be followed by . (period) and\e
+then the name of a system command (method).  Error in:\e
+#1##2#\n
+527 \n\aNote: Unusual to use  NewtonianFrame #1#  with  #2#.\n
+528 \n\aNote: #1# is welded to the NewtonianFrame #3#.\i
+It is unusual for #1# to be used with the #2# command.\n
+529 \k\aNote: Consider  #2#  instead of  #1#.\p=2000
+530 \nNote: Action/reaction assumes force is parallel to p_#2#_#3#>.\n
+531 \k\aError: Unable to calculate  #2#.#4#( #3# )  due to\e
+dot-product error in  #1#.#5#( #3# )\n
+532 \n\aNote: The #1# of #2# in #3# was previously set to a non-zero vector.\i
+However, the current kinematics command suggests that the\i
+#1# of #2# in #3# should be zero.\n\p
+534 \n\aNote: For efficient kinematics, consider a change of variables from\i
+#5#, #6#, #7# to angular velocity variables, e.g., with\i
+#1#.#3#( #2#, #4#, #5#, #6#, #7# )\n\p=1700
+535 \n\aNote: For efficient kinematics, consider a change of variables from\i
+#5#, #6#, #7#, #8# to angular velocity variables, e.g., with\i
+#1#.#3#( #2#, #4#, #5#, #6#, #7#, #8# )\n\p=1700
+536
+537
+538
+539
+540 \nNote: The stored partial derivative of #2# with respect to #1# is unknown.
+541 \nNote: The stored partial derivative of #2# with respect to #1# seems nonzero.
+542 \nNote: The stored partial derivative of #2# with respect to #1# is zero.
+543 \k\a\nNote: Internal program warning (not user error).\i
+The stored partial derivative of #2# with respect to #1# is\i
+zero (possibly due to simplification),\i
+but #1# appears on the right-hand-side of #2#.\i
+Please send this file to technical support.\i
+Type  RUN  to continue.\n
+544 \k\a\nError: Internal program error (not user error).\e
+The stored partial derivative of #2# with respect to #1# seems non-zero,\e
+but #1# never appears on the right-hand-side of #2#.\e
+Please send this file to technical support.\e
+Type  RUN  to continue.\n
+545 \nNote: Internal program warning message (not user error).\i
+Inefficient storage of partial derivative with respect to #1#.\i
+Please send offending file to technical support.\i
+Type  RUN  to continue.\n
+546 \k\a\nError: Internal program error (not user error).\e
+Invalid stored partial derivative with respect to #1#.\e
+Please send offending file to technical support.\e
+Type  RUN  to continue.\n
+547 \k\a\nError: Internal program error (not user error).\e
+Invalid stored _ALTERNATE_ partial derivative with respect to #1#.\e
+Please send offending file to technical support.\e
+Type  RUN  to continue.\n
+548 \k\a\nError: Internal program error (not user error).\e
+Invalid stored _ALTERNATE_ partial derivative with respect to #1#.\e
+Generic partial derivative is zero, but partial velocity is non-zero.\e
+Please send offending file to technical support.\e
+Type  RUN  to continue.\n
+549
+550 \nNote: Nonlinear equations may have multiple solutions and/or converge\i
+to an answer that is not a solution. The solution depends on a guess.\i
+If a guess yields an unsatisfactory answer, try another guess.
+551 Note: Solution convergence = #1#  (near zero is good).\n
+552 \n\k\aError: Nonlinear equations may have multiple solutions and/or converge\e
+to an answer that is not a solution. The solution depends on a guess.\e
+Your guess did NOT adequately converge to a solution (allowed error = #1#).\e
+Ensure your equations are correct and try another guess.
+553 Error: Maximum number of iterations (#1#) exceeded.
+554 Error: Solution convergence = #1#  (not within absError of zero).
+555 Error: Worst absolute error = #2#  in equation #1#.
+556 \k\aError: Unable to calculate constant values for ODE calculations.
+557
+558 \k\aError: Unable to perform the cross-product and dot-\e
+products necessary to carry out the VtoW command.\n
+559 \n\aNote: #1# is not interpreted as #2#.\i
+The syntax for angular acceleration starts with #2#.\n\p=2700
+560
+561
+562 \nQuery replace is being done on:\n #1#\n
+563 Replace  #1#  with  #2#  ? (Y/N): \0
+564 \nNote: The #1# command normally has two arguments (not one).\i
+Since its only argument is expressed in the basis #2#,\i
+this is reinterpreted as  #1#( #2#, #3# )\n\p=2000
+565 \k\aError: The matrix argument to the #1# command\e
+must be either a row matrix or column matrix.\n
+566 \k\aError: One of the elements in the matrix argument to the\e
+#1# command is not a vector, dyadic, triadic, etc.\n
+567 \k\aError: One of the element in the matrix argument to the\e
+#1# command could not be expressed in the #2# basis.\n
+568 \k\aError: Matrix element #1# is not a scalar expression.\e
+For this command, matrix elements cannot be vectors, etc.\n
+569 \k\aError: Matrix element #1# is not a REAL scalar expression.
+570 \k\aError: Unable to carry out the #1# command because the #4#i (i=x,y,z)\e
+measures of the position vector from #2# to #3# could not be found.\n
+571 \k\aError: Unable to carry out the #1# command because the\e
+quantity p_#2#_#3# already exists as a scalar,\e
+and can not be overwritten as a matrix.\n
+572 \n\k\aError: #2#_#1# has already been defined as a rotation matrix.\e
+Its transpose #1#_#2# cannot be assigned to a scalar.\n
+573 \k\aError: Unable to form element [#2#,#3#] of the #1# rotation matrix.
+574 \aWarning: #1#[#2#,#3#]  is not constant, but  #4# = 0>\p=500
+575 \aWarning: #1#  is a 3x3 rotation matrix, but\w
+the absolute value of #1#[#2#,#3#] is larger than 1.\n\p
+576 \k\aError: #1# is an identity matrix and #1#[#2#,#3#] should be 1.
+577 \k\aError: #1# is an identity matrix and #1#[#2#,#3#] should be 0.
+578 \k\aError: #1#  is an invalid 3x3 rotation matrix.
+579 \k\aError: Matrix element [#2#,#3#] is not a real scalar expression.\e
+#1#  is an invalid rotation matrix.\n
+580 \k\aError: Matrix argument  #1#  contains a non-scalar expression.
+581 \k\aError: The #1# command has a matrix argument with a non-scalar expression.
+582 \k\aError: An argument of the #1# command must be a\e
+scalar expression or matrix of scalar expressions.\e
+This argument cannot be a vector, dyadic, etc.\n
+583 \aWarning: An argument of the #1# command is a matrix.\e
+This matrix does not appear to be symmetric.\p
+584
+585 \n\k\aError: Currently, the command #1# requires a\e
+one-dimensional (row or column) matrix.
+586 \n\k\aError: Currently, the command #1# requires a\e
+matrix that contains only real scalar elements.
+587
+588 \k\aError: Unable to calculate the partial derivative of kinetic energy\e
+with respect to time-derivatives of generalized coordinates.\n
+589 \k\aError: Unable to calculate the partial derivative of kinetic\e
+energy with respect to all the generalized coordinates.\n
+590 \k\aError: Unable to calculate the partial derivative of a
+function with respect to #1#.\n
+591 \k\aError: There are no independent or auxiliary generalized speeds.\e
+Generalized active forces cannot be formed from a potential function.\n
+592 \aNote: No generalized speeds have been declared.  Generalized forces\i
+are assumed to be the negative of the partial derivatives\i
+of the potential function with respect to generalized coordinates.\n\p=2000
+593 \k\aError: The number of generalized coordinates must be equal\e
+to the number of generalized speeds.\n
+594 \k\aError: The relationship between #1#' and the generalized speeds\e
+must be in the workspace.  #1#' has not been declared.\n
+595 \k\aError: The relationship between #1#' and the generalized speeds\e
+must be in the workspace.\n
+596 \k\aError: The partial derivative of #1# with respect to #1#\e
+must be available and #1# must be linear in #2#.\n
+597 \k\aWarning: Operating system PATH variable is too long.\w
+Plotting dynamic linked libraries (dll) may not be found.\n\p=2000
+598 \k\aError: While reading string from file, newline character not found.\e
+String may be too long:\e
+#1#\n\n
+599 \k\aError while reading string from file. String is too long:\e
+#1#\n\n
+600 The #1# command is not available when commands are issued through a socket.
+601 \n\k\aError: After reading the first line of MGLicense.txt\e
+ftell = #1#, which may signal a Microsoft bug.\n
+602 \nNote: Operating system clock seems invalid.\i
+Number of seconds = #1#.\n\p
+603 \n\k\aError: MGLicense.txt string is  #1#.\e
+Unable to interpret this as number of seconds.\n\p
+604 \nNote: Consider upgrading to the latest version of #1#.\i
+Visit:  #2#\n\p
+605 \n\k\aError: The second line of MGLicense.txt has #1# characters:\e
+#2#\n\p
+606 \n\k\aError: MGLicense.txt string is  #1#.\e
+This is parsed   as number of seconds = #2#.\e
+This is compared to number of seconds = #3#.\n\p
+607 \k\aError: The names which appear within parentheses following a Point,\e
+Particle, RigidBody, or RigidFrame declarations must have previously\e
+appeared in a a RigidBody or RigidFrame declaration.\e
+The declaration #1#(#2#) is the offending declaration.\n
+608 \nNote: #1#'s inertia properties suggest an axially-symmetric\i
+RigidBody such as a wheel, cylinder, or cone.  If, #7# is\i
+fixed in some other RigidBody or RigidFrame, it can be advantageous\i
+to use a different syntax of the #2# command, e.g.,\i
+#1#.#2#( #3#, otherRigidBodyOrFrame, #4#, #5#, #6# )\n\p=200
+609
+610 \k\aWarning: M#1# has been previously declared or defined.\w
+When the setting of the default quantity AUTODECLARE has\w
+MASS=ON, the declaration RigidBody #1#\w
+informs the program to try to declare M#1# as a non-negative\w
+constant and assign this value to the mass of #1#.\p\n
+611 \k\aWarning: M#1# has been previously declared or defined.\w
+When the setting of the default quantity AUTODECLARE has\w
+MASS=ON, the declaration Particle #1#\w
+informs the program to try to declare M#1# as a non-negative\w
+constant and assign this value to the mass of #1#.\p\n
+612 \k\aWarning: #1# has been previously declared or defined.\w
+When the setting of the default quantity AUTODECLARE has\w
+INERTIA=ON, the declaration RigidBody #2#\w
+informs the program to try to declare #1# as a non-negative\w
+constant and to create a central inertia dyadic for #2#.\p\n
+/************************** VERSION 4.1 MESSAGES *****************************/
+699 \nNote: Use  :=  to automatically overwrite input (without query), e.g.,\i
+Input  #1# := #2# #3# \p=500\n
+699 \nNote: Use  :=  to assign and overwrite without query, e.g.,\i
+Input #1# :=  #2#\p=500\n
+700 Note: The proper syntactical form is #1#_#2#_#3#> \p
+701 Note: The proper syntactical form is #1#_#2#> \p
+702 Note: The proper syntactical form is #1#_#2#_#3#>> \p
+704 \nNote: Use  :=  to assign and overwrite without query.
+/*  The 2nd line below is commented out as it is barely used and this message appears */
+/*  incorrectly in conjunction with SolveQuadraticPositiveRoot( x^2 = cos(t), x )     */
+/*  Use  +=  to accumulate sums (similarly for  -=,  *=,  /= ).                       */
+705
+706 \k\aError: Unable to interpret #1##2#
+707 \nNote: It is unusual to assign the generalized speed #1# to an\i
+expression containing #2# (the time-derivative of a variable).\i
+Kinematical differential equations relate time-derivatives of\i
+configuration variables to generalized speeds, e.g., #2# = #1#\n\p
+/************************** VERSION 4.2 MESSAGES *****************************/
+708 \k\aError: The command SetCMSymbol must be issued before any bodies are created.
+709 \k\aError: #1# is an invalid argument of #2#.\e
+Argument must have the form  #1# = RightHandSide.
+710 \nNote: DEGREES ON does not affect integration or solving nonlinear equations.\n\p
+711 \k\aError: Unable to symbolically form the Jacobian or residual matrix.\n
+712 \n\k\aError: Unable to find a real solution to nonlinear algebraic equation(s).\e
+Try another guess for the solution.\e
+Note: It is possible that no real solution exists.
+713 \k\aError: Unable to calculate the Jacobian matrix.
+714 \k\aError: Unable to calculate the residual matrix.
+715 \k\aError: Unable to solve for the gradient due to a singular matrix.
+716 \k\aError: Unable to calculate a non-zero gradient.\n
+717 \nNote: The solution did not converge to within #1# = #2#.\i
+However, solution #3# = #5# is less than default #3# = #4#.\i
+Do you want this solution? (Y/N): \0
+/**   (solution #3# is ratio of solution error to initial guess error).\i   **/
+718 \k\aError: Unable to solve linear algebraic equations at #1# = #2#.
+719 \nNote: The output units for  #1#  are  #2#.
+720 \k\aError: Unable to evaluate #1# to a real number.\n
+721 \k\aError: Unable to evaluate #1# to a real number.\e
+#1# has not been assigned an expression or INPUT value.\n
+722 Error: A numerical integration parameter is invalid.
+723 Error: Unable to open or write to an output file at #1# = #2#\n
+724 \k\aError: Unable to form the coefficient or right-hand-side matrix.
+725 \k\aError: Unable to successfully integrate the ordinary differential equations.
+726 \k\aError: Unable to form the matrices needed to solve linear algebraic equations.
+727 \k\aError: There are no variables to be integrated.
+728 \k\aError: Unable to numerically solve a matrix set of equations.\e
+All elements in row #1# of the coefficient matrix are zero.\e
+Coefficient matrix is singular.\n
+728 \k\aError: Unable to numerically solve a matrix set of equations.\e
+All elements in row #1# of the coefficient matrix are zero.\e
+Coefficient matrix is singular.\n
+729 \k\aError: Unable to numerically solve a matrix set of equations due to a zero\e
+pivot in column  #1#  during LU-decomposition of a coefficient matrix.\e
+Coefficient matrix is singular.\n
+730 \nNote: #2# is an argument of the #1# command\i
+appearing on the left-hand side of an equals sign.\i
+It also appears (possibly implicitly) on the right-hand side of #3#.\i
+Consider nesting the #1# command. \n\p=2000
+731 \k\aError: Nonlinear solver stepsize of #1# is too small.
+732 \k\aError: #1#  does not parse to a real number.
+733 \k\aError: An integral's upper and lower limits must be a real number.\e
+#1#  does not parse to a real number.\n
+734 \k\aError: Numerical integration failed at #1# = #2#\e
+because derivatives could not be evaluated.
+735 \k\aError: Numerical integration of #3# failed at #1# = #2#\e
+because step-size has been cut too many times.\n
+736 \k\aError: Numerical integration of #3# failed at #1# = #2#.\e
+Step-size is too small relative to #2# (numerical round-off).\e
+Numerical integration step-size may have been halved too many times.\n
+737 \k\aError: Internal program error:  Please send offending file to technical support.\n
+738 \k\aError: The deprecated UNITS declaration is incompatible with newer commands.\e
+Use the SetUnitSystem declaration together with\e
+INPUT or OUTPUT commands to assign units.\n
+740 \k\aError: #1# is not the name of a valid object, e.g.,\e
+it is not a RigidBody, RigidFrame, Particle, or Point.\n
+741 \k\aError: #2# is an invalid method for #1#.
+742 \k\aError: Unable to form generalized effective forces,\e
+i.e., unable to form generalized inertia forces.
+743 \k\aError: Unable to form generalized active forces.
+744 \nNote: The ZERO matrix has been set equal to the generalized active forces\i
+without the addition of generalized effective forces, i.e.,\i
+no generalized inertia forces are being calculated.\n
+are being formed with generalized active forces
+745 \k\aError: Expecting parentheses after  .#1#   e.g.,  .#1#()\n
+746 \nNote: The vector argument of the #1# command must be a unit vector.\i
+If necessary, use the #2# command, e.g.,\i
+#2#( #3# )\n\p=0
+747 \nNote: #1# must be a vector fixed in either #2# or #3#.\n\p=1300
+748
+749 \a\nWarning: Since both #1# and #2# are fixed on #3#, it may be\w
+incorrect to differentiate #1#'s position vector from #2#.\w
+Consider using a different syntax of the command, e.g.,\w
+#1#.#4#( ... #2#, ... #3# )\n\p=0
+750 Note: #1# to be performed on #2# but not #2#'.
+751 Note: Point #1# has been created as the point of #2# that is\i
+coincident with #3#.  To skip this note, declare:\i
+Point #1#( #2# )\n\p=2000
+752 \k\aError: Either declare a NewtonianFrame, or use a syntax of\e
+the #1# command in which the first argument is a\e
+RigidFrame or RigidBody, or use the #2# command.\n
+753
+754 \nNote: #1#_#2#_#3#>  is being assigned and\i
+#1#_#3#_#2#>  is also in the workspace.\i
+To account for both, use  #2#.#4#(#3#).\n\p=0
+755 \k\aError: Nonlinear equations solution failed at:\0
+756 \k\aError: The #1# on #3# from #2# should be the zero vector.
+757 \nNote: Differentiating #1#'s position vector from #2# in #3#\i
+to form relative #4#.\p=2300\n
+758 \k\aError: The angular velocity of #1# in #2# should be the zero vector.
+759 \k\aError: The angular acceleration of #1# in #2# should be the zero vector.
+760 \k\aError: The position vector from #1# to #2# should be the zero vector.
+761 \k\aError: The velocity of #1# in #2# should be the zero vector.
+762 \k\aError: The acceleration of #1# in #2# should be the zero vector.
+763 \k\aError: A number that is out-of-range for this program was encountered.
+764 \nNote: The default SI UnitSystem uses mass, length, and time units of\i
+#2#, #3#, and #4#, respectively.\i
+Units convert (as necessary) for  #1#.\n
+765 \n\aNote: Force is applied to #1#, but #1# is not a particle or\i
+attached (welded) to a massive object (e.g., a RigidBody).\i
+If #1# is a point of rigidBody BB, declare it as  Point #1#(BB).\i
+This message may be irrelevant for static analysis.\n
+766 \n\aNote: Force is applied to #1# (a point of #2#),\i
+but #2# is not a massive object (e.g., a RigidBody).\i
+This message may be irrelevant for static analysis.\n
+767
+768 \nNote: For easy reading/printing, consider:\i
+Save filename.html
+769 \n#1#  #2#\n\&
+was set in the file #3#\n\&
+For more information, type:  Help #1#\n\p=200
+770 \k\aError: The reference-frame argument of the #1# command is missing.
+771 \k\aError: The command #1# requires  System.#1#(...)
+772 \nNote: No object was named before the #1# command.\w
+The command   System.#1#  is being used.\n\p=2000
+773 \nNote: Folder  #1#  is missing\i
+If this messages continues to reappear, you may need to install X11\i
+from the XQuartz project at:  https://www.xquartz.org\n\p=3500
+774 \nNote: Folder #1# is missing.  Try installing X11/XQuartx.
+774Old \nNote: No Macintosh symbolic links exist for  #1#  and/or  #2# \i
+You may be prompted for your Macintosh password to set these links.
+They are set in the file MotionGenesis/MGToolbox/PlotGenesis/MacOSConnectPlotGenesisToJavaQuartzX11Gnuplot.txt\n
+775 \n\aNote: Since #1# and #2# are both points of #3#,\i
+an "internal force" is being applied to #3#.
+776 Note: It is odd for the number of digits in the #1# command\i
+to be more than 16.  #2# digits will be used.\n\p=1200
+777 \k\aError: Encountered a singular matrix with a row of zeros.\e
+The row of zeros corresponds to the unknown #1#.\n
+778 \k\aError: Encountered a singular matrix with a column of zeros.\e
+The column of zeros corresponds to the unknown #1#.\e
+Check your equations to see if they involve #1#.\n
+779 \k\aError: You may want to try something like\e
+#1#.#2#( #3#,  #4# ).\n\p=2400
+780 \n\aNote: #1# is a built-in quantity.  It is unusual to assign it.\i
+Consider the Evaluate command with  t = ... \n\p=2000
+781 \n\aNote: #1# is a built-in quantity.  It is unusual to assign it\i
+except through an INPUT statement, for example something like\i
+Input #1# = #2# #3# \n\p=3500
+782 \k\aError: Internal program error:  Invalid unit conversion factors.\e
+Please send offending file to technical support.\n
+783 \k\aError: #1# is an invalid name because it contains _ (underscore).
+784 \k\aError: #1# is an invalid name because it contains ' (prime).
+785 \k\aError: Unable to create a system with zero physical objects.
+786 \k\aError: #1# has already been declared as a System.\n
+787 Note: #1# is already in the system (it is included only once).
+788 Note: Since #1# is already welded to #2#, it is being skipped.\p=1000
+789 \aWarning: Equation #1# does not contain any unknowns to-be-solved.\p
+790 \k\aError: Previous expression does not contain any unknowns to-be-solved.
+791 Unknown(s):
+792 \nNote: No plots will appear since #1# is #2#.\n\p=3100
+793 \nNote: The following operating system call succeeded:\n#1#\n\i
+However, the operating system could not open/launch the file:\n#2#\n\n\p=5700
+794 \nNote: To plot, you may need to download/install Quartz X11 from:\i
+https://www.xquartz.org/ \i
+Then logout and re-login.\n\p=5300\n
+795 \n\nNote: This tests optional plotting utility.\i
+If a plot does not appear, Gnuplot may not be installed.\i
+Note: Gnuplot is optional and only used for plotting.\n\p=5700
+796 Note: Did you mean  #2#  (point #1# is welded to #2#)?\i
+#2# is a RigidBody, RigidFrame, or NewtonianFrame.\n
+797 \k\aError: #1# is invalid for the #2# command.\e
+It is not a RigidBody, RigidFrame, or NewtonianFrame.\n
+798 \k\aError: #2# is an invalid method for #1#.\e
+#1# is not a RigidBody.
+799 \k\aError: #2# is an invalid method for #1#.\e
+#1# is not a point or a particle.
+800 Note: To automate plotting, use #1#.
+801 \nNote: To automate plotting, use #1#.  Or simply type:
+802 \nWarning: #1#  was unable to invoke Gnuplot.
+803 \nNote: To plot any data file, drag-and-drop the data file onto\i
+#1#.
+804 Note: #1# is not a massive object (e.g., a Particle or RigidBody).
+805 Note: #1# does not contain massive objects (no particles or\i
+rigid bodies) for use by the #2# command.
+806 \k\aError: #1# is not a particle.\e
+#1# is an invalid object for the  #2#  command.\n
+807 \k\aError: #1# is not a RigidBody, RigidFrame, Particle, or Point.\e
+#1# is an invalid object for the #2# command.\n
+808 \k\aError: #1# is not a Particle or Point.\e
+#1# is an invalid object for the #2# command.\n
+809 \k\aError: #1# does not contain any objects declared as\e
+a RigidBody, RigidFrame, Particle, or Point.\e
+#1# is an invalid object for the #2# command.\n
+810 \k\aError: #1# does not contain any Particles or Points.\e
+#1# is an invalid object for the #2# command.\n
+811 \k\aError: For the given number of arguments to the command #1#.#2#,\e
+#3# is expected to name a vector basis, RigidBody, or RigidFrame.\n
+812 \nWarning: RigidBody #1# has a negative value for its moment of inertia #2#.\w
+Real physical bodies require:  #2# >= 0.\n\p=2800
+813 \nWarning: RigidBody #1# has numerical values for its moments of\w
+inertia which violate the "triangle-inequality''.\w
+Real physical bodies require:  #2#.\n\p=2800
+814 \nWarning: The PRINCIPAL moments of inertia for RigidBody #1# are:\w
+Imin = #2#   Imed = #3#   Imax = #4#\w
+Real physical bodies require the "triangle-inequality"  Imax <= Imin + Imed.\n\p=2800
+815 \nWarning: RigidBody #1# has a numerical value for its product of inertia #2#\w
+whose absolute value is too large relative to its moment of inertia #3#.\w
+Real physical bodies require:  #4#.\n\p=2800
+816 \nWarning: RigidBody #1# has a zero moment-of-inertia about a spin axis.\n\p=2800
+817 \nWarning: Integral over the independent variable #1# detected.\w
+Invalid results are possible unless the integrand can be\w
+explicitly resolved as a function of #1#.\w
+Example: If the integrand depends on y (which implicitly depends on y')\w
+or depends on y' (which implicitly depends on y), errors may result.\w
+Please instead consider the ODE command.\n\p=1800
+818 \nWarning: Integral over the independent variable #1# detected.\w
+Invalid results are possible unless the limits can be\w
+explicitly resolved as a function of #1#.\w
+Example: If the limits depends on y (which implicitly depends on y')\w
+or depends on y' (which implicitly depends on y), errors may result.\w
+Please instead consider the ODE command.\n\p=1800
+819 \nWarning: #1# is being assigned a negative mass value.\n\p=2800
+820 \nNote: The moments of inertia for RigidBody #1#\i
+suggest it should only rotate about #2#\n\p=800
+821 \k\a\nError: #1#  already depends on  #2#.
+822 \k\a\nError: No roots exist.  The first argument to the\e
+#1# command is not a function of #2#.\n
+823 \k\a\nError: No roots exist.  The matrix formed for carrying out the\e
+#1# command must have more than one element.\n
+824 \nNote: Fewer roots exist.  The first argument of #1#\i
+is only a polynomial of degree #2# in #3#.\n\p=200
+825 \nNote: Fewer roots exist.  The first argument of #1#\i
+is only a polynomial of degree #2#.\n\p=200
+826 \k\a\nError: The first argument of #1# is a matrix with\e
+#2# elements.  However, it should have #3# elements.\n
+827 \nNote: Input values which may be _initial_ values (e.g., for #1#)\i
+are being used to evaluate an expression to a number.\n\p=2300
+828 \nNote: An algorithm that requires real numbers is being used.\i
+Input values (e.g., the input value for #1#) are being used.\n\p=2300
+829 \nNote: #1# was set to #2# which is much smaller than #3# = #4#.\i
+Depending on the absolute value of the variables being numerically integrated,\i
+consider the Input command to set a smaller value for #3#.\n\p=2500
+830 \nNote: Attempting to open/launch file:\i
+#1#
+831 Open/launch seemed successful.
+832 Open/launch may have failed.
+833 \nNote: Attempting to use gnuplot to read file:\i
+#1#\n
+834 \nNote: End-user and/or computer/IT administrators are responsible for all\i
+computer security.  We recommend the software be installed on a\i
+computer/account with restricted privileges as all users who access\i
+the software may have privileges at least equal to the account under\i
+which the software is installed.  All users who access the software\i
+must have read/write privileges for the file MGLicense.txt.
+835 \n      Do you understand and agree with these terms? (Y/N): \0
+836 \n\i
+Instructions for a server/network license.\i
+   All users who access the software must have read/write privileges\i
+   for the file MGLicense.txt.  If you have a server/network version,\i
+   you need to change read/write permissions for MGLicense.txt.\i
+   For example, from a MacOSX terminal, cd to the MotionGenesis folder\i
+   and type the Unix command:  chmod a+x MGLicense.txt\i
+   For PC/Windows, do something like the following:\i
+1. Navigate to C:\MotionGenesis (the folder containing MGLicense.txt).\i
+2. Right-click on MGLicense.txt and select "Properties".\i
+3. Click on the "Security" tab.\i
+4. Click on "Users" from the "Group or user names" section\i
+   (if needed, press the "Edit" button to open "Edit Permissions").\i
+5. Check the "Allow" checkbox under the "Full Control" option to\i
+   enable all users read/write access to the file MGLicense.txt.\i
+6. Press "OK" to save the changes.\n\p
+837 \k\aError: Encountered  /=  with a vector on the right-hand-side of /= \e
+Unable to divide by a vector.
+838 \k\aError: Encountered  /=  with a dyadic on the right-hand-side of /= \e
+Unable to divide by a dyadic.
+839 \k\aError: Encountered  /=  with a triadic on the right-hand-side of /= \e
+Unable to divide by a triadic.
+840 \k\aError: Encountered  /=  with a matrix on the right-hand-side of /= \e
+Unable to divide by a matrix.
+841 \k\aError: Encountered  ^=  with a vector on the right-hand-side of ^= \e
+Unable to have a vector exponent.
+842 \k\aError: Encountered  ^=  with a dyadic on the right-hand-side of ^= \e
+Unable to have a dyadic exponent.
+843 \k\aError: Encountered  ^=  with a triadic on the right-hand-side of ^= \e
+Unable to have a triadic exponent.
+844 \k\aError: Encountered  ^=  with a matrix on the right-hand-side of ^= \e
+Unable to have a matrix exponent.
+845
+846
+847
+848
+849
+850 \n\k\aError: This syntax of the command #1# expects the\e
+2nd argument to resolve to a 3x4 or 4x4 matrix that contains\e
+a 3x3 rotation matrix and 3x1 position vector matrix.\n
+851 \n\k\aError: This syntax of the command #1# expects the\e
+2nd argument to resolve to a 3x3 rotation matrix.\n
+852 \n\k\aError: This syntax of the command #1# expects the\e
+3rd argument #2# to resolve to a position vector.\n
+853
+854
+855
+856
+
+

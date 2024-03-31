@@ -1,0 +1,103 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 19.8.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">19.8.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  19.8.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N                % Example: Earth.
+   (6) RigidBody       B
+   (7) Particle        A
+   (8) %--------------------------------------------------------------------
+   (9) %   Mathematical declarations.
+   (10) Variable    theta'', x''              
+   (11) Specified   Fc
+   (12) Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+   (13) Constant    L = 0.5 m
+   (14) Constant    N
+   (15) Constant    Rx
+   (16) Constant    Ry
+   (17) %--------------------------------------------------------------------
+   (18) %   Mass and inertia properties.
+   (19) A.SetMass( mA = 10 kg )
+   (20) B.SetMass( mB = 1 kg )
+   (21) B.SetInertia( Bcm,  IBxx, IByy, IBzz = 0.08333 kg*m^2,  IBxy, IByz, IBzx )
+   (22) %--------------------------------------------------------------------
+   (23) %   Rotational kinematics.
+   (24) B.RotateZ( N, -1*theta )
+-> (25) B_N = [cos(theta), -sin(theta), 0;  sin(theta), cos(theta), 0;  0, 0, 1]
+-> (26) w_B_N> = -theta'*Bz>
+-> (27) alf_B_N> = -theta''*Bz>
+
+   (28) %--------------------------------------------------------------------
+   (29) %   Translational kinematics.
+   (30) A.Translate(No, x*Nx>)
+-> (31) p_No_A> = x*Nx>
+-> (32) v_A_N> = x'*Nx>
+-> (33) a_A_N> = x''*Nx>
+
+   (34) Bo.Translate( A, 0> )          % Sets position, velocity, acceleration.
+-> (35) p_A_Bo> = 0>
+-> (36) v_Bo_N> = x'*Nx>
+-> (37) a_Bo_N> = x''*Nx>
+
+   (38) Bcm.Translate( No , x*Nx> + L*By> )
+-> (39) p_No_Bcm> = L*By> + x*Nx>
+-> (40) v_Bcm_N> = L*theta'*Bx> + x'*Nx>
+-> (41) a_Bcm_N> = L*theta''*Bx> - L*theta'^2*By> + x''*Nx>
+
+   (42) %--------------------------------------------------------------------
+   (43) %   Add relevant contact/distance forces.
+   (44) System.AddForceGravity( -g*Ny> )            % Add's gravity force to each massive object.
+-> (45) Force_A> = -mA*g*Ny>
+-> (46) Force_Bcm> = -mB*g*Ny>
+
+   (47) A.AddForce( Fc*Nx> +  N*Ny> )                   % External force.
+-> (48) Force_A> = Fc*Nx> + (N-mA*g)*Ny>
+
+   (49) Bo.AddForce( A, Rx*Nx> + Ry*Ny> )
+-> (50) Force_Bo_A> = Rx*Nx> + Ry*Ny>
+
+   (51) eq[1] = A.GetPosition( No )
+-> (52) eq[1] = x*Nx>
+
+   (53) eq[2] = A.GetVelocity( N )
+-> (54) eq[2] = x'*Nx>
+
+   (55) eq[3] = A.GetAcceleration( N )
+-> (56) eq[3] = x''*Nx>
+
+   (57) eq[5] = Bcm.GetPosition( No )
+-> (58) eq[5] = L*By> + x*Nx>
+
+   (59) eq[6] = Bcm.GetVelocity( N )
+-> (60) eq[6] = L*theta'*Bx> + x'*Nx>
+
+   (61) eq[7] = Bcm.GetAcceleration( N )
+-> (62) eq[7] = L*theta''*Bx> - L*theta'^2*By> + x''*Nx>
+
+   (63) eq[8] = A.GetResultantForce()
+-> (64) eq[8] = (Fc-Rx)*Nx> + (N-Ry-mA*g)*Ny>
+
+   (65) eq[9] = B.GetResultantForce()
+-> (66) eq[9] = Rx*Nx> + (Ry-mB*g)*Ny>
+
+   (67) eq[10] = B.GetMomentOfForces( Bcm )
+-> (68) eq[10] = L*(Rx*cos(theta)-Ry*sin(theta))*Nz>
+
+   (69) eq[11] = Dot( Nx>, A.GetDynamics() )
+-> (70) eq[11] = Rx + mA*x'' - Fc
+
+   (71) eq[12] = Dot( Nx>, B.GetDynamics() )
+-> (72) eq[12] = mB*x'' + mB*L*cos(theta)*theta'' - Rx - mB*L*sin(theta)*theta'^2
+
+   (73) eq[13] = Dot( Ny>, B.GetDynamics() )
+-> (74) eq[13] = mB*g - Ry - mB*L*cos(theta)*theta'^2 - mB*L*sin(theta)*theta''
+
+   (75) eq[14] = Dot( Bz>, B.GetDynamics( Bcm ) )
+-> (76) eq[14] = -L*(Rx*cos(theta)-Ry*sin(theta)) - IBzz*theta''
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

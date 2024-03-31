@@ -1,0 +1,39 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetRows  or  GetColumns  (number of rows or columns in a matrix)
+   (3) %--------------------------------------------------------------------
+   (4) M = [1, 2, 3, 4;  5, 6, 7, 8;  9, 10, 11, 12]
+-> (5) M = [1, 2, 3, 4;  5, 6, 7, 8;  9, 10, 11, 12]
+
+   (6) numberOfRows = GetRows( M )
+-> (7) numberOfRows = 3
+
+   (8) numberOfColumns = GetColumns( M )
+-> (9) numberOfColumns = 4
+
+   (10) %--------------------------------------------------------------------
+   (11) % Example 2: GetRows  or  GetColumns  (designated rows or columns in a matrix)
+   (12) %--------------------------------------------------------------------
+   (13) Rows3And1OfM = GetRows( M,  3,1 )
+-> (14) Rows3And1OfM = [9, 10, 11, 12;  1, 2, 3, 4]
+
+   (15) Columns3And1OfM = GetColumns( M,  4,1 )
+-> (16) Columns3And1OfM = [4, 1;  8, 5;  12, 9]
+
+   (17) %--------------------------------------------------------------------
+   (18) % Example 3: GetRows  or  GetColumns  (range of rows or columns in a matrix)
+   (19) %--------------------------------------------------------------------
+   (20) RangeOfRowsOfM = GetRows( M,  1:2 )
+-> (21) RangeOfRowsOfM = [1, 2, 3, 4;  5, 6, 7, 8]
+
+   (22) RangeOfColumnsOfM = GetColumns( M,  2:3, 3:2 )
+-> (23) RangeOfColumnsOfM = [2, 3, 3, 2;  6, 7, 7, 6;  10, 11, 11, 10]
+
+   (24) %--------------------------------------------------------------------
+   (25) % Example 4: GetRows  or  GetColumns  (submatrix)
+   (26) %--------------------------------------------------------------------
+   (27) Submatrix1 = M[ 1:2, 1:2 ]
+-> (28) Submatrix1 = [1, 2;  5, 6]
+
+   (29) Submatrix2 = M[ 3 : GetRow(M),  2 : GetColumn(M) ]
+-> (30) Submatrix2 = [10, 11, 12]
+

@@ -1,0 +1,24 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 3: SetUnitSystem  (affects unit conversions)  
+   (3) %--------------------------------------------------------------------
+   (4) SetUnitSystem( gram, cm, sec )
+   (5) MetersPerCm = ConvertUnits( meter, GetUnitSystem )
+-> (6) MetersPerCm = 100
+
+   (7) InchesPerCm = ConvertUnits( inch,  GetUnitSystem )
+-> (8) InchesPerCm = 2.54
+
+   (9) a1 = Evaluate( t^2, t = 2 inches )  
+-> (10) a1 = 25.8064
+
+   (11) a2 = Evaluate( t^2, t = 2 meters )
+-> (12) a2 = 40000
+
+   (13) s1 = Solve( t^5 - 1, t=1 inch )
+->   %  Note: t = 1 cm  was converted from  t = 0.3937008 inch.
+-> (14) s1 = [1]
+
+   (15) s2 = Solve( t^5 - 1, t=1 meter )
+->   %  Note: t = 1 cm  was converted from  t = 0.01 meter.
+-> (16) s2 = [1]
+

@@ -1,0 +1,98 @@
+% MotionGenesis file:  MGTemplateBasic.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N                % Example: Earth.
+RigidBody       B                % Example: Upper forearm.
+%Point           Bo( B )
+%Point		Bcm( B )
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+%Variable    	wz, Fx, Fy, Fz, Tx, Ty
+Variable    	theta, Fx, Fy, Fz, Tx, Ty
+Constant    	g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+Constant 	xcm
+Constant	zcm
+%solveDT(to get the wz and stuff)
+%or maybe just do a dummy variable theta to solve this
+%how to rotate around
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+B.SetMass( m )
+B.SetInertia( Bo,  IBxx, IByy, IBzz,  IBxy, IByz, IBzx )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+%B.Rotate
+%Maybe define a theta
+B.RotateZ(N, theta)
+%B.SetAngularVelocity( N, wz*Bz> )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+Bo.Translate( No, 0*Bx> )
+%Bo.SetVelocityAcceleration( N, 0*Nx> )  % Differentiates to find acceleration.
+%Bcm.SetPosition(Bo, xcm*Bx> + zcm*Bz>)
+Bcm.Translate(Bo, xcm*Bx> + zcm*Bz>)
+%find it in N with a function
+%Bcm.SetVelocityAcceleration( B, 0*Bx> )
+Bcm.SetVelocityAcceleration( N, Bcm.GetVelocity( N ))
+%How to make wz differentiable such that acceleration of Bcm can be determined
+%--------------------------------------------------------------------
+%   Add relevant contact/distance forces. % Not figured out yet
+B.AddForceGravity( -g*Ny> )            % Add's gravity force to each massive object. %On the right location???
+Bo.AddForce( Fx*Bx> )                   % External force.
+Bo.AddForce( Fy*By> )
+Bo.AddForce( Fz*Bz> )
+%--------------------------------------------------------------------
+%   Add relevant torques.
+B.AddTorque( Tx*Bx> )                  % External torque.
+B.AddTorque( Ty*By> )
+%--------------------------------------------------------------------
+%   Translational dynamic equations (F = m*a).
+%   For static analysis, use  B.GetStatics()  or  System.GetStatics().
+B.GetDynamics()
+Dynamics[1] = Dot(  B.GetDynamics(),  Bx>  )
+Dynamics[2] = Dot(  B.GetDynamics(),  By>  )
+Dynamics[3] = Dot(  B.GetDynamics(),  Bz>  )
+%--------------------------------------------------------------------
+%   Rotational dynamic equations (M = DH/Dt + ...).
+%   For static analysis, use  B.GetStatics( aboutPoint ).
+Dynamics[4] = Dot(  B.GetDynamics(Bo),  Bx>  )
+Dynamics[5] = Dot(  B.GetDynamics(Bo),  By>  )
+Dynamics[6] = Dot(  B.GetDynamics(Bo),  Bz>  )
+%--------------------------------------------------------------------
+%   Solve algebraic equations for list of unknowns.
+%Solve( Dynamics = 0,   wz, Fx, Fy, Fz, Tx, Ty )
+Solve( Dynamics = 0,   theta', Fx, Fy, Fz, Tx, Ty )
+%--------------------------------------------------------------------
+
+
+%   Energy calculations (if needed).
+Variable workDone' = Dot( someForce>, someVelocity> )
+KE = System.GetKineticEnergy()
+PEgravity = System.GetForceGravityPotentialEnergy( -g*Ny>, No )
+MechanicalEnergy = KE + PEgravity - workDone
+%--------------------------------------------------------------------
+%   Momentum calculations (if needed).
+H> = System.GetAngularMomentum( aboutPoint )
+L> = EvaluateToNumber( System.GetLinearMomentum() )
+%--------------------------------------------------------------------
+%   Other calculations (e.g., for output).
+xQ = Dot(  Q.GetPosition(No),  Nx>  )
+%--------------------------------------------------------------------
+%   Set initial values for variables (for subsequent ODE command).
+Input  qA = 30 deg,  qA' = 0 rad/sec
+Input  qB = 90 deg,  qB' = 0 rad/sec
+%--------------------------------------------------------------------
+%   List output quantities (e.g., from the ODE command).
+Output      t sec,  x m,  Fx Newton,  Fy Newton
+OutputPlot  t sec,  qA degrees  qB degrees
+%--------------------------------------------------------------------
+%   Set numerical integration parameters and solve ODEs.
+%   Or auto-generate MATLAB, C, or Fortran code.
+Input  tFinal = 10 sec,  tStep = 0.02 sec,  absError = 1.0E-07
+ODE()  Filename    % or ODE( Zero = 0, listOfVariablesToSolve ) Filename.m
+%--------------------------------------------------------------------
+%   Record input together with responses.
+Save  someFileName.html
+Quit
+

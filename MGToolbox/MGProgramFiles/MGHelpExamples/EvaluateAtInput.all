@@ -1,0 +1,20 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: EvaluateAtInput 
+   (3) %--------------------------------------------------------------------
+   (4) Variable   x, y
+   (5) z = x^2*cos(y) - sin(t)
+-> (6) z = x^2*cos(y) - sin(t)
+
+   (7) zEvaluated1 = Evaluate( z, x=t^2, y=t )
+-> (8) zEvaluated1 = t^4*cos(t) - sin(t)
+
+   (9) Input x=1, y=2
+   (10) zEvaluated2 = EvaluateAtInput( z )
+-> (11) zEvaluated2 = -0.4161468 - sin(t)
+
+   (12) zEvaluated3 = EvaluateAtInput( z, x=t^2 )
+-> (13) zEvaluated3 = -0.4161468*t^4 - sin(t)
+
+   (14) zEvaluated4 = EvaluateAtInput( z, x=t^2, y=t )
+-> (15) zEvaluated4 = t^4*cos(t) - sin(t)
+

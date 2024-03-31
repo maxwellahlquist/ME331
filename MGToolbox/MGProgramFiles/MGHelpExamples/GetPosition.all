@@ -1,0 +1,17 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetPosition 
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame N             
+   (5) Point      P
+   (6) Particle   Q            
+   (7) Variable   xP, yP, zP
+   (8) Variable   xQ, yQ, zQ
+   (9) P.SetPosition( No, xP*Nx> + yP*Ny> + zP*Nz> )
+-> (10) p_No_P> = xP*Nx> + yP*Ny> + zP*Nz>
+
+   (11) Q.SetPosition( P,  xQ*Nx> + yQ*Ny> + zQ*Nz> )
+-> (12) p_P_Q> = xQ*Nx> + yQ*Ny> + zQ*Nz>
+
+   (13) QPositionVectorFromNo> = Q.GetPosition( No )
+-> (14) QPositionVectorFromNo> = (xP+xQ)*Nx> + (yP+yQ)*Ny> + (zP+zQ)*Nz>
+

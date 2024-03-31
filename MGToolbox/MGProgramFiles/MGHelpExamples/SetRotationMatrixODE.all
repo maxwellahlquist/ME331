@@ -1,0 +1,88 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: SetRotationMatrixODE  (Orientation angles)
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame  A, B
+   (5) Variable    q1',  q2', q3'
+   (6) Variable    wx',  wy', wz'
+   (7) B.SetAngularVelocity( A, wx*Bx> + wy*By> + wz*Bz> )
+-> (8) w_B_A> = wx*Bx> + wy*By> + wz*Bz>
+
+   (9) B.SetRotationMatrixODE( A, BodyXYZ, q1, q2, q3 )
+-> (10) B_A[1,1] = cos(q2)*cos(q3)
+-> (11) B_A[1,2] = sin(q3)*cos(q1) + sin(q1)*sin(q2)*cos(q3)
+-> (12) B_A[1,3] = sin(q1)*sin(q3) - sin(q2)*cos(q1)*cos(q3)
+-> (13) B_A[2,1] = -sin(q3)*cos(q2)
+-> (14) B_A[2,2] = cos(q1)*cos(q3) - sin(q1)*sin(q2)*sin(q3)
+-> (15) B_A[2,3] = sin(q1)*cos(q3) + sin(q2)*sin(q3)*cos(q1)
+-> (16) B_A[3,1] = sin(q2)
+-> (17) B_A[3,2] = -sin(q1)*cos(q2)
+-> (18) B_A[3,3] = cos(q1)*cos(q2)
+-> (19) q1' = (wx*cos(q3)-wy*sin(q3))/cos(q2)
+-> (20) q2' = wx*sin(q3) + wy*cos(q3)
+-> (21) q3' = wz - tan(q2)*(wx*cos(q3)-wy*sin(q3))
+
+   (22) %--------------------------------------------------------------------
+   (23) % Example 2: SetRotationMatrixODE (Euler parameters / quaternion )
+   (24) %--------------------------------------------------------------------
+   (25) RigidFrame  C
+   (26) Variable    e0', e1', e2', e3' 
+   (27) C.SetAngularVelocity( A, wx*Cx> + wy*Cy> + wz*Cz> )
+-> (28) w_C_A> = wx*Cx> + wy*Cy> + wz*Cz>
+
+   (29) C.SetRotationMatrixODE( A, Euler, e0, e1, e2, e3 )
+-> (30) C_A[1,1] = -1 + 2*e0^2 + 2*e1^2
+-> (31) C_A[1,2] = 2*e0*e3 + 2*e1*e2
+-> (32) C_A[1,3] = 2*e1*e3 - 2*e0*e2
+-> (33) C_A[2,1] = 2*e1*e2 - 2*e0*e3
+-> (34) C_A[2,2] = -1 + 2*e0^2 + 2*e2^2
+-> (35) C_A[2,3] = 2*e0*e1 + 2*e2*e3
+-> (36) C_A[3,1] = 2*e0*e2 + 2*e1*e3
+-> (37) C_A[3,2] = 2*e2*e3 - 2*e0*e1
+-> (38) C_A[3,3] = -1 + 2*e0^2 + 2*e3^2
+-> (39) e0' = -0.5*e1*wx - 0.5*e2*wy - 0.5*e3*wz
+-> (40) e1' = 0.5*e0*wx + 0.5*e2*wz - 0.5*e3*wy
+-> (41) e2' = 0.5*e0*wy + 0.5*e3*wx - 0.5*e1*wz
+-> (42) e3' = 0.5*e0*wz + 0.5*e1*wy - 0.5*e2*wx
+
+   (43) %--------------------------------------------------------------------
+   (44) % Example 3: SetRotationMatrixODE  (Rodrigues parameters)
+   (45) %--------------------------------------------------------------------
+   (46) RigidFrame  D
+   (47) Variable    r1', r2', r3' 
+   (48) D.SetAngularVelocity( A, wx*Dx> + wy*Dy> + wz*Dz> )
+-> (49) w_D_A> = wx*Dx> + wy*Dy> + wz*Dz>
+
+   (50) D.SetRotationMatrixODE( A, Rodrigues, r1, r2, r3 )
+-> (51) D_A[1,1] = (1+r1^2-r2^2-r3^2)/(1+r1^2+r2^2+r3^2)
+-> (52) D_A[1,2] = 2*(r3+r1*r2)/(1+r1^2+r2^2+r3^2)
+-> (53) D_A[1,3] = -2*(r2-r1*r3)/(1+r1^2+r2^2+r3^2)
+-> (54) D_A[2,1] = -2*(r3-r1*r2)/(1+r1^2+r2^2+r3^2)
+-> (55) D_A[2,2] = (1+r2^2-r1^2-r3^2)/(1+r1^2+r2^2+r3^2)
+-> (56) D_A[2,3] = 2*(r1+r2*r3)/(1+r1^2+r2^2+r3^2)
+-> (57) D_A[3,1] = 2*(r2+r1*r3)/(1+r1^2+r2^2+r3^2)
+-> (58) D_A[3,2] = -2*(r1-r2*r3)/(1+r1^2+r2^2+r3^2)
+-> (59) D_A[3,3] = -(-1+r1^2+r2^2-r3^2)/(1+r1^2+r2^2+r3^2)
+-> (60) r1' = 0.5*wx*(1+r1^2) + 0.5*wz*(r2+r1*r3) - 0.5*wy*(r3-r1*r2)
+-> (61) r2' = 0.5*wx*(r3+r1*r2) + 0.5*wy*(1+r2^2) - 0.5*wz*(r1-r2*r3)
+-> (62) r3' = 0.5*wy*(r1+r2*r3) + 0.5*wz*(1+r3^2) - 0.5*wx*(r2-r1*r3)
+
+   (63) %--------------------------------------------------------------------
+   (64) % Example 4: SetRotationMatrixODE  (Direction cosines)
+   (65) %--------------------------------------------------------------------
+   (66) RigidFrame  F
+   (67) Variable    C{1:3,1:3}' 
+   (68) F.SetAngularVelocity( A, wx*Fx> + wy*Fy> + wz*Fz> )
+-> (69) w_F_A> = wx*Fx> + wy*Fy> + wz*Fz>
+
+   (70) F.SetRotationMatrixODE( A, Poisson, C11,C12,C13, C21,C22,C23, C31,C32,C33 )
+-> (71) F_A = [C11, C12, C13;  C21, C22, C23;  C31, C32, C33]
+-> (72) C11' = C21*wz - C31*wy
+-> (73) C12' = C22*wz - C32*wy
+-> (74) C13' = C23*wz - C33*wy
+-> (75) C21' = C31*wx - C11*wz
+-> (76) C22' = C32*wx - C12*wz
+-> (77) C23' = C33*wx - C13*wz
+-> (78) C31' = C11*wy - C21*wx
+-> (79) C32' = C12*wy - C22*wx
+-> (80) C33' = C13*wy - C23*wx
+

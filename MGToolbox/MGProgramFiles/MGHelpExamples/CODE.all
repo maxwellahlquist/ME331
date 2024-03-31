@@ -1,0 +1,37 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: CODE Nonlinear( ... )      2 equations, 2 unknowns.
+   (3) %--------------------------------------------------------------------
+   (4) Variable  x, y                
+   (5) Constant  R = 3 meters       % Radius of circle.
+   (6) eqn[1] = x^2 + y^2 - 3^2     % Equation for circle of radius R.
+-> (7) eqn[1] = -9 + x^2 + y^2
+
+   (8) eqn[2] = y - 2*sin(x)        % Equation for sine wave of amplitude 2 m.
+-> (9) eqn[2] = y - 2*sin(x)
+
+   (10) Input  x = 4 m,  y = 2 m     % Guess for solution (in meters).
+   (11) Code Nonlinear( eqn = 0,  x, y )  CircleSineWaveIntersection.m
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example: CODE Nonlinear( ... )      1 equation, 2 unknowns.
+   (14) %--------------------------------------------------------------------
+   (15) Code Nonlinear( eqn[1] = 0,  x, y )  CodePointNearCircle.m
+
+   (16) %--------------------------------------------------------------------
+   (17) % Example: CODE Algebraic( ... )      2 equations, 2 unknowns.
+   (18) %--------------------------------------------------------------------
+   (19) linearEqn[1] = x + y - R
+-> (20) linearEqn[1] = x + y - R
+
+   (21) linearEqn[2] = 2*x + 3*y - 4*sin(t)
+-> (22) linearEqn[2] = 2*x + 3*y - 4*sin(t)
+
+   (23) Output t degrees,  x meters,  y meters
+   (24) Code Algebraic( linearEqn = 0,  x, y ) [t degrees = 0, 360, 30] CodeTest.m
+
+   (25) %--------------------------------------------------------------------
+   (26) % For more examples, type:
+   (27) % Help ALGEBRAIC
+   (28) % Help NONLINEAR
+   (29) % Help ODE
+   (30) %--------------------------------------------------------------------

@@ -1,0 +1,65 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetInertiaMatrix  (inertia matrix of a rigid body)
+   (3) %--------------------------------------------------------------------
+   (4) RigidBody  B
+   (5) B.SetInertia( Bcm, Ixx, Iyy, Izz )
+   (6) BInertiaMatrixAboutBcmInB = B.GetInertiaMatrix( Bcm, B )
+-> (7) BInertiaMatrixAboutBcmInB = [Ixx, 0, 0;  0, Iyy, 0;  0, 0, Izz]
+
+   (8) %--------------------------------------------------------------------
+   (9) % Example 2: GetInertiaMatrix  (inertia matrix in another basis)
+   (10) %--------------------------------------------------------------------
+   (11) RigidFrame A
+   (12) Variable  theta
+   (13) B.SetRotationMatrixZ( A, theta )
+-> (14) B_A = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+
+   (15) BInertiaMatrixAboutBcmInA = B.GetInertiaMatrix( Bcm, A )
+-> (16) BInertiaMatrixAboutBcmInA[1,1] = Ixx*cos(theta)^2 + Iyy*sin(theta)^2
+-> (17) BInertiaMatrixAboutBcmInA[1,2] = (Ixx-Iyy)*sin(theta)*cos(theta)
+-> (18) BInertiaMatrixAboutBcmInA[1,3] = 0
+-> (19) BInertiaMatrixAboutBcmInA[2,1] = (Ixx-Iyy)*sin(theta)*cos(theta)
+-> (20) BInertiaMatrixAboutBcmInA[2,2] = Iyy + (Ixx-Iyy)*sin(theta)^2
+-> (21) BInertiaMatrixAboutBcmInA[2,3] = 0
+-> (22) BInertiaMatrixAboutBcmInA[3,1] = 0
+-> (23) BInertiaMatrixAboutBcmInA[3,2] = 0
+-> (24) BInertiaMatrixAboutBcmInA[3,3] = Izz
+
+   (25) %--------------------------------------------------------------------
+   (26) % Example 3: GetInertiaMatrix  (inertia matrix of a particle)
+   (27) %--------------------------------------------------------------------
+   (28) Particle   Q
+   (29) Q.SetMass( mQ )
+   (30) Variable   x, y, z
+   (31) Q.SetPosition( Bo, x*Bx> + y*By> + z*Bz> )
+-> (32) p_Bo_Q> = x*Bx> + y*By> + z*Bz>
+
+   (33) QInertiaMatrixAboutBoInB = Q.GetInertiaMatrix( Bo, B )
+-> (34) QInertiaMatrixAboutBoInB[1,1] = mQ*(y^2+z^2)
+-> (35) QInertiaMatrixAboutBoInB[1,2] = -mQ*x*y
+-> (36) QInertiaMatrixAboutBoInB[1,3] = -mQ*x*z
+-> (37) QInertiaMatrixAboutBoInB[2,1] = -mQ*x*y
+-> (38) QInertiaMatrixAboutBoInB[2,2] = mQ*(x^2+z^2)
+-> (39) QInertiaMatrixAboutBoInB[2,3] = -mQ*y*z
+-> (40) QInertiaMatrixAboutBoInB[3,1] = -mQ*x*z
+-> (41) QInertiaMatrixAboutBoInB[3,2] = -mQ*y*z
+-> (42) QInertiaMatrixAboutBoInB[3,3] = mQ*(x^2+y^2)
+
+   (43) %--------------------------------------------------------------------
+   (44) % Example 4: GetInertiaDyadic  (inertia matrix of a system)
+   (45) %--------------------------------------------------------------------
+   (46) B.SetMass( mB )
+   (47) Bcm.SetPosition( Bo, 2*Bx> + 3*By> + 4*Bz> )
+-> (48) p_Bo_Bcm> = 2*Bx> + 3*By> + 4*Bz>
+
+   (49) SystemInertiaMatrixAboutBoInB = System.GetInertiaMatrix( Bo, B )
+-> (50) SystemInertiaMatrixAboutBoInB[1,1] = Ixx + 25*mB + mQ*(y^2+z^2)
+-> (51) SystemInertiaMatrixAboutBoInB[1,2] = -6*mB - mQ*x*y
+-> (52) SystemInertiaMatrixAboutBoInB[1,3] = -8*mB - mQ*x*z
+-> (53) SystemInertiaMatrixAboutBoInB[2,1] = -6*mB - mQ*x*y
+-> (54) SystemInertiaMatrixAboutBoInB[2,2] = Iyy + 20*mB + mQ*(x^2+z^2)
+-> (55) SystemInertiaMatrixAboutBoInB[2,3] = -12*mB - mQ*y*z
+-> (56) SystemInertiaMatrixAboutBoInB[3,1] = -8*mB - mQ*x*z
+-> (57) SystemInertiaMatrixAboutBoInB[3,2] = -12*mB - mQ*y*z
+-> (58) SystemInertiaMatrixAboutBoInB[3,3] = Izz + 13*mB + mQ*(x^2+y^2)
+

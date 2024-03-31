@@ -1,0 +1,36 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: AddTorqueDamper  
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) RigidBody A
+   (6) Variable  qA'
+   (7) Constant  b    % Damping constant
+   (8) A.SetAngularVelocity( N, qA'*Az> )
+-> (9) w_A_N> = qA'*Az>
+
+   (10) A.AddTorqueDamper( N, b )
+-> (11) Torque_A_N> = -b*qA'*Az>
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2: AddTorqueDamper  (with angular-rate exponent) 
+   (14) %--------------------------------------------------------------------
+   (15) RigidBody B
+   (16) Variable  qB'
+   (17) B.SetAngularVelocity( A, qB'*By> )
+-> (18) w_B_A> = qB'*By>
+
+   (19) B.AddTorqueDamper( A, b, 3 )
+-> (20) Torque_B_A> = -b*qB'^3*By>
+
+   (21) %--------------------------------------------------------------------
+   (22) % Example 3: AddTorqueDamper  (angular-velocity with three components) 
+   (23) %--------------------------------------------------------------------
+   (24) RigidBody  C
+   (25) Variable   wx, wy, wz
+   (26) C.SetAngularVelocity( N, wx*Cx> + wy*Cy> + wz*Cz> )
+-> (27) w_C_N> = wx*Cx> + wy*Cy> + wz*Cz>
+
+   (28) C.AddTorqueDamper( N, b, 2 )
+-> (29) Torque_C_N> = -b*wx*sqrt(wx^2+wy^2+wz^2)*Cx> - b*wy*sqrt(wx^2+wy^2+wz^2)*Cy>
+        - b*wz*sqrt(wx^2+wy^2+wz^2)*Cz>
+

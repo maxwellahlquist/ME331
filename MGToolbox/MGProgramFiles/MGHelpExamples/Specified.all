@@ -1,0 +1,23 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: Specified
+   (3) %--------------------------------------------------------------------
+   (4) Specified  x'+,  y-,  e{0:3}'
+   (5) Specified  q'',  u'
+   (6) b = sin(t) + abs(x) + x' - abs(x') + y + abs(y)
+-> (7) b = sin(t) + x
+
+   (8) derivExample = dt(b) + dt(e0) + dt(q) + dt(q') + dt(u)
+-> (9) derivExample = cos(t) + e0' + q' + u' + x' + q''
+
+   (10) u = sin(t)
+-> (11) u = sin(t)
+
+   (12) SetDt( q = t^3 )
+-> (13) q = t^3
+-> (14) q' = 3*t^2
+-> (15) q'' = 6*t
+
+   (16) arrayOfSpecified = Specified()
+-> (17) arrayOfSpecified = [e0;  e0';  e1;  e1';  e2;  e2';  e3;  e3';  q;  q';  
+        q'';  u;  u';  x;  x';  y]
+

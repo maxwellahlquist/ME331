@@ -1,0 +1,35 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: FRSTAR
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) Particle  A
+   (6) RigidBody B
+   (7) A.SetMass( mA )
+   (8) B.SetMass( mB )
+   (9) B.SetInertia( Bcm, Ixx, Iyy, Izz )
+   (10) Variable   wx',  wy',  wz',  vA'
+   (11) SetGeneralizedSpeed(  wx,  wy,  wz,  vA  )
+   (12) A.SetVelocity( N, vA*Nx> )
+-> (13) v_A_N> = vA*Nx>
+
+   (14) B.SetAngularVelocity( N, wx*Bx> + wy*By> + wz*Bz> )
+-> (15) w_B_N> = wx*Bx> + wy*By> + wz*Bz>
+
+   (16) Bcm.SetVelocity( N, 0> )
+-> (17) v_Bcm_N> = 0>
+
+   (18) FrStarA = FRSTAR( A )
+-> (19) FrStarA = [0;  0;  0;  -mA*vA']
+
+   (20) FrStarB = FRSTAR( B )
+-> (21) FrStarB[1] = (Iyy-Izz)*wy*wz - Ixx*wx'
+-> (22) FrStarB[2] = -(Ixx-Izz)*wx*wz - Iyy*wy'
+-> (23) FrStarB[3] = (Ixx-Iyy)*wx*wy - Izz*wz'
+-> (24) FrStarB[4] = 0
+
+   (25) FrStarS = FRSTAR()
+-> (26) FrStarS[1] = (Iyy-Izz)*wy*wz - Ixx*wx'
+-> (27) FrStarS[2] = -(Ixx-Izz)*wx*wz - Iyy*wy'
+-> (28) FrStarS[3] = (Ixx-Iyy)*wx*wy - Izz*wz'
+-> (29) FrStarS[4] = -mA*vA'
+

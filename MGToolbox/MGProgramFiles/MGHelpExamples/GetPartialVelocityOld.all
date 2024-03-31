@@ -1,0 +1,57 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetPartialVelocity and GetPartialAngularVelocity
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) RigidBody      B       % Sphere
+   (6) Point          BN(B)   % Point of B in contact with N
+   (7) %----------------------------------------------
+   (8) Constant  R
+   (9) Variable  x',  y'
+   (10) Variable  wx,  wy,  wz
+   (11) SetGeneralizedSpeed( x', y', wx, wy, wz )
+   (12) %----------------------------------------------
+   (13) B.SetAngularVelocity( N,  wx*Nx> + wy*Ny> + wz*Nz> )
+-> (14) w_B_N> = wx*Nx> + wy*Ny> + wz*Nz>
+
+   (15) Bcm.SetPositionVelocity( No,  x*Nx> + y*Ny> + R*Nz> )
+-> (16) p_No_Bcm> = x*Nx> + y*Ny> + R*Nz>
+-> (17) v_Bcm_N> = x'*Nx> + y'*Ny>
+
+   (18) %----------------------------------------------
+   (19) %     Partial angular velocities and velocities
+   (20) wBNPartials = B.GetPartialAngularVelocity( N ) 
+-> (21) wBNPartials = [0>;  0>;  Nx>;  Ny>;  Nz>]
+
+   (22) vBcmNPartials = Bcm.GetPartialVelocity( N )
+-> (23) vBcmNPartials = [Nx>;  Ny>;  0>;  0>;  0>]
+
+   (24) %----------------------------------------------
+   (25) %     Rolling constraints at point BN of B
+   (26) BN.SetPositionVelocity( Bcm, -R*Nz>, B )
+-> (27) p_Bcm_BN> = -R*Nz>
+-> (28) v_BN_N> = (x'-R*wy)*Nx> + (y'+R*wx)*Ny>
+
+   (29) Dependent[1] = Dot( BN.GetVelocity(N), Nx> )
+-> (30) Dependent[1] = x' - R*wy
+
+   (31) Dependent[2] = Dot( BN.GetVelocity(N), Ny> )
+-> (32) Dependent[2] = y' + R*wx
+
+   (33) Constrain(  Dependent[ x', y' ]  )
+-> (34) x' = R*wy
+-> (35) y' = -R*wx
+
+   (36) %----------------------------------------------
+   (37) %     Partial angular velocities and velocities
+   (38) wBNPartialsAfterConstrain = B.GetPartialAngularVelocity( N ) 
+-> (39) wBNPartialsAfterConstrain = [Nx>;  Ny>;  Nz>]
+
+   (40) vBcmNPartialsAfterConstrain = Bcm.GetPartialVelocity( N )
+-> (41) vBcmNPartialsAfterConstrain = [-R*Ny>;  R*Nx>;  0>]
+
+   (42) partialsOfScalarExpression = GetPartialVelocity( 2*x' + 3*y' )
+-> (43) partialsOfScalarExpression = [-3*R;  2*R;  0]
+
+   (44) partialForWx = GetPartialVelocity( 2*x' + 3*y',  wx )
+-> (45) partialForWx = -3*R
+

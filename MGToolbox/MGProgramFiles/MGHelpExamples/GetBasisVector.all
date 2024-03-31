@@ -1,0 +1,30 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  GetBasisVector (default basis subscripts)
+   (3) %--------------------------------------------------------------------
+   (4) RigidBody A
+   (5) AfirstBasisVector> := GetBasisVector( A, 1 )
+-> (6) AfirstBasisVector> = Ax>
+
+   (7) AthirdBasisVector> := GetBasisVector( A, 3 )
+-> (8) AthirdBasisVector> = Az>
+
+   (9) %--------------------------------------------------------------------
+   (10) % Example 2:  GetBasisVector (vary basis subscripts)
+   (11) %--------------------------------------------------------------------
+   (12) SetBasisSubscripts( 1,2,3 )
+   (13) AfirstBasisVector> := GetBasisVector( A, 1 )
+-> (14) AfirstBasisVector> = A1>
+
+   (15) AthirdBasisVector> := GetBasisVector( A, 3 )
+-> (16) AthirdBasisVector> = A3>
+
+   (17) %--------------------------------------------------------------------
+   (18) % Example 3:  GetBasisVector (vary basis subscripts again)
+   (19) %--------------------------------------------------------------------
+   (20) SetBasisSubscripts( i,j,k )
+   (21) AfirstBasisVector> := GetBasisVector( A, 1 )
+-> (22) AfirstBasisVector> = Ai>
+
+   (23) AthirdBasisVector> := GetBasisVector( A, 3 )
+-> (24) AthirdBasisVector> = Ak>
+

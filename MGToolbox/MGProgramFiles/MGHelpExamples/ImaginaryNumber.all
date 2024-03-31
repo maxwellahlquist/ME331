@@ -1,0 +1,16 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: ImaginaryNumber  
+   (3) %--------------------------------------------------------------------
+   (4) B = 3 + sqrt(-1)         % Default name of sqrt(-1) is imaginary
+-> (5) B = 3 + imaginary
+
+   (6) SetImaginaryNumber( i )
+   (7) C = 3 + sqrt(-1)
+-> (8) C = 3 + i
+
+   (9) D = 4*sqrt(-1) + 3*GetImaginaryNumber()
+-> (10) D = 7*i
+
+   (11) E = abs(3+i) + sin(i) + cosh(i)
+-> (12) E = 3.70258 + 1.175201*i
+

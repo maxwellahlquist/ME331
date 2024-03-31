@@ -1,0 +1,45 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  GetResultantTorque  GetNetTorque
+   (3) %--------------------------------------------------------------------
+   (4) RigidBody  B
+   (5) B.AddTorque( 888*Bz> )                      % Add external torque on B.
+-> (6) Torque_B> = 888*Bz>
+
+   (7) %--------------------------------------------------------------------
+   (8) % ExtraExample:  GetResultantTorque  GetNetTorque
+   (9) % As of now, 888*Bz> is not regarded as being from NewtonianFrame N.
+   (10) % Perhaps another frame is welded to the NewtonianFrame so the torque comes
+   (11) % from the other frame, but not the NewtonianFrame.
+   (12) %--------------------------------------------------------------------
+   (13) NewtonianFrame N                              % Newtonian frame is external to system.
+   (14) Specified      Tx, Ty
+   (15) N.AddTorque( Tx*Bx> )                         % Add external torque on N.
+-> (16) Torque_N> = Tx*Bx>
+
+   (17) N.AddTorque( B,  Ty*By> )                     % Add action/reaction torque on N from B.
+-> (18) Torque_N_B> = Ty*By>
+
+   (19) NetTorqueOnNFromB> = N.GetNetTorque( B )      % Net action/reaction torque on N from B.
+-> (20) NetTorqueOnNFromB> = Ty*By>
+
+   (21) NetTorqueOnN> = N.GetResultantTorque()        % Net torque on NewtonianFrame N.
+-> (22) NetTorqueOnN> = Tx*Bx> + Ty*By>
+
+   (23) NetTorqueOnB> := B.GetResultantTorque()       % Net torque on body B.
+-> (24) NetTorqueOnB> = -Ty*By> + 888*Bz>
+
+   (25) NetTorqueOnS> := System.GetResultantTorque()  % Net torque on System -- which is just B.
+-> (26) NetTorqueOnS> = -Ty*By> + 888*Bz>
+
+   (27) %--------------------------------------------------------------------
+   (28) % Example 3:  GetInherentlyExternalTorque
+   (29) %--------------------------------------------------------------------
+   (30) ExternalTorqueOnN> = N.GetInherentlyExternalTorque()       % Net external torque on frame N.
+-> (31) ExternalTorqueOnN> = Tx*Bx>
+
+   (32) ExternalTorqueOnB> = B.GetInherentlyExternalTorque()       % Net external torque on body B.
+-> (33) ExternalTorqueOnB> = 888*Bz>
+
+   (34) ExternalTorqueOnS> = System.GetInherentlyExternalTorque()  % Net external torque on system -- which is just B.
+-> (35) ExternalTorqueOnS> = 888*Bz>
+

@@ -1,0 +1,22 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetTranspose  ( transpose of a matrix )
+   (3) %--------------------------------------------------------------------
+   (4) Constant a, b
+   (5) M = [a, b;  3, 4;  5, 6]
+-> (6) M = [a, b;  3, 4;  5, 6]
+
+   (7) transposeM = GetTranspose( M )
+-> (8) transposeM = [a, 3, 5;  b, 4, 6]
+
+   (9) %--------------------------------------------------------------------
+   (10) % Example 2: GetTranspose  ( transpose of a dyadic )
+   (11) %--------------------------------------------------------------------
+   (12) RigidBody B
+   (13) D>> = Dyadic( B,  a, a*b, 3,  4, b^2, 5,  6, 7, 8 )
+-> (14) D>> = a*Bx>*Bx> + a*b*Bx>*By> + 3*Bx>*Bz> + 4*By>*Bx> + b^2*By>*By>
+        + 5*By>*Bz> + 6*Bz>*Bx> + 7*Bz>*By> + 8*Bz>*Bz>
+
+   (15) tranposeD>> = GetTranspose( D>> )
+-> (16) tranposeD>> = a*Bx>*Bx> + 4*Bx>*By> + 6*Bx>*Bz> + a*b*By>*Bx> + b^2*By>*By>
+        + 7*By>*Bz> + 3*Bz>*Bx> + 5*Bz>*By> + 8*Bz>*Bz>
+

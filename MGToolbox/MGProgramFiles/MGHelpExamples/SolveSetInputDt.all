@@ -1,0 +1,46 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: SolveSetInputDt  (1 equation in 1 unknown) 
+   (3) %--------------------------------------------------------------------
+   (4) Variable z'
+   (5) Input     t = 0 sec
+   (6) SolveSetInputDt(  z + sin(z)^3 = cos(t),   z = 2 )
+
+->  %  INPUT has been assigned as follows:
+->  %   z                         0.7166169624667624
+
+-> (7) z' = -sin(t)/(1+3*cos(z)*sin(z)^2)
+
+   (8) %--------------------------------------------------------------------
+   (9) % Example 2: SolveSetInputDt  (2 equations in 2 unknowns with input) 
+   (10) %--------------------------------------------------------------------
+   (11) Variable  x', y'
+   (12) Constant  a = 1 meter,  b = 1 meter
+   (13) funct[1] = x^2 + y^2 - cos(t)              % Time-varying circle.
+-> (14) funct[1] = x^2 + y^2 - cos(t)
+
+   (15) funct[2] = a*y - b*sin(x)                  % Sine function.
+-> (16) funct[2] = a*y - b*sin(x)
+
+   (17) SolveSetInputDt(  funct = 0,  x=2, y=3 )   % x=2,  y=3 is a guess.
+
+->   %  INPUT has been assigned as follows:
+->   %   x                         0.7390851332151607
+->   %   y                         0.6736120291832148
+
+-> (18) x' = -0.5*a*sin(t)/(a*x+b*y*cos(x))
+-> (19) y' = -0.5*b*sin(t)*cos(x)/(a*x+b*y*cos(x))
+
+   (20) %--------------------------------------------------------------------
+   (21) % Example 3: SolveSetInputDt (returns value of and solves for x', x'') 
+   (22) %--------------------------------------------------------------------
+   (23) Variable  x''
+   (24) answer = SolveSetInputDt(  x^2 = cos(x) + t,   x = 12 deg )
+
+->   %  INPUT has been assigned as follows:
+->   %   x                         47.21930325529203       deg
+
+->   %  Note: x = 0.8241323 radian  was converted from  x = 47.2193 deg.
+-> (25) x' = 1/(2*x+sin(x))
+-> (26) x'' = -(2+cos(x))*x'^2/(2*x+sin(x))
+-> (27) answer = [0.8241323]
+

@@ -1,0 +1,58 @@
+% MotionGenesis file:  MGTemplateBasic.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N                % Example: Earth.
+RigidBody       A                %
+RigidBody      	B                %
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    qB''
+Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+Constant	LA = 5 cm, LB = 5 cm
+Constant	Tm = 0.5 N*m
+Constant	qAF = 45 deg
+Constant	sigma = 46 noUnits
+Specified   qA''
+SetDt( qA = qAF*(1-exp(-sigma*t)) )
+
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+B.SetMass( mB = 0.1 kg )
+%A.SetInertia( Acm,  IAxx = 0.2 kg*m^2,  IAyy = 0.3 kg*m^2,  IAzz = 0.4 kg*m^2 )
+B.SetInertia( Bo,  IBxx = 0.2 kg*m^2,  IByy = 0.3 kg*m^2,  IBzz = 0.4 kg*m^2 )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+A.RotateZ( N, qA )
+B.RotateZ( A, qB )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+Ao.Translate( No, 0> )
+Bo.Translate( Ao, -LA*ay> )
+Bcm.Translate( Bo, LB/2*by> )
+%--------------------------------------------------------------------
+%   Add relevant torques.
+B.AddForceGravity( -g*Ny> )
+B.AddTorque( A, Tm*bz> )
+%--------------------------------------------------------------------
+%   For static analysis, use  B.GetStatics()  or  System.GetStatics().
+Dynamics = Dot(  B.GetDynamics(Bo),  bz>  )
+Solve(Dynamics, qB'')
+
+%   Set initial values for variables (for subsequent ODE command).
+Input  qB = 5 deg,  qB' = 0 rad/sec
+%--------------------------------------------------------------------
+%   List output quantities (e.g., from the ODE command).
+Output      t sec,  qA deg, qB deg
+OutputPlot  t sec,  qA degrees,  qB degrees
+%OutputPlot  t sec,  qA degrees
+%--------------------------------------------------------------------
+%   Set numerical integration parameters and solve ODEs.
+%   Or auto-generate MATLAB, C, or Fortran code.
+Input  tFinal = 0.1 sec,  tStep = 0.005 sec,  absError = 1.0E-07
+ODE()  Filename    % or ODE( Zero = 0, listOfVariablesToSolve ) Filename.m
+%--------------------------------------------------------------------
+%   Record input together with responses.
+% Save  someFileName.html
+stop
+

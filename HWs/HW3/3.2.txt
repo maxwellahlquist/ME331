@@ -1,0 +1,39 @@
+% MotionGenesis file:  MGTemplateBasic.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    SA
+Variable    theta, phi, alpha
+Constant    a = 2 m, b = 4 m, c = 2.4 m
+%--------------------------------------------------------------------
+%Dynamics[1] = 0.5*SA - a*b*sinDegrees(theta)
+%Dynamics[2] = 0.5*SA - a*c*sinDegrees(phi)
+%Dynamics[3] = 0.5*SA - b*c*sinDegrees(alpha)
+
+Dynamics[1] = theta - asin(SA/(2*a*b))
+Dynamics[2] = phi - asin(SA/(2*a*c))
+Dynamics[3] = alpha - asin(SA/(2*b*c))
+
+Dynamics[4] = theta + phi + alpha - (2*pi)
+%--------------------------------------------------------------------
+%   Solve algebraic equations for list of unknowns.
+Solve( Dynamics = 0,   SA, theta, phi, alpha )
+Quit
+%--------------------------------------------------------------------
+%   Set initial values for variables (for subsequent ODE command).
+Input  qA = 30 deg,  qA' = 0 rad/sec
+Input  qB = 90 deg,  qB' = 0 rad/sec
+%--------------------------------------------------------------------
+%   List output quantities (e.g., from the ODE command).
+Output      t sec,  x m,  Fx Newton,  Fy Newton
+OutputPlot  t sec,  qA degrees  qB degrees
+%--------------------------------------------------------------------
+%   Set numerical integration parameters and solve ODEs.
+%   Or auto-generate MATLAB, C, or Fortran code.
+Input  tFinal = 10 sec,  tStep = 0.02 sec,  absError = 1.0E-07
+ODE()  Filename    % or ODE( Zero = 0, listOfVariablesToSolve ) Filename.m
+%--------------------------------------------------------------------
+%   Record input together with responses.
+Save  someFileName.html
+Quit
+

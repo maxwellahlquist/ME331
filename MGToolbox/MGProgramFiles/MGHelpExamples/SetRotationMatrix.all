@@ -1,0 +1,98 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Examples 1 & 2: SetRotationMatrix (simple rotations with one angle) 
+   (3) %--------------------------------------------------------------------
+   (4) AutoOverwrite ON
+   (5) RigidFrame A, B
+   (6) Variable   q1, q2, q3
+   (7) %--------------------------------------------------------------------
+   (8) B.SetRotationMatrix( A, -BodyZ,  q1 )
+-> (9) B_A = [cos(q1), -sin(q1), 0;  sin(q1), cos(q1), 0;  0, 0, 1]
+
+   (10) B.SetRotationMatrix( A, UnitVector(3*By>+4*Bz>), q1 )
+-> (11) B_A[1,1] = cos(q1)
+-> (12) B_A[1,2] = 0.8*sin(q1)
+-> (13) B_A[1,3] = -0.6*sin(q1)
+-> (14) B_A[2,1] = -0.8*sin(q1)
+-> (15) B_A[2,2] = 0.36 + 0.64*cos(q1)
+-> (16) B_A[2,3] = 0.48 - 0.48*cos(q1)
+-> (17) B_A[3,1] = 0.6*sin(q1)
+-> (18) B_A[3,2] = 0.48 - 0.48*cos(q1)
+-> (19) B_A[3,3] = 0.64 + 0.36*cos(q1)
+
+   (20) %--------------------------------------------------------------------
+   (21) % Example 3: SetRotationMatrix (successive rotations with two angles)
+   (22) %--------------------------------------------------------------------
+   (23) B.SetRotationMatrix( A,  Space-Y-X,  q1, q2 )
+-> (24) B_A[1,1] = cos(q1)
+-> (25) B_A[1,2] = sin(q1)*sin(q2)
+-> (26) B_A[1,3] = sin(q1)*cos(q2)
+-> (27) B_A[2,1] = 0
+-> (28) B_A[2,2] = cos(q2)
+-> (29) B_A[2,3] = -sin(q2)
+-> (30) B_A[3,1] = -sin(q1)
+-> (31) B_A[3,2] = sin(q2)*cos(q1)
+-> (32) B_A[3,3] = cos(q1)*cos(q2)
+
+   (33) %--------------------------------------------------------------------
+   (34) % Example 4: SetRotationMatrix (successive rotations with three angles)
+   (35) %--------------------------------------------------------------------
+   (36) B.SetRotationMatrix( A, BodyXYZ,   q1, q2, q3 )                 
+-> (37) B_A[1,1] = cos(q2)*cos(q3)
+-> (38) B_A[1,2] = sin(q3)*cos(q1) + sin(q1)*sin(q2)*cos(q3)
+-> (39) B_A[1,3] = sin(q1)*sin(q3) - sin(q2)*cos(q1)*cos(q3)
+-> (40) B_A[2,1] = -sin(q3)*cos(q2)
+-> (41) B_A[2,2] = cos(q1)*cos(q3) - sin(q1)*sin(q2)*sin(q3)
+-> (42) B_A[2,3] = sin(q1)*cos(q3) + sin(q2)*sin(q3)*cos(q1)
+-> (43) B_A[3,1] = sin(q2)
+-> (44) B_A[3,2] = -sin(q1)*cos(q2)
+-> (45) B_A[3,3] = cos(q1)*cos(q2)
+
+   (46) %--------------------------------------------------------------------
+   (47) % Example 5: SetRotationMatrix (Euler parameters / quaternion )
+   (48) %--------------------------------------------------------------------
+   (49) Variable  e0, e1, e2, e3
+   (50) B.SetRotationMatrix( A,  EulerParameters, e0, e1, e2, e3 )
+-> (51) B_A[1,1] = -1 + 2*e0^2 + 2*e1^2
+-> (52) B_A[1,2] = 2*e0*e3 + 2*e1*e2
+-> (53) B_A[1,3] = 2*e1*e3 - 2*e0*e2
+-> (54) B_A[2,1] = 2*e1*e2 - 2*e0*e3
+-> (55) B_A[2,2] = -1 + 2*e0^2 + 2*e2^2
+-> (56) B_A[2,3] = 2*e0*e1 + 2*e2*e3
+-> (57) B_A[3,1] = 2*e0*e2 + 2*e1*e3
+-> (58) B_A[3,2] = 2*e2*e3 - 2*e0*e1
+-> (59) B_A[3,3] = -1 + 2*e0^2 + 2*e3^2
+
+   (60) %--------------------------------------------------------------------
+   (61) % Example 6: SetRotationMatrix (Rodrigues parameters / Gibbs vector)
+   (62) %--------------------------------------------------------------------
+   (63) Variable  rho0, rho1, rho2
+   (64) B.SetRotationMatrix( A,  RodriguesParameters, rho0, rho1, rho2 )
+-> (65) B_A[1,1] = (1+rho0^2-rho1^2-rho2^2)/(1+rho0^2+rho1^2+rho2^2)
+-> (66) B_A[1,2] = 2*(rho2+rho0*rho1)/(1+rho0^2+rho1^2+rho2^2)
+-> (67) B_A[1,3] = -2*(rho1-rho0*rho2)/(1+rho0^2+rho1^2+rho2^2)
+-> (68) B_A[2,1] = -2*(rho2-rho0*rho1)/(1+rho0^2+rho1^2+rho2^2)
+-> (69) B_A[2,2] = (1+rho1^2-rho0^2-rho2^2)/(1+rho0^2+rho1^2+rho2^2)
+-> (70) B_A[2,3] = 2*(rho0+rho1*rho2)/(1+rho0^2+rho1^2+rho2^2)
+-> (71) B_A[3,1] = 2*(rho1+rho0*rho2)/(1+rho0^2+rho1^2+rho2^2)
+-> (72) B_A[3,2] = -2*(rho0-rho1*rho2)/(1+rho0^2+rho1^2+rho2^2)
+-> (73) B_A[3,3] = -(-1+rho0^2+rho1^2-rho2^2)/(1+rho0^2+rho1^2+rho2^2)
+
+   (74) %--------------------------------------------------------------------
+   (75) % Example 7: SetRotationMatrix (Poisson parameters)
+   (76) %--------------------------------------------------------------------
+   (77) Variable  R{1:3}{1:3}
+   (78) B.SetRotationMatrix( A, PoissonParameters, R11,R12,R13, R21,R22,R23, R31,R32,R33 )
+-> (79) B_A = [R11, R12, R13;  R21, R22, R23;  R31, R32, R33]
+
+   (80) %--------------------------------------------------------------------
+   (81) % Example 8: SetRotationMatrix (Directly from 3x3 matrix)
+   (82) %--------------------------------------------------------------------
+   (83) B.SetRotationMatrix( A, [R11,R12,R13; R21,R22,R23; R31,R32,R33] )
+-> (84) B_A = [R11, R12, R13;  R21, R22, R23;  R31, R32, R33]
+
+   (85) %--------------------------------------------------------------------
+   (86) % Note: For more examples, type HELP for one of the following:
+   (87) %       SetRotationMatrix
+   (88) %       SetRotationMatrixX      SetRotationMatrixNegativeX
+   (89) %       SetRotationMatrixY      SetRotationMatrixNegativeY
+   (90) %       SetRotationMatrixZ      SetRotationMatrixNegativeZ

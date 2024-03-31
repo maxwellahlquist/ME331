@@ -1,0 +1,14 @@
+% MotionGenesis file:  7.3.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+RigidFrame	A	% Reference Frame
+RigidFrame	B	% TOR sequence
+RigidFrame	C	% ROT sequence
+
+Variable r, o, tt	% subscripts for each theta value
+B.SetRotationMatrix( A, BodyYXZ, tt, o, r )	% First Rotation Table
+C.SetRotationMatrix( A, BodyZXY, r, o, tt )	% Second Rotation Table
+
+Save  7.3.html
+Quit
+

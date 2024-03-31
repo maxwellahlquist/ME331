@@ -1,0 +1,47 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  GetResultantTorque  or  GetNetTorque
+   (3) %--------------------------------------------------------------------
+   (4) RigidBody  A, B
+   (5) Specified  Tx
+   (6) B.AddTorque( Tx*Ax> )                     % Add external torque on B.
+-> (7) Torque_B> = Tx*Ax>
+
+   (8) B.AddTorque( A,  888*Ax> )                % Add action/reaction torque on B from A.
+-> (9) Torque_B_A> = 888*Ax>
+
+   (10) NetTorqueOnBFromA> = B.GetNetTorque( A )  % Net action/reaction torque on B from A.
+-> (11) NetTorqueOnBFromA> = 888*Ax>
+
+   (12) NetTorqueOnAFromB> = A.GetNetTorque( B )  % Net action/reaction torque on A from B.
+-> (13) NetTorqueOnAFromB> = -888*Ax>
+
+   (14) NetTorqueOnB> = B.GetResultantTorque()    % Net torque on body B.
+-> (15) NetTorqueOnB> = (888+Tx)*Ax>
+
+   (16) NetTorqueOnA> = A.GetResultantTorque()    % Net torque on body A.
+-> (17) NetTorqueOnA> = -888*Ax>
+
+   (18) NetTorqueOnS> = System.GetNetTorque()     % Net torque on System(A, B).
+-> (19) NetTorqueOnS> = Tx*Ax>
+
+   (20) %--------------------------------------------------------------------
+   (21) % Example 2:  GetResultantTorque  or  GetNetTorque
+   (22) %--------------------------------------------------------------------
+   (23) B.AddTorque( A,  9*Ay> )                  % Add action/reaction torque on B from A.
+-> (24) Torque_B_A> = 888*Ax> + 9*Ay>
+
+   (25) A.AddTorque( B,  2*Ay> )                  % Add action/reaction torque on A from B.
+-> (26) Torque_A_B> = 2*Ay>
+
+   (27) NetTorqueOnBFromA> := B.GetNetTorque( A ) % Net action/reaction torque on B from A.
+-> (28) NetTorqueOnBFromA> = 888*Ax> + 7*Ay>
+
+   (29) NetTorqueOnB> := B.GetResultantTorque()   % Net torque on body B.
+-> (30) NetTorqueOnB> = (888+Tx)*Ax> + 7*Ay>
+
+   (31) NetTorqueOnA> := A.GetResultantTorque()   % Net torque on body A.
+-> (32) NetTorqueOnA> = -888*Ax> - 7*Ay>
+
+   (33) NetTorqueOnS> := System.GetNetTorque()    % Net torque on System(A, B).
+-> (34) NetTorqueOnS> = Tx*Ax>
+

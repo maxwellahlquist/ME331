@@ -1,0 +1,32 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: AddTorque  (add torque to a RigidFrame or RigidBody)
+   (3) %--------------------------------------------------------------------
+   (4) RigidBody  B
+   (5) B.AddTorque( Bx> + 2*By> )
+-> (6) Torque_B> = Bx> + 2*By>
+
+   (7) B.AddTorque( 3*Bz> )
+-> (8) Torque_B> = Bx> + 2*By> + 3*Bz>
+
+   (9) %--------------------------------------------------------------------
+   (10) % Example 2: AddTorque (action/reaction with two rigid objects) 
+   (11) %--------------------------------------------------------------------
+   (12) RigidFrame A
+   (13) B.AddTorque( A,  Ax> + 2*Ay> )
+-> (14) Torque_B_A> = Ax> + 2*Ay>
+
+   (15) ResultantTorqueOnA> := A.GetResultantTorque()
+-> (16) ResultantTorqueOnA> = -Ax> - 2*Ay>
+
+   (17) ResultantTorqueOnB> := B.GetResultantTorque()
+-> (18) ResultantTorqueOnB> = Ax> + 2*Ay> + Bx> + 2*By> + 3*Bz>
+
+   (19) %--------------------------------------------------------------------
+   (20) % Example: ResetTorque (reset torque on a RigidFrame or RigidBody)
+   (21) %--------------------------------------------------------------------
+   (22) B.ResetTorque( sin(t)*Bx> )               
+-> (23) Torque_B> = sin(t)*Bx>
+
+   (24) B.ResetTorque( A,  cos(t)*Az> )   
+-> (25) Torque_B_A> = cos(t)*Az>
+

@@ -1,0 +1,55 @@
+% MotionGenesis file:  19.8.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N                % Example: Earth.
+RigidBody       B
+Particle        A
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    theta'', x''              
+Specified   Fc
+Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+Constant    L = 0.5 m
+Constant    N
+Constant    Rx
+Constant    Ry
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+A.SetMass( mA = 10 kg )
+B.SetMass( mB = 1 kg )
+B.SetInertia( Bcm,  IBxx, IByy, IBzz = 0.08333 kg*m^2,  IBxy, IByz, IBzx )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+B.RotateZ( N, -1*theta )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+A.Translate(No, x*Nx>)
+Bo.Translate( A, 0> )          % Sets position, velocity, acceleration.
+Bcm.Translate( No , x*Nx> + L*By> )
+%--------------------------------------------------------------------
+%   Add relevant contact/distance forces.
+System.AddForceGravity( -g*Ny> )            % Add's gravity force to each massive object.
+A.AddForce( Fc*Nx> +  N*Ny> )                   % External force.
+Bo.AddForce( A, Rx*Nx> + Ry*Ny> )
+
+
+eq[1] = A.GetPosition( No )
+eq[2] = A.GetVelocity( N )
+eq[3] = A.GetAcceleration( N )
+B.GetRotationMatrix( N )
+eq[5] = Bcm.GetPosition( No )
+eq[6] = Bcm.GetVelocity( N )
+eq[7] = Bcm.GetAcceleration( N )
+eq[8] = A.GetResultantForce()
+eq[9] = B.GetResultantForce()
+eq[10] = B.GetMomentOfForces( Bcm )
+
+eq[11] = Dot( Nx>, A.GetDynamics() )
+eq[12] = Dot( Nx>, B.GetDynamics() )
+eq[13] = Dot( Ny>, B.GetDynamics() )
+eq[14] = Dot( Bz>, B.GetDynamics( Bcm ) )
+
+
+Save 19.8.html, 1
+Quit

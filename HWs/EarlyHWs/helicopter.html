@@ -1,0 +1,21 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: helicopter.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">helicopter.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) Constant g = 9.8 m/s^2
+   (2) Variable L = 50 - 2*t
+-> (3) L = 50 - 2*t
+
+   (4) Variable L' = -2
+-> (5) L' = -2
+
+   (6) Variable theta'' = (-2*theta'*L' - g*sin(theta)) / L
+-> (7) theta'' = -(g*sin(theta)+2*L'*theta')/L
+
+   (8) Input theta = 1 deg,   theta' = 0 deg/s ,  tFinal = 24.92 sec, tStep = 0.02 sec     
+   (9) OutputPlot  t sec,  theta deg
+   (10) ODE()
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

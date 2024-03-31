@@ -1,0 +1,47 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetPartialVelocity and GetPartialAngularVelocity
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) RigidBody      B        % Sphere
+   (6) Point          BN(B)    % Point of B in contact with N
+   (7) %----------------------------------------------------------
+   (8) Constant  R
+   (9) Variable  x',  y'
+   (10) Variable  wx,  wy,  wz
+   (11) SetGeneralizedSpeed( x', y', wx, wy, wz )
+   (12) %----------------------------------------------------------
+   (13) B.SetAngularVelocity( N,  wx*Nx> + wy*Ny> + wz*Nz> )
+-> (14) w_B_N> = wx*Nx> + wy*Ny> + wz*Nz>
+
+   (15) Bcm.SetPositionVelocity( No,  x*Nx> + y*Ny> + R*Nz> )
+-> (16) p_No_Bcm> = x*Nx> + y*Ny> + R*Nz>
+-> (17) v_Bcm_N> = x'*Nx> + y'*Ny>
+
+   (18) %----------------------------------------------------------
+   (19) % Example: Partial angular velocities and velocities.
+   (20) wBNPartials = B.GetPartialAngularVelocity( N ) 
+-> (21) wBNPartials = [0>;  0>;  Nx>;  Ny>;  Nz>]
+
+   (22) vBcmNPartials = Bcm.GetPartialVelocity( N )
+-> (23) vBcmNPartials = [Nx>;  Ny>;  0>;  0>;  0>]
+
+   (24) %----------------------------------------------------------
+   (25) % Example: Generic partial velocities.
+   (26) genericPartialA = GetPartialVelocity( cos(t)*x'*Nx> + sin(t)*y'*Ny> ) 
+-> (27) genericPartialA = [cos(t)*Nx>;  sin(t)*Ny>;  0>;  0>;  0>]
+
+   (28) genericPartialB = GetPartialVelocity( R*(wx + wy) + 3*x' + 4*y' ) 
+-> (29) genericPartialB = [3;  4;  R;  R;  0]
+
+   (30) genericPartialC = GetPartialVelocity( [w_B_N>;  v_Bcm_N>],  x' ) 
+-> (31) genericPartialC = [0>;  Nx>]
+
+   (32) genericPartialD = GetPartialVelocity(  w_B_N>,             [x'; y'; wx] ) 
+-> (33) genericPartialD = [0>;  0>;  Nx>]
+
+   (34) genericPartialE = GetPartialVelocity( [w_B_N>,  v_Bcm_N>], [x'; y'; wx] ) 
+-> (35) genericPartialE = [0>, Nx>;  0>, Ny>;  Nx>, 0>]
+
+   (36) genericPartialF = GetPartialVelocity( [w_B_N>;  v_Bcm_N>], [x'; y'; wx] ) 
+-> (37) genericPartialF = [0>, 0>, Nx>;  Nx>, Ny>, 0>]
+

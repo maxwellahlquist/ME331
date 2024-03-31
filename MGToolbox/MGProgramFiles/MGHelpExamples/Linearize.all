@@ -1,0 +1,55 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  Linearize   (one function with one variable)
+   (3) %--------------------------------------------------------------------
+   (4) Variable x, dx
+   (5) linearizeCosAbout0 = Linearize( cos(x), x )
+-> (6) linearizeCosAbout0 = 1
+
+   (7) linearizeCosAbout1 = Linearize( cos(x), x=1 )
+-> (8) linearizeCosAbout1 = 1.381773 - 0.841471*x
+
+   (9) linearizeCosAbout1Dx = Linearize( cos(x), x=1:dx )
+-> (10) linearizeCosAbout1Dx = 0.5403023 - 0.841471*dx
+
+   (11) %--------------------------------------------------------------------
+   (12) % Example 2:  Linearize   (one function with two variables)
+   (13) %--------------------------------------------------------------------
+   (14) Variable y, dy
+   (15) linearizeExpXYAbout0 = Linearize( exp(x+y), x, y )
+-> (16) linearizeExpXYAbout0 = 1 + x + y
+
+   (17) linearizeExpXYAbout2 = Linearize( exp(x+y), x=2, y=2 )
+-> (18) linearizeExpXYAbout2 = -163.7945 + 54.59815*x + 54.59815*y
+
+   (19) linearizeExpXYAbout2Dxy = Linearize( exp(x+y), x=2:dx, y=2:dy )
+-> (20) linearizeExpXYAbout2Dxy = 54.59815 + 54.59815*dx + 54.59815*dy
+
+   (21) %--------------------------------------------------------------------
+   (22) % Example 3:  Linearize   (matrix of functions with one variable)
+   (23) %--------------------------------------------------------------------
+   (24) matrix = [sin(x); cos(x); exp(x)]
+-> (25) matrix = [sin(x);  cos(x);  exp(x)]
+
+   (26) linearizeMatrix  = Linearize(  matrix, x=0 )
+-> (27) linearizeMatrix = [x;  1;  1 + x]
+
+   (28) linearizeMatrix0 = Linearize0( matrix, x=0 )
+-> (29) linearizeMatrix0 = [0;  1;  1]
+
+   (30) linearizeMatrix1 = Linearize1( matrix, x=0 )
+-> (31) linearizeMatrix1 = [x;  0;  x]
+
+   (32) %--------------------------------------------------------------------
+   (33) % Example 4:  Linearize   (vector function of two variable)
+   (34) %--------------------------------------------------------------------
+   (35) z = sin(x) + cos(y)
+-> (36) z = sin(x) + cos(y)
+
+   (37) RigidFrame  N
+   (38) vector> = sin(x)*Nx> + cos(y)*Ny> + z*Nz>
+-> (39) vector> = sin(x)*Nx> + cos(y)*Ny> + z*Nz>
+
+   (40) vectorExpanded> = Linearize( vector>, x=1:dx, y=2:dy )
+-> (41) vectorExpanded> = (0.841471+0.5403023*dx)*Nx> + (-0.4161468-0.9092974*
+        dy)*Ny> + (0.4253241+0.5403023*dx-0.9092974*dy)*Nz>
+

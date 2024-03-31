@@ -1,0 +1,32 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  Output
+   (3) %--------------------------------------------------------------------
+   (4) Variable  y' = cos(t)*y 
+-> (5) y' = cos(t)*y
+
+   (6) mat = [t, y, y';  y^2, abs(y), cos(t)]
+-> (7) mat = [t, y, y';  y^2, abs(y), cos(t)]
+
+   (8) Input  y = 22 cm,  tFinal = 5 sec,  tStep = 0.1 sec
+   (9) Output        t sec,  y cm,  y inch,  y^2 m 
+   (10) OutputPlot    t sec,  y m,   y' m/s 
+   (11) OutputEncode  t sec,  mat noUnits
+   (12) ODE() Test.m
+
+   (13) %-------------------------------------------------------------------
+   (14) % Running the MATLAB file Test.m produces: a plot, the data file Test.1
+   (15) % and calculations for all the elements in the matrix mat.
+   (16) %
+   (17) % FILE: Test.1
+   (18) %
+   (19) %       t              y              y             y^2
+   (20) %     (sec)          (cm)          (inch)           (m)
+   (21) %
+   (22) % 0.000000E+00   2.200000E+01   8.661417E+00   4.840000E-02 
+   (23) % 1.000000E-01   2.430971E+01   9.570752E+00   5.909620E-02 
+   (24) %      ...            ...           ...            ...
+   (25) %
+   (26) %--------------------------------------------------------------------
+   (27) % Example 2: Typing OUTPUT causes the following to be displayed
+   (28) %--------------------------------------------------------------------
+   (29) % Output 1:  t sec, y cm, y inch, y^2 m

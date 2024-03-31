@@ -1,0 +1,114 @@
+% MotionGenesis file:  pantograph.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N               % Example: Earth.
+RigidBody       A               % Link 1
+RigidBody       B               % Link 2
+RigidBody       C               % Link 3
+RigidBody       D               % Link 4
+
+Particle	Q		% Mass at the pantograph end-effector
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    	qA'', qB'', qC'', qD''	% Joint angles from vertical
+
+Variable	TA, TD			% Torques acting at joint A and D
+Constant	LP = 5 in , LS = 6 in, LN = 0 in
+Constant	mP = 36.84 g, mS = 44.8, mQ = 50 g, IzzP = 1/12*mP*(LP/2)^2, IzzS = 1/12*mS*(LS/2)^2
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+A.SetMass( mP )
+B.SetMass( mS )
+C.SetMass( mS )
+D.SetMass( mP )
+Q.SetMass( mQ )
+
+A.SetInertia( Acm,  0,  0,  IzzP )
+B.SetInertia( Bcm,  0,  0,  IzzS )
+C.SetInertia( Ccm,  0,  0,  IzzS )
+D.SetInertia( Dcm,  0,  0,  IzzP )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+% See schematic to visualize
+A.RotateZ( N, qA )
+B.RotateNegativeZ( N, qB )
+C.RotateZ( N, qC )
+D.RotateNegativeZ( N, qD )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+Ao.Translate(No, 0>)
+Acm.Translate(Ao, LP/2 * ay>)
+Bo.Translate(Acm, LP/2 * ay>)
+Bcm.Translate(Bo, LP/2 * by>)
+Q.Translate(Bcm, LS/2 * by>)
+
+Do.Translate(No, LN*nx>)
+Dcm.Translate(Do, LP/2 * dy>)
+Co.Translate(Dcm, LP/2 * dy>)
+Ccm.Translate(Co, LS/2 * cy>)
+Q.Translate(Ccm, LS/2 * cy>)
+%--------------------------------------------------------------------
+%   Motion constraints (if any).
+NoQ> = Bo.GetPosition(No) + Q.GetPosition(Bo)
+QDo> = Do.GetPosition(Q)
+DoNo> = No.Getposition(Do)
+Loop> = NoQ> + QDo> + DoNo>
+
+Loop[1] = Dot( Loop>, nx> )
+Loop[2] = Dot( Loop>, ny> )
+SolveDT( DT(Loop) = 0,  qB', qC')
+% Linear Kinematic relationships between qA'('), qB'('), qC'('), qD'(')
+
+Variable	x'', y''	% Position of P
+SetDT( x = Dot( NoQ>, nx> ) )
+SetDT( y = Dot( NoQ>, ny> ) )
+% Linear Kinematic relationships between x'('), y'('), qA'('), qD'(')
+% and nonlinear in x, y, qA, qD
+%--------------------------------------------------------------------
+%   Add relevant torques.
+A.AddTorque( N, TA*nz>)
+D.AddTorque( N, TD*nz> )
+%--------------------------------------------------------------------
+%   Translational dynamic equations (F = m*a).
+%   For static analysis, use  B.GetStatics()  or  System.GetStatics().
+SetGeneralizedSpeed(qA', qD')
+Dynamics = Explicit( System.GetDynamicsKane(), qA', qD')
+
+M_matrix = GetCoefficientMatrix( Dynamics, qA'', qD'')
+N_matrix = GetCoefficient( Dynamics, TA, TD)
+
+%--------------------------------------------------------------------
+% Desired Motion
+% x and yOffset are measured from No and defines the origin of the "control shape"
+
+Constant	xOffset = LN / 2, yOffset = 2/3* LP % These can/should be modified
+Constant	r = LP/3, period = 10 sec
+Variable	theta''
+SetDT( theta = 2*pi*t / period )
+
+Specified xDes'' 
+SetDt( xDes = xOffset + r*cos(theta) )
+Specified yDes'' 
+SetDt( yDes = yOffset + r*sin(theta) )
+% The current shape is a simple circle
+% centered at (xOffset, yOffset)
+
+
+% Control Law
+Constant	zeta = 1 noUnits, wn = 2 rad/s
+Specified controlLawX'' = yDes'' + 2*zeta*wn*(yDes' - y') + wn^2*(yDes - y)
+Specified controlLawY'' = yDes'' + 2*zeta*wn*(yDes' - y') + wn^2*(yDes - y)
+
+% Equals zero
+Substitution[1] = x'' - controlLawX''
+Substitution[2] = y'' - controlLawY''
+Solve(Explicit(Substitution) = 0, qA'', qD'')
+
+
+Input tfinal = EvaluateToNumber(period), absError = 1.0E-05, tStep = 0.05 sec
+
+
+OutputPlot x m, y m
+ODE()
+Quit

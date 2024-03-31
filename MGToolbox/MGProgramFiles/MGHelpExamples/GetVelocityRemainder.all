@@ -1,0 +1,29 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetVelocityRemainder and GetAngularVelocityRemainder
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) RigidBody      B       % Sphere
+   (6) Point          BN(B)   % Point of B in contact with N
+   (7) %----------------------------------------------
+   (8) Constant    R
+   (9) Variable    x', y'
+   (10) Variable    wz
+   (11) Specified   wx,  wy
+   (12) SetGeneralizedSpeed( x', y', wz )
+   (13) %----------------------------------------------
+   (14) %     Kinematics
+   (15) B.SetAngularVelocity( N,  wx*Nx> + wy*Ny> + wz*Nz> )
+-> (16) w_B_N> = wx*Nx> + wy*Ny> + wz*Nz>
+
+   (17) Bcm.SetPositionVelocity( No, x*Nx> + y*Ny> + R*Nz> )
+-> (18) p_No_Bcm> = x*Nx> + y*Ny> + R*Nz>
+-> (19) v_Bcm_N> = x'*Nx> + y'*Ny>
+
+   (20) %----------------------------------------------
+   (21) %     Angular velocity and velocity remainders
+   (22) wBNRemainder> = B.GetAngularVelocityRemainder( N ) 
+-> (23) wBNRemainder> = wx*Nx> + wy*Ny>
+
+   (24) vBcmNRemainder> = Bcm.GetVelocityRemainder( N )
+-> (25) vBcmNRemainder> = 0>
+

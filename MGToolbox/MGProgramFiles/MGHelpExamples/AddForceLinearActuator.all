@@ -1,0 +1,25 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: AddForceLinearActuator  (on particle A from point No)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) Particle  A
+   (6) Variable  xA
+   (7) Specified Fx
+   (8) A.SetPosition( No, xA*Nx> )
+-> (9) p_No_A> = xA*Nx>
+
+   (10) A.AddForceLinearActuator( No, Fx )
+-> (11) Force_A_No> = Fx*xA/abs(xA)*Nx>
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2: AddForceLinearActuator  (on particle Q from particle P)
+   (14) %--------------------------------------------------------------------
+   (15) Particle  P, Q
+   (16) Variable  x, y
+   (17) Specified F
+   (18) Q.SetPosition( P, x*Nx> + y*Ny> )
+-> (19) p_P_Q> = x*Nx> + y*Ny>
+
+   (20) Q.AddForceLinearActuator( P, F )
+-> (21) Force_Q_P> = F*x/sqrt(x^2+y^2)*Nx> + F*y/sqrt(x^2+y^2)*Ny>
+

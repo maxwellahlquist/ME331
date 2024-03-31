@@ -1,0 +1,52 @@
+% MotionGenesis file:  7.4.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N
+RigidFrame      A
+RigidBody      B
+Particle        Q
+Point           Qi( N ), Qf( N )
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Constant	xi = 10 cm, yi = 1 cm, xf = 20 cm, yf = 2 cm                
+Constant	wr = (2*pi / 4) rad/s
+Constant	R = 40 cm
+Constant	A = sqrt( (xf - xi)^2 + (yf - yi)^2 )
+
+Specified	s' = DT( 0.5*A*( 1 - cos(wr*t) ) )
+%Specified	s = 0.5*A*( 1 - cos(wr*t) )	% Distance between Qi and Q 
+Specified	qA' = (2*pi/360)
+%Specified	qA = (2*pi/360)*t %rad/sec
+Variable	qB
+Variable	d	% Distance between Bo and Q
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+A.RotateZ( N, qA )
+B.RotateZ( N, -qB )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+Qi.SetPosition( No, xi*Nx> + yi*Ny> )
+Qf.SetPosition( No, xf*Nx> + yf*Ny> )
+u> = GetUnitVector( Qf.GetPosition( Qi ) )
+Q.SetPosition( Qi, s*u> )
+Bo.SetPosition( No, -R*Ay> )
+Q.SetPosition( Bo, d*By> )
+
+NoQi> = Qi.GetPosition( No )
+QiQ> = Q.GetPosition( Qi )
+NoBo> = Bo.GetPosition( No )
+BoQ> = NoQi> + QiQ> - NoBo>
+v> = GetUnitVector( BoQ> )
+
+qB = acos( Dot( Ny>, v> ) )
+Variable qB' = DT( qB )
+
+
+Input tFinal = 360 sec, qA = 0 rad, s = 0 m
+OutputPlot t sec, qB deg
+ODE()
+
+Save  7.4.html
+Quit
+

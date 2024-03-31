@@ -1,0 +1,48 @@
+
+%    File: MGBeamOnTwoCablesKinematics.txt
+% Problem: Beam position/orientation ... from cable lengths.
+%    Note: MotionGenesis script with student blanks at
+%          www.MotionGenesis.com -> TextbookResources
+%-------------------------------------------------------------
+NewtonianFrame N        % Nx> horizontally right, Ny> down.
+RigidBody      B        % Beam with Bx> pointed from Bo to Bc.
+Point          Nc(N)    % Point of N attached to cable C.
+Point          Bc(B)    % Point of B attached to cable C.
+%-------------------------------------------------------------
+Constant LN = 6 m       % Distance between No and NC.
+Constant LB = 4 m       % Distance between Bo and BC.
+Constant LA = 2.7 m     % Length of cable A.
+Constant LC = 3.7 m     % Length of cable C.
+Variable x'', y''       % Nx> and Ny> measures of Bo's position from No.
+Variable q''            % Bz> measure of angle from Nx> to Bx>.
+%--------------------------------------------------------------------
+%   Rotation: Beam B rotates relative to N about Bz> = Nz> by angle q.
+B.RotateZ( N,  q )
+%--------------------------------------------------------------------
+%   Set point Nc's position from No to LN*Nx>.  Similarly for Bo, Bc.
+Nc.SetPosition(  No,  LN*Nx>  )
+Bo.SetPosition(  No,  x*Nx> + y*Ny>  )
+Bc.SetPosition(  Bo,  LB*Bx>  )
+%--------------------------------------------------------------------
+%   Constraints arising from rope lengths ("just geometry").
+Eqn[1] = Bo.GetDistanceSquared( No ) - LA^2
+Eqn[2] = Bc.GetDistanceSquared( Nc ) - LC^2
+%--------------------------------------------------------------------
+%   Solve nonlinear equations (requires a numerical guess).
+Input  x = 1 meter,  x' = 0.4 m/s
+Solve( Eqn = 0,   y = 3 meters,  q = 20 deg  )
+%--------------------------------------------------------------------
+%   Differentiate constraint equations and solve for y' and q'.
+Solve( Dt(Eqn) = 0,   y' = 0 m/s,   q'= 0 rad/sec )
+%--------------------------------------------------------------------
+%   Calculate Bcm's (B's center of mass) velocity and its square.
+Bcm.SetPosition( Bo,  0.5*LB*Bx> )
+v> = Dt( Bcm.GetPosition(No), N )
+vSquared = Dot( v>, v> )
+vSquaredNumerical = EvaluateToNumber( vSquared )
+%--------------------------------------------------------------------
+%   Calculate Bcm's acceleration in N.
+a> = Dt( v>, N )
+%-----------------------------------------------------------
+Save MGBeamOnTwoCablesKinematics.html
+Quit

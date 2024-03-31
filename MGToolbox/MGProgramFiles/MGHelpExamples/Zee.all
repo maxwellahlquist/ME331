@@ -1,0 +1,48 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: Zee   (scalar expression)
+   (3) %--------------------------------------------------------------------
+   (4) Constant   A, B, C
+   (5) ScalarExpression = (A-B)*cos(t) + (B-C)*sin(t)
+-> (6) ScalarExpression = (A-B)*cos(t) + (B-C)*sin(t)
+
+   (7) Zee( ScalarExpression )
+-> (8) z1 = cos(t)
+-> (9) z2 = sin(t)
+-> (10) z3 = A - B
+-> (11) z4 = B - C
+-> (12) z5 = z3*z1 + z4*z2
+-> (13) ScalarExpression = z5
+
+   (14) %--------------------------------------------------------------------
+   (15) % Example 2: ZeeConstants   (vector expression)
+   (16) %--------------------------------------------------------------------
+   (17) RigidBody  N
+   (18) vector> = (A-B)*cos(t)*Nx> + (B-C)*sin(t)*Ny> + cos(A-B)*sin(B-C)*exp(t)*Nz>
+-> (19) vector> = (A-B)*cos(t)*Nx> + (B-C)*sin(t)*Ny> + sin(B-C)*cos(A-B)*exp(t)*Nz>
+
+   (20) ZeeConstants( vector> )
+-> (21) z6 = sin(B-C)*cos(A-B)
+-> (22) vector> = z3*cos(t)*Nx> + z4*sin(t)*Ny> + z6*exp(t)*Nz>
+
+   (23) %--------------------------------------------------------------------
+   (24) % Example 3: Zee   (matrix expression)
+   (25) %--------------------------------------------------------------------
+   (26) Variable x, y
+   (27) matrix[1] = 10 + A + B + C + abs(t)*x + sin(t)*exp(t)*cos(t^2)*y
+-> (28) matrix[1] = 10 + A + B + C + abs(t)*x + sin(t)*exp(t)*cos(t^2)*y
+
+   (29) matrix[2] = 10 + A^2 + cos(B+C)*tan(t)*x
+-> (30) matrix[2] = 10 + A^2 + cos(B+C)*tan(t)*x
+
+   (31) Zee( matrix, x, y )
+-> (32) z7 = abs(t)
+-> (33) z8 = exp(t)
+-> (34) z9 = cos(t^2)
+-> (35) z10 = z2*z8*z9
+-> (36) z11 = 10 + A + B + C
+-> (37) z12 = cos(B+C)
+-> (38) z13 = tan(t)
+-> (39) z14 = z12*z13
+-> (40) z15 = 10 + A^2
+-> (41) matrix = [z11 + z7*x + z10*y;  z15 + z14*x]
+

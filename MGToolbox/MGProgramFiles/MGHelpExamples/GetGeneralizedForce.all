@@ -1,0 +1,29 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetGeneralizedForce
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) Particle  A, B, C
+   (6) Constant  k
+   (7) Variable  q1', q2'
+   (8) SetGeneralizedSpeed( q1', q2' )
+   (9) A.SetVelocity( N, q1'*Nx> )
+-> (10) v_A_N> = q1'*Nx>
+
+   (11) B.SetVelocity( N, (q1'+q2')*Nx> )
+-> (12) v_B_N> = (q1'+q2')*Nx>
+
+   (13) C.SetVelocity( N,  2*q2'*Ny> )
+-> (14) v_C_N> = 2*q2'*Ny>
+
+   (15) A.AddForce( -k*q1*Nx> )
+-> (16) Force_A> = -k*q1*Nx>
+
+   (17) B.AddForce( A, -k*q2*Nx> )
+-> (18) Force_B_A> = -k*q2*Nx>
+
+   (19) C.AddForce( A, 3*Ny> )
+-> (20) Force_C_A> = 3*Ny>
+
+   (21) Fr = System.GetGeneralizedForce()
+-> (22) Fr = [-k*q1;  6 - k*q2]
+

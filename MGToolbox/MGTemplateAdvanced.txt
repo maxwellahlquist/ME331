@@ -1,0 +1,163 @@
+% MotionGenesis file:  MGTemplateAdvanced.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Default settings and unit system for input/output conversions.
+SetDigits( 5 )             % Number of digits displayed for numbers
+SetAutoEpsilon( 1.0E-14 )  % Rounds to nearest integer
+SetAutoZee( OFF )          % Turn ON for efficient calculations or large problems (Professional version)
+SetLineWidth( 120 )        % Set line width for files: .all, .html, .f, .for, .c, .m, etc.
+SetUnitSystem( kg, meter, sec )
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N                % Example: Earth.
+RigidBody       A                % Example: Upper forearm.
+RigidFrame      B                % Comment.
+Particle        Q                % Comment.
+Point           P( B )           % Point P is a point of B.
+System          S( A, B )        % System S consists of objects A and B.
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    qA''                 % qA and its 1st and 2nd derivatives.
+Variable    q{1:3}'              % q1, q1',  q2, q2',  q3, q3'.
+Variable    Fx, Fy               % Reaction forces.
+Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+Specified   TA                   % Torque on A from N.
+SetGeneralizedSpeed( q1', q2', q3' )
+%--------------------------------------------------------------------
+%   Quantities to be left explicit when SetAutoZee(ON).
+SetNoZeeSymbol( Fx, Fy )
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+A.SetMass( mA = 2 kg )
+Q.SetMass( mQ = 3 kg )
+A.SetInertia( Acm,  IAxx = 0.2 kg*m^2,  IAyy = 0.3 kg*m^2,  IAzz = 0.4 kg*m^2 )
+B.SetInertia( Bcm,  IBxx, IByy, IBzz,  IBxy, IByz, IBzx )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+A.RotateX( N, qA )
+B.RotateNegativeY( A, qB )
+C.SetAngularVelocity( N, someVector> )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+Q.SetPosition( No, positionVector> )
+Q.SetPositionVelocity( No, positionVector> )
+Q.Translate( No, positionVector> )          % Sets position, velocity, acceleration
+Q.SetVelocityAcceleration( N, velVector> )  % Differentiates to find acceleration
+%--------------------------------------------------------------------
+%   Alternatively, if need to set just velocity and/or acceleration (rare).
+Q.SetVelocity( N, someVector> )
+Q.SetVelocity( N, No )     % Differentiates Q's position vector from No
+Q.SetVelocity( N, Bo, B )  % Both Q and Bo must be fixed on B
+Q.SetVelocity( N, Bo, B, coincidentPoint )
+%--------------------------------------------------------------------
+%   Kinematical differential equations (if any).
+%   Also try HELP SetRotationMatrixODE().
+q1' = ( w1*cos(q3) - w2*sin(q3) ) / cos(q2)
+q2' = w1*sin(q3) + w2*cos(q3)
+%--------------------------------------------------------------------
+%   Configuration constraints (if any).
+ZeroConfig[1] = L1*cos(q1) + L2*cos(q2) + L3*cos(q3) - L4
+ZeroConfig[2] = L1*sin(q1) + L2*sin(q2) + L3*sin(q3)
+%--------------------------------------------------------------------
+%   Motion constraints (if any).
+MotionConstraint[1] = Dot( Q.GetVelocity(N), Ax> )
+MotionConstraint[2] = Dot( Q.GetVelocity(N), Ay> )
+SolveDt( MotionConstraint = 0,  varName1, varName2 )
+%--------------------------------------------------------------------
+%   Add relevant contact/distance forces.
+System.AddForceGravity( -g*Ny> )            % Add's gravity force to each massive object.
+Q.AddForce( someVector> )                   % External force.
+Q.AddForce( P, actionReactionForce> )       % Law of action/reaction.
+%--------------------------------------------------------------------
+%   Add relevant torques.
+A.AddTorque( SomeVector> )                  % External torque.
+B.AddTorque( A, actionReactionTorque> )     % Law of action/reaction.
+%--------------------------------------------------------------------
+%   Translational dynamic equations (F = m*a).
+%   For static analysis, use  B.GetStatics()  or  System.GetStatics().
+Dynamics[1] = Dot(  B.GetDynamics(),  Nx>  )
+Dynamics[2] = Dot(  B.GetDynamics(),  Ny>  )
+%--------------------------------------------------------------------
+%   Rotational dynamic equations (M = DH/Dt + ...).
+%   For static analysis, use  B.GetStatics( aboutPoint ).
+Dynamics[3] = Dot(  B.GetDynamics(Bcm),  Bz>  )
+%--------------------------------------------------------------------
+%   Alternatively, use Kane's equations of motion.
+%   For static analysis, use  System.GetStaticsKane().
+DynamicsKanes = System.GetDynamicsKane()
+%--------------------------------------------------------------------
+%   Solve algebraic equations for list of unknowns.
+Solve( Dynamics = 0,   x'', y'', Fx, Fy )
+%--------------------------------------------------------------------
+%   Energy calculations (if needed).
+Variable workDone' = Dot( someForce>, someVelocity> )
+KE = System.GetKineticEnergy()
+PEgravity = System.GetForceGravityPotentialEnergy( -g*Ny>, No )
+MechanicalEnergy = KE + PEgravity - workDone
+%--------------------------------------------------------------------
+%   Momentum calculations (if needed).
+H> = System.GetAngularMomentum( aboutPoint )
+L> = EvaluateToNumber( System.GetLinearMomentum() )
+P =  System.GetGeneralizedMomentum()
+%--------------------------------------------------------------------
+%   Other calculations (e.g., for output).
+xQ = Dot(  Q.GetPosition(No),  Nx>  )
+%--------------------------------------------------------------------
+%   Provide expressions for specified quantities.
+%   For example, if t < 0,  TA = cos(t)  else  TA = exp(t)
+TA = IsNegative(t)*cos(t) + IsPositiveOr0(t) * exp(t)
+%--------------------------------------------------------------------
+%   Set initial values for variables (for subsequent ODE command).
+Input  qA = 30 deg,  qA' = 0 rad/sec
+Input  qB = 90 deg,  qB' = 0 rad/sec
+%--------------------------------------------------------------------
+%   List output quantities (e.g., from the ODE command).
+Output      t sec,  x m,  Fx Newton,  Fy Newton
+OutputPlot  t sec,  qA degrees  qB degrees
+%--------------------------------------------------------------------
+%   Output quantities for animation with Animake.
+Animate( N, No, A, B, C )
+%--------------------------------------------------------------------
+%   Set numerical integration parameters and solve ODEs.
+%   Or auto-generate MATLAB, C, or Fortran code.
+%   ODE( Zero = 0,  listOfVariablesToSolve )  [A=0,3,1; B=2,0,-0.5]  filename.m
+Input  tFinal = 10 sec,  tStep = 0.02 sec,  absError = 1.0E-07,  relError = 1.0E-07
+ODE()  Filename
+%--------------------------------------------------------------------
+%   Numerical analysis.
+Answer = EvaluateToNumber( Fx,  q1 = 1, q2 = 2 )
+
+%********************************************************************
+%   LINEARIZATION AND CONTROL SYSTEM / STABILITY ANALYSIS
+%--------------------------------------------------------------------
+%   Perturbation and nominal solution parameters.
+Variable  du{5}'       % Perturbations of u1, ... u5
+Variable  dq{3}'       % Perturbations of q1, ... q3
+Variable  nq{3}'       % Nominal solutions for q1, ... q3
+Variable  nTA          % Nominal solution for TA
+Constant  Omega        % Nominal solution for u4
+%--------------------------------------------------------------------
+%   Find nominal solution for TA.
+Nominal = Evaluate( Zero,  q1=nq1, q1'=0, u1=0, u1'=0, TA=nTA )
+Solve( Nominal = 0,  nTA )
+%--------------------------------------------------------------------
+%   Linearize kinematical equations about nominal solution.
+dq1' = Taylor(q1', 1, q1=0:dq1, q2=0:dq2, ...)
+%--------------------------------------------------------------------
+%   Linearize equations of motion about nominal solution.
+Perturb  = Taylor(Zero, 1, q1=nq1:dq1, u1=0:du1, u1'=0:du1' )
+Solve( Perturb = 0,  du{1:5}' )
+%--------------------------------------------------------------------
+%   Form, x, x', u, A, B, matrices in equation x'=A*x + B*u.
+Xm = [ dq1;  du1;   ... ]
+Xp = [ dq1'; du1';  ... ]
+um = [dTCA, dTCB]
+Am = D( Xp, Transpose(Xm) )
+Bm = D( Xp, um )
+%********************************************************************
+
+%--------------------------------------------------------------------
+%   Save input together with responses.
+Save someFileName.html
+Quit
+

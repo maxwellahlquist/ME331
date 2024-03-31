@@ -1,0 +1,27 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: CM  (center of mass of rigid body)
+   (3) %--------------------------------------------------------------------
+   (4) SetDefaults( AUTOLEV )
+   (5) NewtonianFrame N   
+   (6) RigidBody  B 
+   (7) B.SetMass( mB )
+   (8) Variable   xB, yB
+   (9) Bo.SetPosition( No, xB*N1> + yB*N2> )
+-> (10) p_No_BO> = xB*N1> + yB*N2>
+
+   (11) BoPositionFromNo> = CM( No, B )
+-> (12) BoPositionFromNo> = xB*N1> + yB*N2>
+
+   (13) %--------------------------------------------------------------------
+   (14) % Example 2: CM  (center of mass of system)
+   (15) %--------------------------------------------------------------------
+   (16) Particle   P
+   (17) P.SetMass( mP )
+   (18) Variable   xP, yP
+   (19) P.SetPosition( No, xP*N1> + yP*N2> )
+-> (20) p_No_P> = xP*N1> + yP*N2>
+
+   (21) SystemCmPositionFromNo> = CM( No )
+-> (22) SystemCmPositionFromNo> = (mB*xB+mP*xP)/(mB+mP)*N1> + (mB*yB+mP*yP)/(
+        mB+mP)*N2>
+

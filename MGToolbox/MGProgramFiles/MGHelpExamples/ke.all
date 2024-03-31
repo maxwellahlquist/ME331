@@ -1,0 +1,46 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: KE  (Kinetic energy of a particle)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) Particle       Q             
+   (6) Specified      v1    
+   (7) Variable       v2    
+   (8) SetGeneralizedSpeed( v2 )
+   (9) Q.SetMass( mQ )
+   (10) Q.SetVelocity( N, (v1+v2)*Nx> )
+-> (11) v_Q_N> = (v1+v2)*Nx>
+
+   (12) QKineticEnergy = KE( Q )
+-> (13) QKineticEnergy = 0.5*mQ*(v1+v2)^2
+
+   (14) QKineticEnergy0 = KE( 0, Q )
+-> (15) QKineticEnergy0 = 0.5*mQ*v1^2
+
+   (16) QKineticEnergy1 = KE( 1, Q )
+-> (17) QKineticEnergy1 = mQ*v1*v2
+
+   (18) QKineticEnergy2 = KE( 2, Q )
+-> (19) QKineticEnergy2 = 0.5*mQ*v2^2
+
+   (20) %--------------------------------------------------------------------
+   (21) % Example 2: KE  (Kinetic energy of a rigid body)
+   (22) %--------------------------------------------------------------------
+   (23) RigidBody    B             
+   (24) B.SetMass( mB )
+   (25) B.SetInertia( Bcm, Ixx, Iyy, Izz )
+   (26) Variable     vx, vy, wz    
+   (27) B.SetAngularVelocity( N, wz*Bz> )
+-> (28) w_B_N> = wz*Bz>
+
+   (29) Bcm.SetVelocity( N, vx*Nx> + vy*Ny> )
+-> (30) v_Bcm_N> = vx*Nx> + vy*Ny>
+
+   (31) BKineticEnergy = KE( B )
+-> (32) BKineticEnergy = 0.5*Izz*wz^2 + 0.5*mB*(vx^2+vy^2)
+
+   (33) %--------------------------------------------------------------------
+   (34) % Example 3: KE  (Kinetic energy of a system)
+   (35) %--------------------------------------------------------------------
+   (36) SKineticEnergy = KE()
+-> (37) SKineticEnergy = 0.5*Izz*wz^2 + 0.5*mB*(vx^2+vy^2) + 0.5*mQ*(v1+v2)^2
+

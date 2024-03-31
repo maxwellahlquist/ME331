@@ -1,0 +1,37 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  Strcmp
+   (3) %--------------------------------------------------------------------
+   (4) intA = Strcmp( "abc", "abc" )    % Identical.
+-> (5) intA = 0
+
+   (6) intB = Strcmp( "abc", "def" )    % Different letters.
+-> (7) intB = -1
+
+   (8) intC = Strcmp( "abc", "ABC" )    % Different (lower/upper) case.
+-> (9) intC = 1
+
+   (10) intD = Strcmp( "abc", "abc ")    % Extra space at end.
+-> (11) intD = 1
+
+   (12) intE = Strcmp( "abc",  abc  )    % Missing quotes "".
+-> (13) intE = -1
+
+   (14) %--------------------------------------------------------------------
+   (15) % Example 2:  Strcmpi
+   (16) %--------------------------------------------------------------------
+   (17) intF = Strcmpi( "abc", "abc" )   % Identical.                   
+-> (18) intF = 0
+
+   (19) intG = Strcmpi( "abc", "def" )   % Different letters.           
+-> (20) intG = -1
+
+   (21) intH = Strcmpi( "abc", "ABC" )   % Different (lower/upper) case.
+-> (22) intH = 0
+
+   (23) intI = Strcmpi( "abc", "abc ")   % Extra space at end.          
+-> (24) intI = 1
+
+   (25) intJ = Strcmpi( "abc",  abc  )   % Missing quotes "".           
+-> (26) intJ = -1
+
+   (27) %--------------------------------------------------------------------

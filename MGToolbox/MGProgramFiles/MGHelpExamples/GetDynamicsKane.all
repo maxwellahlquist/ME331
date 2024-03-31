@@ -1,0 +1,33 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetDynamicsKane (Single pendulum)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame  N            % Earth.
+   (5) RigidBody       B            % Rigid pendulum.
+   (6) Constant        g            % Earth's gravitational constant.
+   (7) Constant        L            % Pendulum length.
+   (8) Variable        q''          % Pendulum angle.
+   (9) Variable        Tz           % Torque applied to B from N.
+   (10) SetGeneralizedSpeed( q' )
+   (11) B.SetMassInertia( m, Ixx, Iyy, Izz )
+   (12) B.RotateZ( N, q )
+-> (13) B_N = [cos(q), sin(q), 0;  -sin(q), cos(q), 0;  0, 0, 1]
+-> (14) w_B_N> = q'*Bz>
+-> (15) alf_B_N> = q''*Bz>
+
+   (16) Bcm.Translate( No, -L*By> )
+-> (17) p_No_Bcm> = -L*By>
+-> (18) v_Bcm_N> = L*q'*Bx>
+-> (19) a_Bcm_N> = L*q''*Bx> + L*q'^2*By>
+
+   (20) Bcm.AddForce( -m*g*Ny> )
+-> (21) Force_Bcm> = -m*g*Ny>
+
+   (22) B.AddTorque( Tz*Bz> )
+-> (23) Torque_B> = Tz*Bz>
+
+   (24) KaneDynamics = System.GetDynamicsKane()
+-> (25) KaneDynamics = [m*g*L*sin(q) + (Izz+m*L^2)*q'' - Tz]
+
+   (26) Solve( KaneDynamics = 0,  q'' )
+-> (27) q'' = (Tz-m*g*L*sin(q))/(Izz+m*L^2)
+

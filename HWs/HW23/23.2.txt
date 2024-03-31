@@ -1,0 +1,144 @@
+% MotionGenesis file:  22.17.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+
+%   Physical objects.
+NewtonianFrame  N                % Earth.
+RigidBody       A                % Vertical Post
+RigidBody       B                % Link 1
+RigidBody       C                % Link 2
+RigidBody	D		 % Shell
+RigidBody       E                % Sphere
+
+Point		AB( A )
+Point		BC( B )
+Point		CD( C )
+Point           EN( E )
+Particle	m
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    qA'', qB'', qC''	 % qA, qB, qC and its 1st and 2nd derivatives.
+Variable    wx', wy', wz'
+SetGeneralizedSpeeds( qA', qB', wy)
+Variable    Td			% Revolute motor torque at CD
+Variable    TA, TB
+
+Constant    	g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+Constant	r = 0.4 m
+Constant	h = 0.6 m
+Constant	LB = 0.8 m
+Constant	LC = 1.2 m
+Constant	mE = 50 kg
+Constant	mm = 800 kg
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+%Come back here later
+A.SetMass( 0 )
+B.SetMass( 0 )
+C.SetMass( 0 )
+D.SetMass( 0 )
+E.SetMass( mE )
+m.SetMass( mm )
+A.SetInertia( Acm, 0, 0, 0 )
+B.SetInertia( Bcm, 0, 0, 0 )
+C.SetInertia( Ccm, 0, 0, 0 )
+D.SetInertia( Dcm, 0, 0, 0 )
+E.SetInertia( Ecm, A, IExx = 2/5*mE*r^2,  IEyy = 2/5*mE*r^2,  IEzz = 2/5*mE*r^2 )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+A.RotateY( N, qA )
+B.RotateZ( A, qB )
+C.RotateNegativeZ( A, qC )
+D.RotateZ( A, 0 )
+E.SetAngularVelocityAcceleration( A, wx*Ax> + wy*Ay> + wz*Az> )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+AB.SetPositionVelocityAcceleration( No, h*Ay> )
+Acm.SetPositionVelocityAcceleration( No, h/2*Ay> )
+BC.SetPositionVelocityAcceleration( AB, LB*Bx> )
+CD.SetPositionVelocityAcceleration( BC, LC*Cx> )
+Ecm.SetPositionVelocityAcceleration( CD, -r*Ay> )
+EN.SetPositionVelocityAcceleration( Ecm, -r*Ay> )
+m.SetPositionVelocityAcceleration( CD, 0> )
+
+NoAB> = AB.GetPosition( No )
+ABBC> = BC.GetPosition( AB )
+BCCD> = CD.GetPosition( BC )
+CDEcm> = Ecm.GetPosition( CD )
+EcmEN> = EN.GetPosition( Ecm )
+
+Variable x''
+Variable z''
+
+pseudoLoop> = NoAB> + ABBC> + BCCD> + CDEcm> + EcmEN> % Only a closed loop in Ay>
+SetDt( x = Dot(pseudoLoop>, Nx>) )
+SetDt( z = Dot(pseudoLoop>, Nz>) )
+%--------------------------------------------------------------------
+%   Motion constraints (if any).
+
+MotionConstraint[1] = Dot( pseudoLoop>, Ay> ) % Pseudo Loop Constraint
+MotionConstraint[2] = Dot( EN.GetVelocity( N ), Ax> )
+MotionConstraint[3] = Dot( EN.GetVelocity( N ), Az> )
+SolveDt( Dt(MotionConstraint[1]), qC')
+SolveDt( MotionConstraint[2:3] = 0,  wx, wz )
+
+%--------------------------------------------------------------------
+System.AddForceGravity( -g*Ny> )
+D.AddTorque( C, Td*Az> ) % Doesn't contribute even though it shows up in the equations
+A.AddTorque( N, TA*Ay> )
+B.AddTorque( A, TB*Az> )
+%--------------------------------------------------------------------
+%   Rotational dynamic equations (M = DH/Dt + ...).
+%   For static analysis, use  B.GetStatics( aboutPoint ).
+
+Dynamics = System.GetDynamicsKane()
+Solve( Dynamics = 0, TA, TB, wy') % Explicit substitutes in wx, wz
+
+% Not needed for problem
+%Explicit(TA, qA'', qB'')
+%Explicit(TB, qA'', qB'' )
+%--------------------------------------------------------------------
+
+Constant tF = 16 sec
+Specified	theta_ellipse''
+SetDt( theta_ellipse = 2*pi/tF*t )
+
+Specified	stitch''
+SetDt( stitch = 0.05*sin(40*theta_ellipse) )
+
+Constant	a = 1.8 m, b = 1.5 m
+Specified	r_ellipse''
+SetDT( r_ellipse = a*b/sqrt( (a*sin(theta_ellipse))^2 + (b*cos(theta_ellipse))^2 ) )
+
+Specified	xDes''
+SetDt( xDes =  (r_ellipse + stitch)*cos(theta_ellipse) )
+
+Specified	zDes''
+SetDt( zDes =  (r_ellipse + stitch)*sin(theta_ellipse) )
+%------------------------------------------------------------------------------
+
+Constant	Kp = 1 s^-2, Kd = 2 s^-1
+Specified controlLawX'' = xDes'' + Kd*(xDes' - x') + Kp*(xDes - x)
+Specified controlLawZ'' = zDes'' + Kd*(zDes' - z') + Kp*(zDes - z)
+Eq = [x'' - controlLawX''; z'' - controlLawZ'']
+
+Solve( Eq = 0, qA'', qB'' ) % Leave in controlLaw''
+
+% Joint Initials
+Input qA = 0 deg, qB = 20 deg
+Input qA' = 0 rad/sec, qB' = 0 rad/sec
+SolveSetInput( MotionConstraint[1] = 0, qC = -1 deg)
+
+% Given
+Input  wy = 0 rad/sec
+
+% X/Z initials
+Input controlLawX' = EvaluateAtInput(x'), controlLawZ' = EvaluateAtInput(z')
+Input controlLawX = EvaluateAtInput(x), controlLawZ = EvaluateAtInput(z)
+
+Input tfinal = 16 sec, absError = 1.0E-05
+
+OutputPlot x m, z m
+ODE()
+Save 23.2.html
+quit

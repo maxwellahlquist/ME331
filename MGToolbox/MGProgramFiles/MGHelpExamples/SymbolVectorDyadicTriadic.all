@@ -1,0 +1,22 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example:  >   >>   >>>   0>   0>>   0>>>
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame  A
+   (5) v> = 2*Ax> + 3*Ay> + 4*Az>                % >    denotes a vector
+-> (6) v> = 2*Ax> + 3*Ay> + 4*Az>
+
+   (7) d>> = 2*Ax>*Ax> + 3*Ay>*Az>               % >>   denotes a dyadic
+-> (8) d>> = 2*Ax>*Ax> + 3*Ay>*Az>
+
+   (9) t>>> = 2*Ax>*Ax>*Ax> + 3*Ax>*Ay>*Az>      % >>>  denotes a triadic
+-> (10) t>>> = 2*Ax>*Ax>*Ax> + 3*Ax>*Ay>*Az>
+
+   (11) v0> = Cross(  Ax>,  Ax> )                 % 0>   denotes the zero vector.
+-> (12) v0> = 0>
+
+   (13) d0>> = Cross(  Ax> * Ay>,   Ay> )         % 0>>  denotes the zero dyadic.
+-> (14) d0>> = 0>>
+
+   (15) t0>>> = Cross(  Ax> * Ay> * Az>,  Az> )   % 0>>> denotes the zero triadic.
+-> (16) t0>>> = 0>>>
+

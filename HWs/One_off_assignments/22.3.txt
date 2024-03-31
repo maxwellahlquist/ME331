@@ -1,0 +1,108 @@
+% MotionGenesis file:  22.3.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  A                % Example: Earth.
+RigidFrame      B                % Rotates Simply in A
+RigidFrame      C                % Rotates Simply in B
+RigidBody       D                % Disk is in contact with A
+
+Point           DA( D )           % Point DA is a point of D in contact with A.
+Point           AD( A )           % Point AD is a point of A in contact with D.
+Point		P		  % Path Point of contact
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    qH''	% Heading of disk
+Variable    qL''	% Lean of disk
+Variable    qS''	% Spin of disk
+
+Variable    x'', y''	% Ax> and Ay> measure of path point P in from Ao.
+Variable    wx', wy', wz'	% Derivatives of Ci> measures of D angular velocity in A
+
+Constant    g = 9.80665 m/s^2 	% Earth's gravitational acceleration.
+Constant    m = 2 kg  	  	% Mass of D
+Constant    r = 34.29 cm  	% Radius of D
+%Constant    I = 0.5*m*r^2  	% D's axial moment of inertia.
+%Constant    J = 0.25*m*r^2  	% D's tranverse moment of inertia.
+
+Constant    I  	% D's axial moment of inertia.
+Constant    J 	% D's tranverse moment of inertia.
+
+
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+D.SetMass( m )
+D.SetInertia( Dcm,  J,  I,  J )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+B.RotateZ( A, qH )
+C.RotateX( B, -qL )
+D.RotateY( C, qS )
+ChangeVariables[1] = Dot(D.getAngularVelocity(A), Cx>) -wx
+
+ChangeVariables[2] = Dot(D.getAngularVelocity(A), Cy>) -wy
+
+ChangeVariables[3] = Dot(D.getAngularVelocity(A), Cz>) -wz
+SolveDT(ChangeVariables = 0, qL', qS', qH')
+
+
+%D.SetAngularVelocity( A, wx*Cx> + wy*Cy> + wz*Cz> )
+%stop
+%--------------------------------------------------------------------
+%   Translational kinematics.
+P.SetPositionVelocityAcceleration( Ao, x*Ax> + y*Ay> )
+Dcm.SetPositionVelocityAcceleration( P, r*Cz> )
+
+
+DA.SetPositionVelocityAcceleration( Dcm, -r*Cz> )
+%--------------------------------------------------------------------
+%   Motion constraints (if any).
+MotionConstraint[1] = Dot( DA.GetVelocity(A), Ax> )
+MotionConstraint[2] = Dot( DA.GetVelocity(A), Ay> )
+SolveDt( MotionConstraint = 0, x', y' ) % Why does this work instead, and why does it stop at only 2 derivatives?
+%--------------------------------------------------------------------
+
+Vel> = Express(Explicit(Dcm.GetVelocity( A ), wx, wy, wz), C)
+Accel> = Express(Explicit(Dcm.GetAcceleration( A ), wx, wy, wz), C)
+% These two came out correct as shown in the HW...^^^
+
+System.AddForceGravity( -g*Az> )
+%--------------------------------------------------------------------
+%   Rotational dynamic equations (M = DH/Dt + ...).
+%   For static analysis, use  B.GetStatics( aboutPoint ).
+Dynamics[1] = Explicit(Dot(  System(B,C,D).GetDynamics( DA ),  Az> ), qH, qL, qS )
+Dynamics[2] = Explicit(Dot(  System(C,D).GetDynamics( DA ),  Bx> ), qH, qL, qS )
+Dynamics[3] = Explicit(Dot(  D.GetDynamics( DA ),  Cy>  ), qH, qL, qS )
+%--------------------------------------------------------------------
+%   Solve algebraic equations for list of unknowns.
+%Solve( [Dynamics; MotionConstraint] = 0,   qH'', qL'', qS'' )
+%Solve( Dynamics = 0,   qH'', qL'', qS'' )
+
+
+Explicit(Solve( Dynamics = 0,   wx', wy', wz' ))
+% These take on the same answer with a couple of substitutions I cannot change^
+
+setGeneralizedSpeeds(wx, wy, wz)
+Equations = System.GetDynamicsKane()
+Save 22.3.html
+
+Quit
+
+%   Set initial values for variables (for subsequent ODE command).
+Input  qH = 0 deg,  qH' = 0 rad/sec
+Input  qL = 10 deg,  qL' = 0 rad/sec
+Input  qS = 0 deg,  qS' = 5 rad/sec
+%--------------------------------------------------------------------
+%   List output quantities (e.g., from the ODE command).
+Output      t sec,  qH deg,  qL deg, qS deg
+OutputPlot  t sec,  qH deg,  qL deg, qS deg
+%--------------------------------------------------------------------
+%   Set numerical integration parameters and solve ODEs.
+%   Or auto-generate MATLAB, C, or Fortran code.
+Input  tFinal = 5 sec,  tStep = 0.02 sec,  absError = 1.0E-07
+ODE()  %Filename    % or ODE( Zero = 0, listOfVariablesToSolve ) Filename.m
+%--------------------------------------------------------------------
+%   Record input together with responses.
+Save  22.3.html
+Quit
+

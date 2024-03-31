@@ -1,0 +1,22 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetVelocityRelative   GetAccelerationRelative
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame  N
+   (5) Point           P, Q            
+   (6) Variable        xP'', yP'',  xQ'', yQ''
+   (7) P.Translate( No,  xP*Nx> + yP*Ny> )
+-> (8) p_No_P> = xP*Nx> + yP*Ny>
+-> (9) v_P_N> = xP'*Nx> + yP'*Ny>
+-> (10) a_P_N> = xP''*Nx> + yP''*Ny>
+
+   (11) Q.Translate( No,  xQ*Nx> + yQ*Ny> )
+-> (12) p_No_Q> = xQ*Nx> + yQ*Ny>
+-> (13) v_Q_N> = xQ'*Nx> + yQ'*Ny>
+-> (14) a_Q_N> = xQ''*Nx> + yQ''*Ny>
+
+   (15) vQRelativeToP> = Q.GetVelocityRelative( P, N )
+-> (16) vQRelativeToP> = (xQ'-xP')*Nx> + (yQ'-yP')*Ny>
+
+   (17) aQRelativeToP> = Q.GetAccelerationRelative( P, N )
+-> (18) aQRelativeToP> = (xQ''-xP'')*Nx> + (yQ''-yP'')*Ny>
+

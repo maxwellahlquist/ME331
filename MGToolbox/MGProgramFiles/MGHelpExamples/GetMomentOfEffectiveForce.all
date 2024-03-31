@@ -1,0 +1,41 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetMomentOfEffectiveForce  (point moving in a plane)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N             
+   (5) Particle       Q   
+   (6) Q.SetMass( mQ )
+   (7) Variable       x'', y''
+   (8) Q.Translate( No, x*Nx> + y*Ny> )
+-> (9) p_No_Q> = x*Nx> + y*Ny>
+-> (10) v_Q_N> = x'*Nx> + y'*Ny>
+-> (11) a_Q_N> = x''*Nx> + y''*Ny>
+
+   (12) QMomentOfEffectiveForceAboutNo> = Q.GetMomentOfEffectiveForce( No )
+-> (13) QMomentOfEffectiveForceAboutNo> = mQ*(x*y''-y*x'')*Nz>
+
+   (14) %--------------------------------------------------------------------
+   (15) % Example 2: GetMomentOfEffectiveForce  (rotating rigid body)
+   (16) %--------------------------------------------------------------------
+   (17) RigidBody  B  
+   (18) B.SetMass( mB )
+   (19) B.SetInertia( Bcm, Ixx, Iyy, Izz )
+   (20) Variable   theta''
+   (21) B.RotateZ( N, theta )
+-> (22) B_N = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+-> (23) w_B_N> = theta'*Bz>
+-> (24) alf_B_N> = theta''*Bz>
+
+   (25) BMomentOfEffectiveForceAboutBcm> = B.GetMomentOfEffectiveForce( Bcm )
+-> (26) BMomentOfEffectiveForceAboutBcm> = Izz*theta''*Bz>
+
+   (27) %--------------------------------------------------------------------
+   (28) % Example 3: GetMomentOfEffectiveForce  (rotating/translating rigid body)
+   (29) %--------------------------------------------------------------------
+   (30) Bcm.Translate( No, x*Nx> + y*Ny> )
+-> (31) p_No_Bcm> = x*Nx> + y*Ny>
+-> (32) v_Bcm_N> = x'*Nx> + y'*Ny>
+-> (33) a_Bcm_N> = x''*Nx> + y''*Ny>
+
+   (34) BMomentOfEffectiveForceAboutNo> = B.GetMomentOfEffectiveForce( No )
+-> (35) BMomentOfEffectiveForceAboutNo> = (Izz*theta''+mB*(x*y''-y*x''))*Bz>
+

@@ -1,0 +1,19 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: Plot  
+   (3) % Plot A:  x, x^2, x' versus t.  Uses data from file OdeData.1
+   (4) % Plot B:  x, y       versus t.  Uses files OdeData.1, OdeData.2
+   (5) %--------------------------------------------------------------------
+   (6) Variable x' = sin(t)
+-> (7) x' = sin(t)
+
+   (8) Variable y' = cos(t)
+-> (9) y' = cos(t)
+
+   (10) Input   x = 0,  y = 0,  tFinal = 10
+   (11) Output  t, x, x^2, x'
+   (12) Output  t, y, y'
+   (13) ODE()  OdeData
+
+   (14) Plot   OdeData.1 [1, 2,3,4]  
+   (15) Pause( 5 )
+   (16) Plot   OdeData.1 [1,2]       OdeData.2 [1,2]

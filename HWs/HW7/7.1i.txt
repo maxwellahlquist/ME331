@@ -1,0 +1,23 @@
+% MotionGenesis file:  7.1i.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+NewtonianFrame N
+%   Mathematical declarations.
+Variable    d, c, z
+Constant    theta = 30 deg
+%--------------------------------------------------------------------
+u> = GetUnitVector( 3*Nx> - 1*Ny> + Nz> )			% direction of Ao to Q
+NoAo> = Nx> + 2*Ny>						% Position Vector No to Ao
+QBo> = z*Nz> - c*cos(theta)*Nx> - c*sin(theta)*Ny>	% Position Vector Q to Bo
+NoBo> = 4*Nx> + Nz>						% Position Vector Bo to No
+Dynamics[1] = Dot( Nx> , NoAo> + d*u> + QBo> - NoBo> )
+Dynamics[2] = Dot( Ny> , NoAo> + d*u> + QBo> - NoBo> )
+Dynamics[3] = Dot( Nz> , NoAo> + d*u> + QBo> - NoBo> )
+%--------------------------------------------------------------------
+%   Solve algebraic equations for list of unknowns.
+Solve( Dynamics = 0,   d, c, z )
+ans = evaluate(d, theta = 30 deg)
+%   Record input together with responses.
+Save  7.1i.html
+Quit
+

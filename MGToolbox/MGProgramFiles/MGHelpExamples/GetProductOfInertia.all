@@ -1,0 +1,46 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetProductOfInertia  (product of inertia of a rigid body)
+   (3) %--------------------------------------------------------------------
+   (4) RigidBody  B
+   (5) B.SetInertia( Bcm, Ixx, Iyy, Izz )
+   (6) BProductOfInertiaAboutBcmForBxBy = B.GetProductOfInertia( Bcm, Bx>, By> )
+-> (7) BProductOfInertiaAboutBcmForBxBy = 0
+
+   (8) %--------------------------------------------------------------------
+   (9) % Example 2: GetProductOfInertia  (product of inertia in another basis)
+   (10) %--------------------------------------------------------------------
+   (11) RigidFrame A
+   (12) Variable  theta
+   (13) B.SetRotationMatrixZ( A, theta )
+-> (14) B_A = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+
+   (15) BProductOfInertiaAboutBcmForAxAy = B.GetProductOfInertia( Bcm, Ax>, Ay> )
+-> (16) BProductOfInertiaAboutBcmForAxAy = (Ixx-Iyy)*sin(theta)*cos(theta)
+
+   (17) %--------------------------------------------------------------------
+   (18) % Example 3: GetProductOfInertia  (product of inertia of a particle)
+   (19) %--------------------------------------------------------------------
+   (20) Particle   Q
+   (21) Q.SetMass( mQ )
+   (22) Variable   x, y, z
+   (23) Q.SetPosition( Bo, x*Bx> + y*By> + z*Bz> )
+-> (24) p_Bo_Q> = x*Bx> + y*By> + z*Bz>
+
+   (25) QProductOfInertiaAboutBoForBxBy = Q.GetProductOfInertia( Bo, Bx>, By> )
+-> (26) QProductOfInertiaAboutBoForBxBy = -mQ*x*y
+
+   (27) %--------------------------------------------------------------------
+   (28) % Example 4: GetProductOfInertia  (product of inertia of a system)
+   (29) %--------------------------------------------------------------------
+   (30) B.SetMass( mB )
+   (31) Bcm.SetPosition( Bo, 2*Bx> + 3*By> + 4*Bz> )
+-> (32) p_Bo_Bcm> = 2*Bx> + 3*By> + 4*Bz>
+
+   (33) SProductOfInertiaAboutBoForBxBy = System.GetProductOfInertia( Bo, Bx>, By> )
+-> (34) SProductOfInertiaAboutBoForBxBy = -6*mB - mQ*x*y
+
+   (35) SProductOfInertiaAboutBoForAxBy = System.GetProductOfInertia( Bo, Ax>, Ay> )
+-> (36) SProductOfInertiaAboutBoForAxBy = -6*mB - mQ*x*y - sin(theta)*(Iyy*cos(
+        theta)+mQ*x^2*cos(theta)-12*mB*sin(theta)-5*mB*cos(theta)-Ixx*cos(theta)
+        -2*mQ*x*y*sin(theta)-mQ*y^2*cos(theta))
+

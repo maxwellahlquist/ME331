@@ -1,0 +1,71 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: Evaluate   (scalar expression)
+   (3) %--------------------------------------------------------------------
+   (4) Variable  x, y
+   (5) z = x^2*cos(y) - sin(t)
+-> (6) z = x^2*cos(y) - sin(t)
+
+   (7) zEvaluated1 = Evaluate( z,  x=2, y=60 deg, t=30 deg )
+-> (8) zEvaluated1 = 1.5
+
+   (9) zEvaluated2 = Evaluate( z,  x=t, y=t^3 )
+-> (10) zEvaluated2 = t^2*cos(t^3) - sin(t)
+
+   (11) %--------------------------------------------------------------------
+   (12) % Example 2: Evaluate   (vector expression)
+   (13) %--------------------------------------------------------------------
+   (14) RigidBody   B
+   (15) v> = Vector( B, x, y, z )
+-> (16) v> = x*Bx> + y*By> + z*Bz>
+
+   (17) vEvaluated1> = Evaluate( v>,  x=1 km, y=2 m, z=3 cm )
+-> (18) vEvaluated1> = 1000*Bx> + 2*By> + 0.03*Bz>
+
+   (19) vEvaluated2> = Evaluate( v>,  x=t km, y=t^3 m )
+-> (20) vEvaluated2> = 1000*t*Bx> + t^3*By> + (1000000*t^2*cos(t^3)-sin(t))*Bz>
+
+   (21) %--------------------------------------------------------------------
+   (22) % Example 3: Evaluate   (matrix expression)
+   (23) %--------------------------------------------------------------------
+   (24) matrix[1] = v>
+-> (25) matrix[1] = x*Bx> + y*By> + z*Bz>
+
+   (26) matrix[2] = z
+-> (27) matrix[2] = z
+
+   (28) matrix[3] = x + y + z
+-> (29) matrix[3] = x + y + z
+
+   (30) matrixEvaluated1 = Evaluate( matrix,  x=1 km, y=2, z=3 cm )
+-> (31) matrixEvaluated1 = [1000*Bx> + 2*By> + 0.03*Bz>;  0.03;  1002.03]
+
+   (32) matrixEvaluated2 = Evaluate( matrix,  x=t, y=t^3 )
+-> (33) matrixEvaluated2[1] = t*Bx> + t^3*By> + (t^2*cos(t^3)-sin(t))*Bz>
+-> (34) matrixEvaluated2[2] = t^2*cos(t^3) - sin(t)
+-> (35) matrixEvaluated2[3] = t + t^3 + t^2*cos(t^3) - sin(t)
+
+   (36) %--------------------------------------------------------------------
+   (37) % Example 4: EvaluateAtInput 
+   (38) %--------------------------------------------------------------------
+   (39) s = sin(y) + cos(t)*x^2
+-> (40) s = sin(y) + cos(t)*x^2
+
+   (41) Input x=4, y=150 deg
+   (42) sEvaluated2 = EvaluateAtInput( s )
+-> (43) sEvaluated2 = 0.5 + 16*cos(t)
+
+   (44) sEvaluated3 = EvaluateAtInput( s,  x=t^2 )
+-> (45) sEvaluated3 = 0.5 + t^4*cos(t)
+
+   (46) sEvaluated4 = EvaluateAtInput( s,  x=t^2, y=t deg )
+-> (47) sEvaluated4 = sin(0.01745329*t) + t^4*cos(t)
+
+   (48) %--------------------------------------------------------------------
+   (49) % Example 5: EvaluateToNumber 
+   (50) %--------------------------------------------------------------------
+   (51) t = 2
+-> (52) t = 2
+
+   (53) sEvaluatedToNumber = EvaluateToNumber( s,  y = log(2)*GetImaginaryNumber() )
+-> (54) sEvaluatedToNumber = -6.658349 + 0.75*imaginary
+

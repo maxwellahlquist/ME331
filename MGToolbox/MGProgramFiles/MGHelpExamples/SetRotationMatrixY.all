@@ -1,0 +1,19 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  SetRotationMatrixY
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame     A, B, C
+   (5) Variable       q
+   (6) B.SetRotationMatrixY( A, q )
+-> (7) B_A = [cos(q), 0, -sin(q);  0, 1, 0;  sin(q), 0, cos(q)]
+
+   (8) %--------------------------------------------------------------------
+   (9) % Example 2:  SetRotationMatrixNegativeY
+   (10) %--------------------------------------------------------------------
+   (11) C.SetRotationMatrixNegativeY( B, t )
+-> (12) C_B = [cos(t), 0, sin(t);  0, 1, 0;  -sin(t), 0, cos(t)]
+
+   (13) %--------------------------------------------------------------------
+   (14) % Note: For more HELP, try:  Rotate     SetRotationMatrix  
+   (15) %                            RotateX    SetRotationMatrixX  
+   (16) %                            RotateY    SetRotationMatrixY  
+   (17) %                            RotateZ    SetRotationMatrixZ

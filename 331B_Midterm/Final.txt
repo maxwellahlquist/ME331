@@ -1,0 +1,110 @@
+% MotionGenesis file: midterm.txt
+% Problem: Analysis of a hexapod (6-legged Stewart platform).
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  A       % Earth-fixed rigid planar base.
+RigidBody       D       % Top platform with rigidly attached equipment.
+Point    A{1:6}(A)      % Points A1, A2, ... A6 are fixed to frame A.
+Point    D{1:6}(D)      % Points D1, D2, ... D6 are fixed to body  D.
+%--------------------------------------------------------------------
+%   Physical dimensions for planar base and top platform.
+Constant  a1 =  0.0 m,  b1 = 0.0 m
+Constant  a2 =  0.0 m,  b2 = 4.0 m
+Constant  a3 =  4.0 m,  b3 = 8.0 m
+Constant  a4 =  6.0 m,  b4 = 6.0 m
+Constant  a5 =  7.0 m,  b5 = -1.0 m
+Constant  a6 =  3.0 m,  b6 = -3.0 m
+Constant  d1 =  0.0 m,  e1 =  0.0 m
+Constant  d2 =  0.0 m,  e2 =  0.0 m
+Constant  d3 =  0.0 m,  e3 =  7.0 m
+Constant  d4 =  0.0 m,  e4 =  7.0 m
+Constant  d5 =  7.0 m,  e5 =  0.0 m
+Constant  d6 =  7.0 m,  e6 =  0.0 m
+Constant  dcmx = 3.5 m,  dcmy = 1.0 m
+%--------------------------------------------------------------------
+%   Mass and inertia properties of D (similar to a thin plate).
+Constant  xWidth = 7.0 m, yWidth = 9.0 m
+D.SetMass( m = 300 kg )
+D.SetInertia( Dcm, Ixx = 1/12*m*yWidth^2, Iyy = 1/12*m*xWidth^2, Ixx + Iyy )
+%--------------------------------------------------------------------
+%   Earth's uniform gravitational constant.
+Constant g = 9.8 m/sec^2
+%--------------------------------------------------------------------
+%   Leg lengths and their time-derivatives (extension-rates).
+Specified  L{1:6}''
+%--------------------------------------------------------------------
+%   Constants associated with leg length functions of time.
+Constant  tF = 5 seconds
+Constant  L10 = 9.0 m,  L20 = 9.848857801796104 m,  L30 = 10.81246272045341 m
+Constant  L40 = 11.86840052102587 m,  L50 = 8.604678226878441 m,  L60 = 10.07836745277638 m
+L1F = L10 + 1.6;  SetDt( L1 = Spline( Transition, t, 0, tF, L10, L1F ) )
+L2F = L20 + 1.5;  SetDt( L2 = Spline( Transition, t, 0, tF, L20, L2F ) )
+L3F = L30 + 1.4;  SetDt( L3 = Spline( Transition, t, 0, tF, L30, L3F ) )
+L4F = L40 + 1.3;  SetDt( L4 = Spline( Transition, t, 0, tF, L40, L4F ) )
+L5F = L50 + 1.2;  SetDt( L5 = Spline( Transition, t, 0, tF, L50, L5F ) )
+L6F = L60 + 1.1;  SetDt( L6 = Spline( Transition, t, 0, tF, L60, L6F ) )
+
+%--------------------------------------------------------------------
+Variable qX'', qY'', qZ''	% Euler Angles of D in A
+Variable x'', y'', z''		% A basis positions of Do from Ao
+% 6 variables to describe the (theoretical) 6 DoF of D in A
+
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+D.Rotate( A, BodyXYZ, qX, qY, qZ )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+A1.Translate( Ao, a1*Ax> + b1*Ay> )
+A2.Translate( Ao, a2*Ax> + b2*Ay> )
+A3.Translate( Ao, a3*Ax> + b3*Ay> )
+A4.Translate( Ao, a4*Ax> + b4*Ay> )
+A5.Translate( Ao, a5*Ax> + b5*Ay> )
+A6.Translate( Ao, a6*Ax> + b6*Ay> )
+
+Do.Translate( Ao, x*Ax> + y*Ay> + z*Az> )
+
+D1.Translate( Do, d1*Dx> + e1*Dy> )
+D2.Translate( Do, d2*Dx> + e2*Dy> )
+D3.Translate( Do, d3*Dx> + e3*Dy> )
+D4.Translate( Do, d4*Dx> + e4*Dy> )
+D5.Translate( Do, d5*Dx> + e5*Dy> )
+D6.Translate( Do, d6*Dx> + e6*Dy> )
+
+Dcm.Translate( Do, dcmx*Dx> + dcmy*Dy> )
+
+%--------------------------------------------------------------------
+%   Motion constraints (if any).
+% 6 Constraint Equations relating the dot of links with themselves which equals length squared
+MotionConstraint[1] = Dot( D1.GetPosition( A1 ), D1.GetPosition( A1 ) ) - L1^2
+MotionConstraint[2] = Dot( D2.GetPosition( A2 ), D2.GetPosition( A2 ) ) - L2^2
+MotionConstraint[3] = Dot( D3.GetPosition( A3 ), D3.GetPosition( A3 ) ) - L3^2
+MotionConstraint[4] = Dot( D4.GetPosition( A4 ), D4.GetPosition( A4 ) ) - L4^2
+MotionConstraint[5] = Dot( D5.GetPosition( A5 ), D5.GetPosition( A5 ) ) - L5^2
+MotionConstraint[6] = Dot( D6.GetPosition( A6 ), D6.GetPosition( A6 ) ) - L6^2
+
+MotionConstraintDT = DT(MotionConstraint) % Get Constraints linear in derivatives
+
+KE = D.GetKineticEnergy() % Plot 1
+
+Flegs> =  D.GetMass()* (Dcm.GetAcceleration(A) - g*Az>) % See Proof of equivalence in hand analysis
+Variable FlegsMag = GetMagnitude(Flegs>) % Plot 2
+
+dHdt> = DT( D.GetAngularMomentum( Dcm ), A )
+Power = Dot (Flegs>, Dcm.GetVelocity(A)) + Dot (dHdt>, D.GetAngularVelocity(A)) % See Proof of equivalence in hand analysis
+Variable Work' = Power % Plot 3
+
+U = System.GetForceGravityPotentialEnergy(g*Az>, Ao)
+Variable KEPlusPEMinusWork = U + KE - Work % Plot 4
+
+Input  tFinal = 5 sec,  tStep = 0.02 sec,  absError = 1.0E-07, Work = 0
+SolveSetInput(Evaluate(Expand(MotionConstraint), t = 0), qX = 0, qY = 0, qZ = 0, x = -1, y = 1, z = -1)
+SolveSetInput(Evaluate(Expand(MotionConstraintDT), t = 0), qX' = 0, qY' = 0, qZ' = 0, x' = -1, y' = 1, z' = -1)
+
+OutputPlot t sec, KE
+OutputPlot t sec, FlegsMag
+OutputPlot t sec, Work
+OutputPlot t sec, KEPlusPEMinusWork
+ODE (Dt(MotionConstraintDT), qX'', qY'', qZ'', x'' , y'', z'')
+
+Save midterm3.html
+Quit

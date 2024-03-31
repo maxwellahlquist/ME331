@@ -1,0 +1,84 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: MGBeamOnTwoCablesKinematics.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">MGBeamOnTwoCablesKinematics.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) %    File: MGBeamOnTwoCablesKinematics.txt
+   (2) % Problem: Beam position/orientation ... from cable lengths.
+   (3) %    Note: MotionGenesis script with student blanks at
+   (4) %          www.MotionGenesis.com -> TextbookResources
+   (5) %-------------------------------------------------------------
+   (6) NewtonianFrame N        % Nx> horizontally right, Ny> down.
+   (7) RigidBody      B        % Beam with Bx> pointed from Bo to Bc.
+   (8) Point          Nc(N)    % Point of N attached to cable C.
+   (9) Point          Bc(B)    % Point of B attached to cable C.
+   (10) %-------------------------------------------------------------
+   (11) Constant LN = 6 m       % Distance between No and NC.
+   (12) Constant LB = 4 m       % Distance between Bo and BC.
+   (13) Constant LA = 2.7 m     % Length of cable A.
+   (14) Constant LC = 3.7 m     % Length of cable C.
+   (15) Variable x'', y''       % Nx> and Ny> measures of Bo's position from No.
+   (16) Variable q''            % Bz> measure of angle from Nx> to Bx>.
+   (17) %--------------------------------------------------------------------
+   (18) %   Rotation: Beam B rotates relative to N about Bz> = Nz> by angle q.
+   (19) B.RotateZ( N,  q )
+-> (20) B_N = [cos(q), sin(q), 0;  -sin(q), cos(q), 0;  0, 0, 1]
+-> (21) w_B_N> = q'*Bz>
+-> (22) alf_B_N> = q''*Bz>
+
+   (23) %--------------------------------------------------------------------
+   (24) %   Set point Nc's position from No to LN*Nx>.  Similarly for Bo, Bc.
+   (25) Nc.SetPosition(  No,  LN*Nx>  )
+-> (26) p_No_Nc> = LN*Nx>
+
+   (27) Bo.SetPosition(  No,  x*Nx> + y*Ny>  )
+-> (28) p_No_Bo> = x*Nx> + y*Ny>
+
+   (29) Bc.SetPosition(  Bo,  LB*Bx>  )
+-> (30) p_Bo_Bc> = LB*Bx>
+
+   (31) %--------------------------------------------------------------------
+   (32) %   Constraints arising from rope lengths ("just geometry").
+   (33) Eqn[1] = Bo.GetDistanceSquared( No ) - LA^2
+-> (34) Eqn[1] = x^2 + y^2 - LA^2
+
+   (35) Eqn[2] = Bc.GetDistanceSquared( Nc ) - LC^2
+-> (36) Eqn[2] = LB^2 + y^2 + (LN-x)^2 + 2*LB*y*sin(q) - LC^2 - 2*LB*cos(q)*(
+        LN-x)
+
+   (37) %--------------------------------------------------------------------
+   (38) %   Solve nonlinear equations (requires a numerical guess).
+   (39) Input  x = 1 meter,  x' = 0.4 m/s
+   (40) Solve( Eqn = 0,   y = 3 meters,  q = 20 deg  )
+-> (41) y = 2.507987
+-> (42) q = 0.256541       %  or  q = 14.69871 deg.
+
+   (43) %--------------------------------------------------------------------
+   (44) %   Differentiate constraint equations and solve for y' and q'.
+   (45) Solve( Dt(Eqn) = 0,   y' = 0 m/s,   q'= 0 rad/sec )
+-> (46) y' = -0.1594904
+-> (47) q' = 0.06862983
+
+   (48) %--------------------------------------------------------------------
+   (49) %   Calculate Bcm's (B's center of mass) velocity and its square.
+   (50) Bcm.SetPosition( Bo,  0.5*LB*Bx> )
+-> (51) p_Bo_Bcm> = 0.5*LB*Bx>
+
+   (52) v> = Dt( Bcm.GetPosition(No), N )
+-> (53) v> = 0.5*LB*q'*By> + x'*Nx> + y'*Ny>
+
+   (54) vSquared = Dot( v>, v> )
+-> (55) vSquared = x'^2 + y'^2 + 0.25*LB^2*q'^2 + LB*cos(q)*q'*y' - LB*sin(q)*
+        q'*x'
+
+   (56) vSquaredNumerical = EvaluateToNumber( vSquared )
+-> (57) vSquaredNumerical = 0.1340649
+
+   (58) %--------------------------------------------------------------------
+   (59) %   Calculate Bcm's acceleration in N.
+   (60) a> = Dt( v>, N )
+-> (61) a> = -0.5*LB*q'^2*Bx> + 0.5*LB*q''*By> + x''*Nx> + y''*Ny>
+
+   (62) %-----------------------------------------------------------
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

@@ -1,0 +1,35 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetGeneralizedEffectiveForce
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) Particle  A
+   (6) RigidBody B
+   (7) A.SetMass( mA )
+   (8) B.SetMass( mB )
+   (9) B.SetInertia( Bcm, Ixx, Iyy, Izz )
+   (10) Variable  w{1:3}', vA'
+   (11) SetGeneralizedSpeed( w{1:3}, vA )
+   (12) A.SetVelocity( N, vA*Nx> )
+-> (13) v_A_N> = vA*Nx>
+
+   (14) B.SetAngularVelocity( N, w1*Bx> + w2*By> + w3*Bz> )
+-> (15) w_B_N> = w1*Bx> + w2*By> + w3*Bz>
+
+   (16) Bcm.SetVelocity( N, 0> )
+-> (17) v_Bcm_N> = 0>
+
+   (18) FrEffectiveA = A.GetGeneralizedEffectiveForce()
+-> (19) FrEffectiveA = [0;  0;  0;  mA*vA']
+
+   (20) FrEffectiveB = B.GetGeneralizedEffectiveForce()
+-> (21) FrEffectiveB[1] = Ixx*w1' - (Iyy-Izz)*w2*w3
+-> (22) FrEffectiveB[2] = (Ixx-Izz)*w1*w3 + Iyy*w2'
+-> (23) FrEffectiveB[3] = Izz*w3' - (Ixx-Iyy)*w1*w2
+-> (24) FrEffectiveB[4] = 0
+
+   (25) FrEffectiveS = System.GetGeneralizedEffectiveForce()
+-> (26) FrEffectiveS[1] = Ixx*w1' - (Iyy-Izz)*w2*w3
+-> (27) FrEffectiveS[2] = (Ixx-Izz)*w1*w3 + Iyy*w2'
+-> (28) FrEffectiveS[3] = Izz*w3' - (Ixx-Iyy)*w1*w2
+-> (29) FrEffectiveS[4] = mA*vA'
+

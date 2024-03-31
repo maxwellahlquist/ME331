@@ -1,0 +1,47 @@
+% MotionGenesis file:  7.1ii.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+NewtonianFrame N
+RigidBody C
+Point Ao(N)
+Point Bo(N)
+Point CB(C)
+Point Q(C)
+%----------------------------------------
+%   Mathematical declarations.
+Variable    d, x, y, z
+Constant    theta = 30 deg
+Constant    a = 2 m, b = 1 m, c = 1 m
+
+u> = GetUnitVector( 3*Nx> - 1*Ny> + Nz> )			% direction of Ao to Q
+%--------------------------------------------------------------------
+C.RotateZ( N, theta )
+
+%   Translational kinematics.
+Ao.SetPosition( No, Nx> + 2*Ny> )
+Q.SetPosition( Ao, d*u> )
+Q.SetPosition( Co, x*Cx> + y*Cy> + z*Cz> )
+CB.SetPosition( Co, -1*b*Cy> )
+Bo.SetPosition( CB, -2*Cx> )
+Bo.SetPosition( No, 4*Nx> + Nz> )
+
+NoAo> = Ao.GetPosition( No )
+AoQ> = Q.GetPosition( Ao )
+QCo> = Co.GetPosition( Q )
+CoCB> = CB.GetPosition( Co )
+CBBo> = Bo.GetPosition( CB )
+BoNo> = No.GetPosition( Bo )
+Loop> = NoAo> + AoQ> + QCo> + CoCB> + CBBo> + BoNo>
+
+%--------------------------------------------------------------------
+Dynamics[1] = Dot( Nx> , Loop>)
+Dynamics[2] = Dot( Ny> , Loop> )
+Dynamics[3] = Dot( Nz> , Loop> )
+Dynamics[4] = (x^2/a^2) + (y^2/b^2) + (z^2/c^2) - 1
+%--------------------------------------------------------------------
+%   Solve algebraic equations for list of unknowns.
+Solve( Dynamics = 0,  d = 2 m, x = -2 m , y = 0.5 m, z = 0 m )
+
+Save  7.1ii.html
+Quit
+

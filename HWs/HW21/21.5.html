@@ -1,0 +1,73 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 21.5.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">21.5.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  21.5.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N                % Example: Earth.
+   (6) RigidFrame      B
+   (7) Particle        Q
+   (8) %--------------------------------------------------------------------
+   (9) %   Mathematical declarations.
+   (10) Variable    y'', theta''
+   (11) Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+   (12) Constant    Ln = 0.5 m, k = 100 m
+   (13) %--------------------------------------------------------------------
+   (14) %   Mass and inertia properties.
+   (15) Q.SetMass( m = 1 kg )
+   (16) %--------------------------------------------------------------------
+   (17) %   Rotational kinematics.
+   (18) B.RotateZ( N, theta )
+-> (19) B_N = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+-> (20) w_B_N> = theta'*Bz>
+-> (21) alf_B_N> = theta''*Bz>
+
+   (22) %--------------------------------------------------------------------
+   (23) %   Translational kinematics.
+   (24) Q.Translate( No, -(Ln + y)*By> )
+-> (25) p_No_Q> = (-Ln-y)*By>
+-> (26) v_Q_N> = (Ln+y)*theta'*Bx> - y'*By>
+-> (27) a_Q_N> = (2*theta'*y'+(Ln+y)*theta'')*Bx> + ((Ln+y)*theta'^2-y'')*By>
+
+   (28) %--------------------------------------------------------------------
+   (29) %   Add relevant contact/distance forces.
+   (30) System.AddForceGravity( -g*Ny> )            % Add's gravity force to each massive object.
+-> (31) Force_Q> = -m*g*Ny>
+
+   (32) Q.AddForce( y*k*By> )                   % External force.
+-> (33) Force_Q> = k*y*By> - m*g*Ny>
+
+   (34) %--------------------------------------------------------------------
+   (35) SetGeneralizedSpeeds(y', theta')
+   (36) eq = System.GetDynamicsKane()
+-> (37) eq[1] = k*y + m*y'' - m*g*cos(theta) - m*(Ln+y)*theta'^2
+-> (38) eq[2] = m*(Ln+y)*(g*sin(theta)+2*theta'*y'+(Ln+y)*theta'')
+
+   (39) Solve( eq, y'', theta'' )
+-> (40) y'' = g*cos(theta) + (Ln+y)*theta'^2 - k*y/m
+-> (41) theta'' = -(g*sin(theta)+2*theta'*y')/(Ln+y)
+
+   (42) Input y = 0.2 m, theta = 1 deg
+   (43) Input y' = 0, theta' = 0
+   (44) Input  tFinal = 16 sec,  tStep = 0.02 sec,  absError = 1.0E-07
+   (45) OutputPlot t sec, theta deg
+   (46) ODE ()
+
+   (47) Ln := 0.3
+-> (48) Ln = 0.3
+
+   (49) eq := System.GetDynamicsKane()
+-> (50) eq[1] = k*y + m*y'' - m*g*cos(theta) - m*(Ln+y)*theta'^2
+-> (51) eq[2] = m*(Ln+y)*(g*sin(theta)+2*theta'*y'+(Ln+y)*theta'')
+
+   (52) Solve( eq := 0, y'', theta'' )
+-> (53) y'' = g*cos(theta) + (Ln+y)*theta'^2 - k*y/m
+-> (54) theta'' = -(g*sin(theta)+2*theta'*y')/(Ln+y)
+
+   (55) ODE ()
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

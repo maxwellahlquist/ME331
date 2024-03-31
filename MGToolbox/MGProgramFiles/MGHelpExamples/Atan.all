@@ -1,0 +1,24 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: atan   (real scalar expressions)
+   (3) %--------------------------------------------------------------------
+   (4) angleInRadians = atan( 1.0 ) 
+-> (5) angleInRadians = 0.7853982
+
+   (6) angleInDegrees = atanDegrees( 1.0 ) 
+-> (7) angleInDegrees = 45
+
+   (8) Arad = atan(0.5+2*t)
+-> (9) Arad = atan(0.5+2*t)
+
+   (10) Adeg = atan(0.5+2*t) * ConvertUnits(rad,deg)
+-> (11) Adeg = 57.29578*atan(0.5+2*t)
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2: atan   (complex scalar expressions)
+   (14) %--------------------------------------------------------------------
+   (15) B = atan( 3*GetImaginaryNumber() )
+-> (16) B = 0.25*imaginary
+
+   (17) C = atan( t - 3*GetImaginaryNumber() )
+-> (18) C = atan(t-3*imaginary)
+

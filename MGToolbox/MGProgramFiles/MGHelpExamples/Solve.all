@@ -1,0 +1,81 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: Solve  (1 linear equation in 1 unknown) 
+   (3) %--------------------------------------------------------------------
+   (4) Variable  unknown
+   (5) Solve(  2*unknown = 8*t,  unknown )
+-> (6) unknown = 4*t
+
+   (7) %--------------------------------------------------------------------
+   (8) % Example 2: Solve  (2 linear equations in 2 unknowns) 
+   (9) %--------------------------------------------------------------------
+   (10) Variable  x, y
+   (11) eqn[1] = 2*x + 4*y - 8*t      
+-> (12) eqn[1] = 2*x + 4*y - 8*t
+
+   (13) eqn[2] = 2*x + 6*y - cos(t)            
+-> (14) eqn[2] = 2*x + 6*y - cos(t)
+
+   (15) Solve(  eqn = 0,   x, y )
+-> (16) x = 12*t - cos(t)
+-> (17) y = 0.5*cos(t) - 4*t
+
+   (18) %--------------------------------------------------------------------
+   (19) % Example 3: Solve (2 linear equations in 2 unknowns, MethodName) 
+   (20) %--------------------------------------------------------------------
+   (21) Constant  a, b, c, d,  m, n
+   (22) eqnZero[1] = a*x + b*y - m
+-> (23) eqnZero[1] = a*x + b*y - m
+
+   (24) eqnZero[2] = c*x + d*y - n
+-> (25) eqnZero[2] = c*x + d*y - n
+
+   (26) Solve( Minors,  eqnZero := 0,   x, y )
+-> (27) x = -(b*n-d*m)/(a*d-b*c)
+-> (28) y = (a*n-c*m)/(a*d-b*c)
+
+   (29) Solve( Gauss,   eqnZero := 0,   x, y )
+-> (30) x = (m-b*y)/a
+-> (31) y = (n-c*m/a)/(d-b*c/a)
+
+   (32) %--------------------------------------------------------------------
+   (33) % Example 4: Solve  (1 nonlinear equation in 1 unknown with units) 
+   (34) %--------------------------------------------------------------------
+   (35) Solve( sin(x) := 0.75,   x = 70 deg )       % 70 degrees is a guess.
+-> (36) x = 0.8480621       %  or  x = 48.59038 deg.
+
+   (37) %--------------------------------------------------------------------
+   (38) % Example 5: Solve  (2 nonlinear equations in 2 unknowns) 
+   (39) %--------------------------------------------------------------------
+   (40) nonlinearEqn[1] = -1 + x^2 + y^2            % Equation for a circle.
+-> (41) nonlinearEqn[1] = -1 + x^2 + y^2
+
+   (42) nonlinearEqn[2] = y - sin(x)                % Sine function.
+-> (43) nonlinearEqn[2] = y - sin(x)
+
+   (44) Solve( nonlinearEqn := 0,   x=2, y=3 )      % x=2, y=3 is a guess.
+-> (45) x = 0.7390851
+-> (46) y = 0.673612
+
+   (47) %--------------------------------------------------------------------
+   (48) % Example 6: Solve  (2 nonlinear equations in 2 unknowns with input) 
+   (49) %--------------------------------------------------------------------
+   (50) Input  a = 2 meters,  b = 1 meters   
+   (51) ellipseEquation = -1 + x^2/a^2 + y^2/b^2 
+-> (52) ellipseEquation = -1 + x^2/a^2 + y^2/b^2
+
+   (53) sineFunction = y - sin(x) 
+-> (54) sineFunction = y - sin(x)
+
+   (55) Solve( [ellipseEquation; sineFunction] := 0,   x = 1 meter,  y = 2 meter )
+-> (56) x = 1.029867
+-> (57) y = 0.8572303
+
+   (58) %--------------------------------------------------------------------
+   (59) % Example 7: Solve (return the solutions without assignment) 
+   (60) %--------------------------------------------------------------------
+   (61) solutionA = Solve(  2*x - 5*t = 0,    x )
+-> (62) solutionA = [2.5*t]
+
+   (63) solutionB = Solve(  x^2 + sin(x)^2.2 - 1 = 0,    x = 2 )
+-> (64) solutionB = [0.7528387]
+

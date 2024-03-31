@@ -1,0 +1,60 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: SetVelocity 
+   (3) % Set Q1's velocity in N by differentiation.  Uses No fixed on N.
+   (4) %--------------------------------------------------------------------
+   (5) RigidFrame N             
+   (6) Point      Q1            
+   (7) Variable   x1', y1'           
+   (8) Q1.SetPosition( No,  x1*Nx> + y1*Ny> )
+-> (9) p_No_Q1> = x1*Nx> + y1*Ny>
+
+   (10) Q1.SetVelocity( N, No )   
+-> (11) v_Q1_N> = x1'*Nx> + y1'*Ny>
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2: SetVelocity 
+   (14) % Set Q2's velocity in N by differentiation and Q1's velocity in N.
+   (15) %--------------------------------------------------------------------
+   (16) Point     Q2            
+   (17) Variable  x2', y2'  
+   (18) Q2.SetPosition( Q1,  x2*Nx> + y2*Ny> )
+-> (19) p_Q1_Q2> = x2*Nx> + y2*Ny>
+
+   (20) Q2.SetVelocity( N, Q1 )     
+-> (21) v_Q2_N> = (x1'+x2')*Nx> + (y1'+y2')*Ny>
+
+   (22) %--------------------------------------------------------------------
+   (23) % Example 3: SetVelocity
+   (24) % Set Q3's velocity in N via two points (Q3 and Bo) fixed on B.
+   (25) %--------------------------------------------------------------------
+   (26) RigidBody B                  % Body B translates and rotates in N.
+   (27) Point     Q3( B )            % Q3 is a point fixed on B.
+   (28) Constant  L                  % Distance between Bo and Q3.
+   (29) Variable  wB                 % Angular rate.
+   (30) B.SetAngularVelocity( N,  wB*Bz> )
+-> (31) w_B_N> = wB*Bz>
+
+   (32) Bo.SetVelocity( N,  t*Nx> )
+-> (33) v_Bo_N> = t*Nx>
+
+   (34) Q3.SetPosition( Bo,  L*Bx> )
+-> (35) p_Bo_Q3> = L*Bx>
+
+   (36) Q3.SetVelocity( N, Bo, B )  
+-> (37) v_Q3_N> = L*wB*By> + t*Nx>
+
+   (38) %--------------------------------------------------------------------
+   (39) % Example 4: SetVelocity
+   (40) % Set Q4's velocity in N via one point (Q4) moving on rigid-body B.
+   (41) %--------------------------------------------------------------------
+   (42) Point      Q4,  BQ4( B )     % BQ4 is point of B coincident with Q4.
+   (43) Variable   x4'  
+   (44) Q4.SetPosition( Bo,  x4*Bx> )
+-> (45) p_Bo_Q4> = x4*Bx>
+
+   (46) Q4.SetVelocity( N, Bo, B, BQ4 )    
+-> (47) p_Bo_BQ4> = x4*Bx>
+-> (48) v_BQ4_N> = wB*x4*By> + t*Nx>
+-> (49) v_Q4_B> = x4'*Bx>
+-> (50) v_Q4_N> = x4'*Bx> + wB*x4*By> + t*Nx>
+

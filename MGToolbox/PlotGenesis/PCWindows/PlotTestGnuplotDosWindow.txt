@@ -1,0 +1,36 @@
+# File: PlotTestGnuplotDosWindow.txt
+# Created by MotionGenesis (Mitiguy) for the Gnuplot plotting program.
+#---------------------------------------------------------------------
+set terminal windows color  "Times-Bold" 14
+set datafile commentschars "#%"
+set offsets 0, 0, 0, 0
+unset time
+set size 1.0, 1.0
+set border
+set grid
+set samples 201
+unset polar
+set dummy x
+set zero 1.0E-300
+set title  "PlotTest graph"                       offset 0.0, -0.3
+set xlabel "time   (seconds)"                     offset 0.0,  0.4
+set ylabel "Decaying cosine amplitude  (meters)"  offset 0.4,  0.0
+set format x "%g"
+set format y "%g"
+set xzeroaxis  linetype 0 linewidth 2.2
+set yzeroaxis  linetype 0 linewidth 2.2
+set xrange [ 0.0 : 10.0 ]
+set autoscale y
+set tics in
+set xtics   border mirror norotate     # font "Times-Bold, 24"
+set ytics   border mirror norotate     # font "Times-Bold, 24"
+#set x2tics axis nomirror norotate     # font "Times-Bold, 12"
+#set y2tics axis nomirror norotate     # font "Times-Bold, 12"
+unset logscale x
+unset logscale y
+unset key
+set boxwidth 1.0 relative
+unset mouse
+set label  "Created by MotionGenesis "  at graph 1.0, 1.03  right norotate back  font  "Times-Bold, 7"
+plot exp(-0.1*x)*cos(x)  with linespoints  linetype 1  linewidth 5.0  pointtype 0  pointsize 1.0
+pause -1 "PlotTest seems to be successful."

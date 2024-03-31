@@ -1,0 +1,31 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetStaticsKane (Single pendulum)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame  N            % Earth.
+   (5) RigidBody       B            % Rigid pendulum.
+   (6) Constant        g            % Earth's gravitational constant.
+   (7) Constant        L            % Pendulum length.
+   (8) Variable        q'           % Pendulum angle.
+   (9) Variable        Tz           % Torque applied to B from N.
+   (10) SetGeneralizedSpeed( q' )
+   (11) B.SetMass( m )
+   (12) B.RotateZ( N, q )
+-> (13) B_N = [cos(q), sin(q), 0;  -sin(q), cos(q), 0;  0, 0, 1]
+-> (14) w_B_N> = q'*Bz>
+
+   (15) Bcm.SetPositionVelocity( No, -L*By> )
+-> (16) p_No_Bcm> = -L*By>
+-> (17) v_Bcm_N> = L*q'*Bx>
+
+   (18) Bcm.AddForce( -m*g*Ny> )
+-> (19) Force_Bcm> = -m*g*Ny>
+
+   (20) B.AddTorque( Tz*Bz> )
+-> (21) Torque_B> = Tz*Bz>
+
+   (22) KaneStatics = System.GetStaticsKane()
+-> (23) KaneStatics = [Tz - m*g*L*sin(q)]
+
+   (24) Solve( KaneStatics = 0,  Tz )
+-> (25) Tz = m*g*L*sin(q)
+

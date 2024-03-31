@@ -1,0 +1,12 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: RandomInteger   
+   (3) %--------------------------------------------------------------------
+   (4) randomIntegerA = RandomInteger() 
+-> (5) randomIntegerA = 9396
+
+   (6) randomIntegerB = RandomInteger() 
+-> (7) randomIntegerB = 9930
+
+   (8) randomIntegerC = RandomInteger() 
+-> (9) randomIntegerC = 20325
+

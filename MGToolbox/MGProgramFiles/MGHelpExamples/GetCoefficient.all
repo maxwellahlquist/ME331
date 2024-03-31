@@ -1,0 +1,70 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetCoefficient  (Scalar expression, scalar name)
+   (3) %--------------------------------------------------------------------
+   (4) Variable  x, y
+   (5) Expression = t*x - 2*y
+-> (6) Expression = t*x - 2*y
+
+   (7) coefX = GetCoefficient( Expression,  x )
+-> (8) coefX = t
+
+   (9) coefY = GetCoefficient( Expression,  y )
+-> (10) coefY = -2
+
+   (11) %--------------------------------------------------------------------
+   (12) % Example 2: GetCoefficient  (Scalar expression, matrix of names)
+   (13) %--------------------------------------------------------------------
+   (14) CoefTY = GetCoefficient( Expression,  t, y )
+-> (15) CoefTY = [x;  -2]
+
+   (16) CoefXY = GetCoefficient( Expression,  [x;y] )
+-> (17) CoefXY = [t;  -2]
+
+   (18) %--------------------------------------------------------------------
+   (19) % Example 3: GetCoefficient  (Matrix expression, scalar name)
+   (20) %--------------------------------------------------------------------
+   (21) Zero[1] = sin(t)*x - cos(t)*y
+-> (22) Zero[1] = sin(t)*x - cos(t)*y
+
+   (23) Zero[2] = cos(t)*x - 3*t^2*y
+-> (24) Zero[2] = cos(t)*x - 3*t^2*y
+
+   (25) Fred = GetCoefficient( Zero,  x )
+-> (26) Fred = [sin(t);  cos(t)]
+
+   (27) Joe  = GetCoefficient( Zero,  y )
+-> (28) Joe = [-cos(t);  -3*t^2]
+
+   (29) %--------------------------------------------------------------------
+   (30) % Example 4: GetCoefficient  (Matrix expression, matrix of names)
+   (31) %--------------------------------------------------------------------
+   (32) Sally = GetCoefficient( Zero,  x, y )
+-> (33) Sally = [sin(t), -cos(t);  cos(t), -3*t^2]
+
+   (34) Susan = GetCoefficient( Zero,  [x,y] )
+-> (35) Susan = [sin(t), -cos(t);  cos(t), -3*t^2]
+
+   (36) %--------------------------------------------------------------------
+   (37) % Example 5: GetCoefficientShallow  (Scalar expression, scalar name)
+   (38) %--------------------------------------------------------------------
+   (39) shallowCoefX1 = GetCoefficientShallow(        Expression,   x )
+-> (40) shallowCoefX1 = 0
+
+   (41) shallowCoefX2 = GetCoefficientShallow( GetRhs(Expression),  x )
+-> (42) shallowCoefX2 = t
+
+   (43) shallowCoefX3 = GetCoefficientShallow(      x*Expression,   x )
+-> (44) shallowCoefX3 = Expression
+
+   (45) shallowCoefY1 = GetCoefficientShallow(        Expression,   y )
+-> (46) shallowCoefY1 = 0
+
+   (47) shallowCoefY2 = GetCoefficientShallow( GetRhs(Expression),  y )
+-> (48) shallowCoefY2 = -2
+
+   (49) shallowCoefE1 = GetCoefficientShallow(   Expression,  Expression )
+-> (50) shallowCoefE1 = 1
+
+   (51) shallowCoefE2 = GetCoefficientShallow( x*Expression,  Expression )
+-> (52) shallowCoefE2 = x
+

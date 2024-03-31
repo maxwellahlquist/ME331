@@ -1,0 +1,39 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  true or false  (operator * can mimic a logical AND)
+   (3) %--------------------------------------------------------------------
+   (4) isTrue[1] = false * false
+-> (5) isTrue[1] = false
+
+   (6) isTrue[2] = false * true 
+-> (7) isTrue[2] = false
+
+   (8) isTrue[3] = true  * false
+-> (9) isTrue[3] = false
+
+   (10) isTrue[4] = true  * true 
+-> (11) isTrue[4] = true
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2:  true or false  (IsPositive can mimic a logical OR)
+   (14) %--------------------------------------------------------------------
+   (15) isTrue[5] =  IsPositive( false + false )
+-> (16) isTrue[5] = false
+
+   (17) isTrue[6] =  IsPositive( false + true  )
+-> (18) isTrue[6] = true
+
+   (19) isTrue[7] =  IsPositive( true  + false )
+-> (20) isTrue[7] = true
+
+   (21) isTrue[8] =  IsPositive( true  + true  )
+-> (22) isTrue[8] = true
+
+   (23) %--------------------------------------------------------------------
+   (24) % Example 3:  true or false
+   (25) %--------------------------------------------------------------------
+   (26) isSimplifyA = IsSimplifyEqual( 2*t, 9*t )
+-> (27) isSimplifyA = false
+
+   (28) isSimplifyB = IsSimplifyEqual( 2*t, 2*t )
+-> (29) isSimplifyB = true
+

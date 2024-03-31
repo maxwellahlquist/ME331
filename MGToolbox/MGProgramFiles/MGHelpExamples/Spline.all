@@ -1,0 +1,51 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: Spline  (TRANSITION) 
+   (3) %--------------------------------------------------------------------
+   (4) Variable  x
+   (5) Constant xF, y0, yF
+   (6) x0 = 0  
+-> (7) x0 = 0
+
+   (8) TransitionSpline = Spline( TRANSITION, x, x0, xF, y0, yF )
+-> (9) TransitionSpline = y0 + 0.1591549*(y0-yF)*sin(6.283185*x/xF) - (y0-yF)*x
+       /xF
+
+   (10) %--------------------------------------------------------------------
+   (11) % Example 2: Spline  (STEP) 
+   (12) %--------------------------------------------------------------------
+   (13) Constant  t0, tF
+   (14) StepSpline = Spline( STEP, t, t0, tF, y0, yF )
+-> (15) StepSpline = 0.5*y0 + 0.5*yF - 0.3183099*(y0-yF)*atan(31.82052*(t0+tF-2
+        *t)/(t0-tF))
+
+   (16) %--------------------------------------------------------------------
+   (17) % Example 3: Spline  (PULSE) 
+   (18) %--------------------------------------------------------------------
+   (19) Constant  yExtremum 
+   (20) PulseSpline = Spline( PULSE, x, x0, xF, y0, yExtremum )
+-> (21) PulseSpline = y0 - 54.78763*(y0-yExtremum)*(sin(pi*x/xF)-pi*x*(xF^3+x^3
+        -2*xF*x^2)/xF^4)
+
+   (22) %--------------------------------------------------------------------
+   (23) % Example 4: Spline  (BELL) 
+   (24) %--------------------------------------------------------------------
+   (25) BellSpline = Spline( BELL, t, t0, tF, y0, yExtremum )
+-> (26) BellSpline = y0 - (y0-yExtremum)*exp(-4.60517*(t0+tF-2*t)^2/(t0-tF)^2)
+
+   (27) %--------------------------------------------------------------------
+   (28) % Example 5: Spline  (LINE) 
+   (29) LinearSpline = Spline( LINE, t, 0, tF, y0, yF )
+-> (30) LinearSpline = y0 - (y0-yF)*t/tF
+
+   (31) %--------------------------------------------------------------------
+   (32) % Example 6: Spline  (CUBIC) 
+   (33) CubicSpline = Spline( CUBIC, t, 0, tF, y0, yF, 0, 0 )
+-> (34) CubicSpline = y0 + 2*(y0-yF)*t^3/tF^3 - 3*(y0-yF)*t^2/tF^2
+
+   (35) %--------------------------------------------------------------------
+   (36) % Example 7: Spline  (Polynomial of degree n = 5) 
+   (37) %--------------------------------------------------------------------
+   (38) PolynomialSpline = Spline( 5, x, 0, xF, y0, yF, 0,0, 0,0 )
+-> (39) PolynomialSpline = y0 + 15*(y0-yF)*x^4/xF^4 - 10*(y0-yF)*x^3/xF^3
+        - 6*(y0-yF)*x^5/xF^5
+

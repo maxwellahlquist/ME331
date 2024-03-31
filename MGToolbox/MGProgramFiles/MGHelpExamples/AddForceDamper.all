@@ -1,0 +1,50 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: AddForceDamper 
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) Particle  P1
+   (6) Variable  x', y'
+   (7) Constant  b
+   (8) P1.SetPositionVelocity( No, x*Nx> )
+-> (9) p_No_P1> = x*Nx>
+-> (10) v_P1_N> = x'*Nx>
+
+   (11) P1.AddForceDamper( No, b )
+-> (12) Force_P1_No> = -b*x'*Nx>
+
+   (13) %--------------------------------------------------------------------
+   (14) % Example 2: AddForceDamper 
+   (15) %--------------------------------------------------------------------
+   (16) Particle  Q1
+   (17) Q1.SetPositionVelocity( P1, y*Ny> )
+-> (18) p_P1_Q1> = y*Ny>
+-> (19) v_Q1_N> = x'*Nx> + y'*Ny>
+
+   (20) Q1.AddForceDamper( P1, b )
+-> (21) Force_Q1_P1> = -b*y'*Ny>
+
+   (22) Q1.AddForceDamper( No, b )
+-> (23) Force_Q1_No> = -b*x*(x*x'+y*y')/(x^2+y^2)*Nx> - b*y*(x*x'+y*y')/(x^2+y^2)*Ny>
+
+   (24) %--------------------------------------------------------------------
+   (25) % Example 3: AddForceDamper 
+   (26) %--------------------------------------------------------------------
+   (27) Particle  P2
+   (28) P2.SetPositionVelocity( No, x*Nx> )
+-> (29) p_No_P2> = x*Nx>
+-> (30) v_P2_N> = x'*Nx>
+
+   (31) P2.AddForceDamper( No, b, 3 )
+-> (32) Force_P2_No> = -b*x'^3*Nx>
+
+   (33) %--------------------------------------------------------------------
+   (34) % Example 4: AddForceDamper 
+   (35) %--------------------------------------------------------------------
+   (36) Particle  Q2
+   (37) Q2.SetPositionVelocity( P2, y*Ny> )
+-> (38) p_P2_Q2> = y*Ny>
+-> (39) v_Q2_N> = x'*Nx> + y'*Ny>
+
+   (40) Q2.AddForceDamper( P2, b, 2 )
+-> (41) Force_Q2_P2> = -b*y^3*y'^2/abs(y)^3*Ny>
+

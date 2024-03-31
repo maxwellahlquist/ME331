@@ -1,0 +1,29 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: Variable  (variables declarations)
+   (3) %--------------------------------------------------------------------
+   (4) Variable  w,  x+,  y-,  z'+,   e{0:3}'
+   (5) b = sin(t)  +  x  -  abs(x)  +  y  +  abs(y)  +  abs(z)
+-> (6) b = sin(t) + z
+
+   (7) dtExample1 = Dt(b) + Dt(e0)
+-> (8) dtExample1 = cos(t) + e0' + z'
+
+   (9) %--------------------------------------------------------------------
+   (10) % Example 2: Variable  (variable declarations and differentiation)
+   (11) %--------------------------------------------------------------------
+   (12) Variable  q',  u''
+   (13) dtExample2 = Dt(q)  +  Dt(u)  + DtDt(u)  +  Dt(u')
+-> (14) dtExample2 = q' + u' + 2*u''
+
+   (15) SetDt( q = sin(t) )
+-> (16) q = sin(t)
+-> (17) q' = cos(t)
+
+   (18) SetDt( u' = t^3 )
+-> (19) u' = t^3
+-> (20) u'' = 3*t^2
+
+   (21) arrayOfVariables = Variable()
+-> (22) arrayOfVariables = [e0;  e0';  e1;  e1';  e2;  e2';  e3;  e3';  q;  q';  
+        u;  u';  u'';  w;  x;  y;  z;  z']
+

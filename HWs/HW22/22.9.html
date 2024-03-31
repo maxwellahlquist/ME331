@@ -1,0 +1,242 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 22.9.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">22.9.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  22.9.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N                % Example: Earth.
+   (6) RigidBody       A
+   (7) RigidBody       B
+   (8) RigidBody       C
+   (9) Point           P
+   (10) Point           BC ( B )
+   (11) Point           CB ( C )
+   (12) %--------------------------------------------------------------------
+   (13) %   Mathematical declarations.
+   (14) Variable    qA'', qB'', qC''
+   (15) %Variable    Rx, Rz
+   (16) Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+   (17) Constant    LN = 2 m
+   (18) Constant    L = 4 m
+   (19) Constant    m = 3 kg
+   (20) Constant    I = m*L^2/12	% This may or may not be the right formula
+-> (21) I = 0.08333333*m*L^2
+
+   (22) Constant    wd = (pi/4) rad/sec
+   (23) Specified   TA = 960*(wd - qA')
+-> (24) TA = 960*wd - 960*qA'
+
+   (25) %--------------------------------------------------------------------
+   (26) %   Mass and inertia properties.
+   (27) A.SetMass( m )
+   (28) B.SetMass( m )
+   (29) C.SetMass( m )
+   (30) A.SetInertia( Acm,  0,  I,  0 )
+   (31) B.SetInertia( Bcm,  0,  I,  0 )
+   (32) C.SetInertia( Ccm,  0,  I,  0 )
+   (33) %--------------------------------------------------------------------
+   (34) %   Rotational kinematics.
+   (35) A.RotateY( N, qA )
+-> (36) A_N = [cos(qA), 0, -sin(qA);  0, 1, 0;  sin(qA), 0, cos(qA)]
+-> (37) w_A_N> = qA'*Ay>
+-> (38) alf_A_N> = qA''*Ay>
+
+   (39) B.RotateY( A, qB )
+-> (40) B_A = [cos(qB), 0, -sin(qB);  0, 1, 0;  sin(qB), 0, cos(qB)]
+-> (41) w_B_A> = qB'*By>
+-> (42) w_B_N> = (qA'+qB')*By>
+-> (43) alf_B_A> = qB''*By>
+-> (44) alf_B_N> = (qA''+qB'')*By>
+
+   (45) C.RotateY( N, qC )
+-> (46) C_N = [cos(qC), 0, -sin(qC);  0, 1, 0;  sin(qC), 0, cos(qC)]
+-> (47) w_C_N> = qC'*Cy>
+-> (48) alf_C_N> = qC''*Cy>
+
+   (49) %--------------------------------------------------------------------
+   (50) %   Translational kinematics.
+   (51) Ao.Translate( No, 0> )
+-> (52) p_No_Ao> = 0>
+-> (53) v_Ao_N> = 0>
+-> (54) a_Ao_N> = 0>
+
+   (55) Acm.Translate( No, L/2*Ax> )
+-> (56) p_No_Acm> = 0.5*L*Ax>
+-> (57) v_Acm_N> = -0.5*L*qA'*Az>
+-> (58) a_Acm_N> = -0.5*L*qA'^2*Ax> - 0.5*L*qA''*Az>
+
+   (59) Bo.Translate( Ao, L*Ax> )
+-> (60) p_Ao_Bo> = L*Ax>
+-> (61) v_Bo_N> = -L*qA'*Az>
+-> (62) a_Bo_N> = -L*qA'^2*Ax> - L*qA''*Az>
+
+   (63) Bcm.Translate( Bo, L/2*Bx> )
+-> (64) p_Bo_Bcm> = 0.5*L*Bx>
+-> (65) v_Bcm_N> = -L*qA'*Az> - 0.5*L*(qA'+qB')*Bz>
+-> (66) a_Bcm_N> = -L*qA'^2*Ax> - L*qA''*Az> - 0.5*L*(qA'+qB')^2*Bx> - 0.5*L*(
+        qA''+qB'')*Bz>
+
+   (67) Co.Translate( No, -LN*Nx> )
+-> (68) p_No_Co> = -LN*Nx>
+-> (69) v_Co_N> = 0>
+-> (70) a_Co_N> = 0>
+
+   (71) Ccm.Translate( Co, L/2*Cx> )
+-> (72) p_Co_Ccm> = 0.5*L*Cx>
+-> (73) v_Ccm_N> = -0.5*L*qC'*Cz>
+-> (74) a_Ccm_N> = -0.5*L*qC'^2*Cx> - 0.5*L*qC''*Cz>
+
+   (75) CB.Translate( Co, L*Cx> )
+-> (76) p_Co_CB> = L*Cx>
+-> (77) v_CB_N> = -L*qC'*Cz>
+-> (78) a_CB_N> = -L*qC'^2*Cx> - L*qC''*Cz>
+
+   (79) BC.Translate( CB, 0> )
+-> (80) p_CB_BC> = 0>
+-> (81) v_BC_N> = -L*qC'*Cz>
+-> (82) a_BC_N> = -L*qC'^2*Cx> - L*qC''*Cz>
+
+   (83) P.Translate( Bo, 2*Bx> - 2*Bz> )
+-> (84) p_Bo_P> = 2*Bx> - 2*Bz>
+-> (85) v_P_N> = -L*qA'*Az> + (-2*qA'-2*qB')*Bx> + (-2*qA'-2*qB')*Bz>
+-> (86) a_P_N> = -L*qA'^2*Ax> - L*qA''*Az> + (-2*(qA'+qB')^2-2*qA''-2*qB'')*Bx>
+        + (2*(qA'+qB')^2-2*qA''-2*qB'')*Bz>
+
+   (87) %--------------------------------------------------------------------
+   (88) %   Motion constraints (if any).
+   (89) Loop> = L*(Ax> + Bx> - Cx>) + LN*Nx>
+-> (90) Loop> = L*Ax> + L*Bx> - L*Cx> + LN*Nx>
+
+   (91) Loop[1] = Dot( Loop>, Nx> )
+-> (92) Loop[1] = LN + L*cos(qA) + L*cos(qA+qB) - L*cos(qC)
+
+   (93) Loop[2] = Dot( Loop>, Nz> )
+-> (94) Loop[2] = L*(sin(qC)-sin(qA)-sin(qA+qB))
+
+   (95) Solve( DT(Loop) = 0,  qB', qC' )
+-> (96) qB' = (sin(qC)*(cos(qA)+cos(qA+qB))-cos(qC)*(sin(qA)+sin(qA+qB)))*qA'/
+        sin(qA+qB-qC)
+-> (97) qC' = sin(qB)*qA'/sin(qA+qB-qC)
+
+   (98) Solve( DT(DT(Loop)) = 0,  qB'', qC'' )
+-> (99) qB'' = (qC'^2-cos(qC)*(cos(qA)*qA'^2+cos(qA+qB)*(qA'+qB')^2+sin(qA)*qA
+        ''+sin(qA+qB)*qA'')-sin(qC)*(sin(qA)*qA'^2+sin(qA+qB)*(qA'+qB')^2-cos(
+        qA)*qA''-cos(qA+qB)*qA''))/sin(qA+qB-qC)
+
+-> (100) qC'' = -((qA'+qB')^2+sin(qA+qB)*(sin(qA)*qA'^2-sin(qC)*qC'^2-cos(qA)*
+         qA'')-cos(qA+qB)*(cos(qC)*qC'^2-cos(qA)*qA'^2-sin(qA)*qA''))/sin(qA+
+         qB-qC)
+
+   (101) %--------------------------------------------------------------------
+   (102) %   Add relevant contact/distance forces.
+   (103) System.AddForceGravity( -g*Nz> )            % Add's gravity force to each massive object.
+-> (104) Force_Acm> = -g*m*Nz>
+-> (105) Force_Bcm> = -g*m*Nz>
+-> (106) Force_Ccm> = -g*m*Nz>
+
+   (107) %--------------------------------------------------------------------
+   (108) %   Translational dynamic equations (F = m*a).
+   (109) %   For static analysis, use  B.GetStatics()  or  System.GetStatics().
+   (110) SetGeneralizedSpeeds( qA' )
+   (111) Statics = System.GetStaticsKane()
+-> (112) Statics[1] = 0.5*g*L*m*(3*cos(qA)+sin(qB)*cos(qC)/sin(qA+qB-qC)+cos(
+         qA+qB)*(1+(sin(qC)*(cos(qA)+cos(qA+qB))-cos(qC)*(sin(qA)+sin(qA+qB)))/
+         sin(qA+qB-qC)))
+
+   (113) Equations = [Loop; Statics]
+-> (114) Equations[1] = LN + L*cos(qA) + L*cos(qA+qB) - L*cos(qC)
+-> (115) Equations[2] = L*(sin(qC)-sin(qA)-sin(qA+qB))
+-> (116) Equations[3] = 0.5*g*L*m*(3*cos(qA)+sin(qB)*cos(qC)/sin(qA+qB-qC)+cos(
+         qA+qB)*(1+(sin(qC)*(cos(qA)+cos(qA+qB))-cos(qC)*(sin(qA)+sin(qA+qB)))/
+         sin(qA+qB-qC)))
+
+   (117) SolveSetInput( Equations = 0, qA = 70 deg, qB = 100 deg, qC = 100 deg)
+
+->    %  INPUT has been assigned as follows:
+->    %   qA                        75.52248781407008       deg
+->    %   qB                        104.4775121859299       deg
+->    %   qC                        104.4775121859299       deg
+
+   (118) A.AddTorque( TA*Ny> )                  % External torque.
+-> (119) Torque_A> = TA*Ny>
+
+   (120) Dynamics = System.GetDynamicsKane()
+-> (121) Dynamics[1] = 0.25*(4*I+5*m*L^2+(4*I+m*L^2)*sin(qB)^2/sin(qA+qB-qC)^2+
+         4*I*(1+(sin(qC)*(cos(qA)+cos(qA+qB))-cos(qC)*(sin(qA)+sin(qA+qB)))/sin
+         (qA+qB-qC))^2+m*L^2*(4*cos(qB)+(1+(sin(qC)*(cos(qA)+cos(qA+qB))-cos(
+         qC)*(sin(qA)+sin(qA+qB)))/sin(qA+qB-qC))^2+4*cos(qB)*(sin(qC)*(cos(qA)
+         +cos(qA+qB))-cos(qC)*(sin(qA)+sin(qA+qB)))/sin(qA+qB-qC)))*qA'' - TA
+         - 1.5*g*L*m*cos(qA) - 0.5*g*L*m*sin(qB)*cos(qC)/sin(qA+qB-qC) - 0.5*g*
+         L*m*cos(qA+qB)*(1+(sin(qC)*(cos(qA)+cos(qA+qB))-cos(qC)*(sin(qA)+sin(
+         qA+qB)))/sin(qA+qB-qC)) - 0.25*m*L^2*(2*sin(qB)*(qA'+qB')^2-2*sin(qB)*
+         (1+(sin(qC)*(cos(qA)+cos(qA+qB))-cos(qC)*(sin(qA)+sin(qA+qB)))/sin(qA+
+         qB-qC))*qA'^2-(1+2*cos(qB)+(sin(qC)*(cos(qA)+cos(qA+qB))-cos(qC)*(sin(
+         qA)+sin(qA+qB)))/sin(qA+qB-qC))*(qC'^2-sin(qC)*(sin(qA)*qA'^2+sin(qA+
+         qB)*(qA'+qB')^2)-cos(qC)*(cos(qA)*qA'^2+cos(qA+qB)*(qA'+qB')^2))/sin(
+         qA+qB-qC)) - 0.25*(4*I*sin(qB)*((qA'+qB')^2+sin(qA+qB)*(sin(qA)*qA'^2-
+         sin(qC)*qC'^2)+cos(qA+qB)*(cos(qA)*qA'^2-cos(qC)*qC'^2))+m*L^2*sin(qB)
+         *((qA'+qB')^2+sin(qA+qB)*(sin(qA)*qA'^2-sin(qC)*qC'^2)+cos(qA+qB)*(cos
+         (qA)*qA'^2-cos(qC)*qC'^2))-4*I*(sin(qA+qB-qC)+sin(qC)*(cos(qA)+cos(qA+
+         qB))-cos(qC)*(sin(qA)+sin(qA+qB)))*(qC'^2-sin(qC)*(sin(qA)*qA'^2+sin(
+         qA+qB)*(qA'+qB')^2)-cos(qC)*(cos(qA)*qA'^2+cos(qA+qB)*(qA'+qB')^2)))/
+         sin(qA+qB-qC)^2
+
+   (122) Solve(Dynamics = 0, qA'')
+-> (123) qA'' = (4*TA+6*g*L*m*cos(qA)+2*g*L*m*sin(qB)*cos(qC)/sin(qA+qB-qC)+2*g
+         *L*m*cos(qA+qB)*(1+(sin(qC)*(cos(qA)+cos(qA+qB))-cos(qC)*(sin(qA)+sin(
+         qA+qB)))/sin(qA+qB-qC))+m*L^2*(2*sin(qB)*(qA'+qB')^2-2*sin(qB)*(1+(sin
+         (qC)*(cos(qA)+cos(qA+qB))-cos(qC)*(sin(qA)+sin(qA+qB)))/sin(qA+qB-qC))
+         *qA'^2-(1+2*cos(qB)+(sin(qC)*(cos(qA)+cos(qA+qB))-cos(qC)*(sin(qA)+sin
+         (qA+qB)))/sin(qA+qB-qC))*(qC'^2-sin(qC)*(sin(qA)*qA'^2+sin(qA+qB)*(qA'
+         +qB')^2)-cos(qC)*(cos(qA)*qA'^2+cos(qA+qB)*(qA'+qB')^2))/sin(qA+qB-qC))
+         +(4*I*sin(qB)*((qA'+qB')^2+sin(qA+qB)*(sin(qA)*qA'^2-sin(qC)*qC'^2)+
+         cos(qA+qB)*(cos(qA)*qA'^2-cos(qC)*qC'^2))+m*L^2*sin(qB)*((qA'+qB')^2+
+         sin(qA+qB)*(sin(qA)*qA'^2-sin(qC)*qC'^2)+cos(qA+qB)*(cos(qA)*qA'^2-cos
+         (qC)*qC'^2))-4*I*(sin(qA+qB-qC)+sin(qC)*(cos(qA)+cos(qA+qB))-cos(qC)*(
+         sin(qA)+sin(qA+qB)))*(qC'^2-sin(qC)*(sin(qA)*qA'^2+sin(qA+qB)*(qA'+qB')^2)
+         -cos(qC)*(cos(qA)*qA'^2+cos(qA+qB)*(qA'+qB')^2)))/sin(qA+qB-qC)^2)/(4*
+         I+5*m*L^2+(4*I+m*L^2)*sin(qB)^2/sin(qA+qB-qC)^2+4*I*(1+(sin(qC)*(cos(
+         qA)+cos(qA+qB))-cos(qC)*(sin(qA)+sin(qA+qB)))/sin(qA+qB-qC))^2+m*L^2*(
+         4*cos(qB)+(1+(sin(qC)*(cos(qA)+cos(qA+qB))-cos(qC)*(sin(qA)+sin(qA+qB)))
+         /sin(qA+qB-qC))^2+4*cos(qB)*(sin(qC)*(cos(qA)+cos(qA+qB))-cos(qC)*(sin
+         (qA)+sin(qA+qB)))/sin(qA+qB-qC)))
+
+   (124) Equations := [Loop; Dynamics]
+-> (125) Equations[1] = LN + L*cos(qA) + L*cos(qA+qB) - L*cos(qC)
+-> (126) Equations[2] = L*(sin(qC)-sin(qA)-sin(qA+qB))
+-> (127) Equations[3] = 0.25*(4*I+5*m*L^2+(4*I+m*L^2)*sin(qB)^2/sin(qA+qB-qC)^2
+         +4*I*(1+(sin(qC)*(cos(qA)+cos(qA+qB))-cos(qC)*(sin(qA)+sin(qA+qB)))/
+         sin(qA+qB-qC))^2+m*L^2*(4*cos(qB)+(1+(sin(qC)*(cos(qA)+cos(qA+qB))-cos
+         (qC)*(sin(qA)+sin(qA+qB)))/sin(qA+qB-qC))^2+4*cos(qB)*(sin(qC)*(cos(
+         qA)+cos(qA+qB))-cos(qC)*(sin(qA)+sin(qA+qB)))/sin(qA+qB-qC)))*qA''
+         - TA - 1.5*g*L*m*cos(qA) - 0.5*g*L*m*sin(qB)*cos(qC)/sin(qA+qB-qC)
+         - 0.5*g*L*m*cos(qA+qB)*(1+(sin(qC)*(cos(qA)+cos(qA+qB))-cos(qC)*(sin(
+         qA)+sin(qA+qB)))/sin(qA+qB-qC)) - 0.25*m*L^2*(2*sin(qB)*(qA'+qB')^2-2*
+         sin(qB)*(1+(sin(qC)*(cos(qA)+cos(qA+qB))-cos(qC)*(sin(qA)+sin(qA+qB)))
+         /sin(qA+qB-qC))*qA'^2-(1+2*cos(qB)+(sin(qC)*(cos(qA)+cos(qA+qB))-cos(
+         qC)*(sin(qA)+sin(qA+qB)))/sin(qA+qB-qC))*(qC'^2-sin(qC)*(sin(qA)*qA'^2
+         +sin(qA+qB)*(qA'+qB')^2)-cos(qC)*(cos(qA)*qA'^2+cos(qA+qB)*(qA'+qB')^2))
+         /sin(qA+qB-qC)) - 0.25*(4*I*sin(qB)*((qA'+qB')^2+sin(qA+qB)*(sin(qA)*qA'^2
+         -sin(qC)*qC'^2)+cos(qA+qB)*(cos(qA)*qA'^2-cos(qC)*qC'^2))+m*L^2*sin(
+         qB)*((qA'+qB')^2+sin(qA+qB)*(sin(qA)*qA'^2-sin(qC)*qC'^2)+cos(qA+qB)*(
+         cos(qA)*qA'^2-cos(qC)*qC'^2))-4*I*(sin(qA+qB-qC)+sin(qC)*(cos(qA)+cos(
+         qA+qB))-cos(qC)*(sin(qA)+sin(qA+qB)))*(qC'^2-sin(qC)*(sin(qA)*qA'^2+
+         sin(qA+qB)*(qA'+qB')^2)-cos(qC)*(cos(qA)*qA'^2+cos(qA+qB)*(qA'+qB')^2)))
+         /sin(qA+qB-qC)^2
+
+   (128) x = Dot(P.GetPosition(No), Nx> )
+-> (129) x = L*cos(qA) + 2*cos(qA+qB) - 2*sin(qA+qB)
+
+   (130) z = Dot(P.GetPosition(No), Nz> )
+-> (131) z = -2*sin(qA+qB) - 2*cos(qA+qB) - L*sin(qA)
+
+   (132) Input  tFinal = 9 sec,  tStep = 0.02 sec,  absError = 1.0E-07
+   (133) Input qA' = 0
+   (134) OutputPlot  x m, z m
+   (135) ODE ()
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

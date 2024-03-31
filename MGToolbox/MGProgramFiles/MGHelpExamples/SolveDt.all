@@ -1,0 +1,60 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: SolveDt  (1 linear equation in 1 unknown) 
+   (3) %--------------------------------------------------------------------
+   (4) Variable  z'
+   (5) SolveDt(  2*z = 8*t,   z )
+-> (6) z = 4*t
+-> (7) z' = 4
+
+   (8) %--------------------------------------------------------------------
+   (9) % Example 2: SolveDt  (2 linear equations in 2 unknowns) 
+   (10) %--------------------------------------------------------------------
+   (11) Variable  s1'',  s2''
+   (12) eqn[1] = s1 + 2*s2 - 8*t      
+-> (13) eqn[1] = s1 + 2*s2 - 8*t
+
+   (14) eqn[2] = s1 + 4*s2 - cos(t)            
+-> (15) eqn[2] = s1 + 4*s2 - cos(t)
+
+   (16) SolveDt(  eqn = 0,   s1, s2 )
+-> (17) s1 = 16*t - cos(t)
+-> (18) s2 = 0.5*cos(t) - 4*t
+-> (19) s1' = 16 + sin(t)
+-> (20) s2' = -4 - 0.5*sin(t)
+-> (21) s1'' = cos(t)
+-> (22) s2'' = -0.5*cos(t)
+
+   (23) %--------------------------------------------------------------------
+   (24) % Example 3: SolveDt (2 linear equations in 2 unknowns, MethodName) 
+   (25) %--------------------------------------------------------------------
+   (26) Variable  x',  y'
+   (27) Constant  a, b, c, d
+   (28) eqnZero[1] = a*x + b*y - t
+-> (29) eqnZero[1] = a*x + b*y - t
+
+   (30) eqnZero[2] = c*x + d*y - sin(t)
+-> (31) eqnZero[2] = c*x + d*y - sin(t)
+
+   (32) SolveDt( Minors,  eqnZero  = 0,   x, y )
+-> (33) x = (d*t-b*sin(t))/(a*d-b*c)
+-> (34) y = -(c*t-a*sin(t))/(a*d-b*c)
+-> (35) x' = (d-b*cos(t))/(a*d-b*c)
+-> (36) y' = -(c-a*cos(t))/(a*d-b*c)
+
+   (37) SolveDt( Gauss,   eqnZero := 0,   x, y )
+-> (38) x = (t-b*y)/a
+-> (39) y = (sin(t)-c*t/a)/(d-b*c/a)
+-> (40) x' = (1-b*y')/a
+-> (41) y' = -(c/a-cos(t))/(d-b*c/a)
+
+   (42) %--------------------------------------------------------------------
+   (43) % Example 5: SolveDt (solution is value for q and symbolic for q', q'') 
+   (44) %--------------------------------------------------------------------
+   (45) Variable  q''                % Unknown to be solved.
+   (46) Specified k''                % Regarded as known.
+   (47) Input  k = 72 degrees
+   (48) SolveDt(  q + cos(q) = k,   q = 20 deg )
+-> (49) q = 0.3018485       %  or  q = 17.29464 deg.
+-> (50) q' = k'/(1-sin(q))
+-> (51) q'' = (k''+cos(q)*q'^2)/(1-sin(q))
+

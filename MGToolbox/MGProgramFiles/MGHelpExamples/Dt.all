@@ -1,0 +1,47 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  Dt( scalarExpression, name )
+   (3) %--------------------------------------------------------------------
+   (4) s = sin(t)
+-> (5) s = sin(t)
+
+   (6) s1stDerivative = Dt( s )
+-> (7) s1stDerivative = cos(t)
+
+   (8) s2ndDerivative = DtDt( s )
+-> (9) s2ndDerivative = -sin(t)
+
+   (10) s3rdDerivative = DtDtDt( s )
+-> (11) s3rdDerivative = -cos(t)
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2:  Dt( matrixExpression, name )
+   (14) %--------------------------------------------------------------------
+   (15) Variable  x'', y''
+   (16) m = [1, 2*t;  3*x, 4*y^2]
+-> (17) m = [1, 2*t;  3*x, 4*y^2]
+
+   (18) m1stDerivative = Dt( m )
+-> (19) m1stDerivative = [0, 2;  3*x', 8*y*y']
+
+   (20) m2ndDerivative = DtDt( m )
+-> (21) m2ndDerivative = [0, 0;  3*x'', 8*y'^2 + 8*y*y'']
+
+   (22) %--------------------------------------------------------------------
+   (23) % Example 3:  Dt( vectorExpression, refFrame )
+   (24) %--------------------------------------------------------------------
+   (25) RigidFrame A
+   (26) v> = Vector( A, 3*x, y^2, 0 )
+-> (27) v> = 3*x*Ax> + y^2*Ay>
+
+   (28) v1stDerivativeInA> = Dt( v>, A )
+-> (29) v1stDerivativeInA> = 3*x'*Ax> + 2*y*y'*Ay>
+
+   (30) v2ndDerivativeInA> = DtDt( v>, A )
+-> (31) v2ndDerivativeInA> = 3*x''*Ax> + (2*y'^2+2*y*y'')*Ay>
+
+   (32) %--------------------------------------------------------------------
+   (33) % Example 4:  Dt( tensorExpression, refFrame )
+   (34) %--------------------------------------------------------------------
+   (35) DtOfTensorInA = Dt( [s, v>], A )
+-> (36) DtOfTensorInA = [cos(t), 3*x'*Ax> + 2*y*y'*Ay>]
+

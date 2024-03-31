@@ -1,0 +1,426 @@
+% DIRCOS   Forms direction cosine matrices, e.g., A_B
+% Portions copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.
+%----------------------------------------------------------------------------
+%
+% Syntax1: DIRCOS( A, B, EULER, E1, E2, E3, E4 )
+% Syntax2: DIRCOS( A, B, RODRIGUES, R1, R2, R3 )
+% Syntax3: DIRCOS( A, B, BODY123,   Q1, Q2, Q3 )
+% Syntax4: DIRCOS( A, B, SPACE123,  Q1, Q2, Q3 )
+
+IF( Strcmpi(#3#,EULER) == 0 )
+  {
+  IF( #NUM_ARGS# != 7) {echo("Error: Incorrect number of arguments in DIRCOS.\A\K")}
+  ELSE
+    {
+#1#_#2# = [1 - 2*((AUTOZ(#5#))^2 + (AUTOZ(#6#))^2)                   , &
+           2*((AUTOZ(#4#))*(AUTOZ(#5#)) - (AUTOZ(#6#))*(AUTOZ(#7#))) , &
+           2*((AUTOZ(#6#))*(AUTOZ(#4#)) + (AUTOZ(#5#))*(AUTOZ(#7#))) ; &
+           2*((AUTOZ(#4#))*(AUTOZ(#5#)) + (AUTOZ(#6#))*(AUTOZ(#7#))) , &
+           1 - 2*((AUTOZ(#6#))^2 + (AUTOZ(#4#))^2)                   , &
+           2*((AUTOZ(#5#))*(AUTOZ(#6#)) - (AUTOZ(#4#))*(AUTOZ(#7#))) ; &
+           2*((AUTOZ(#6#))*(AUTOZ(#4#)) - (AUTOZ(#5#))*(AUTOZ(#7#))) , &
+           2*((AUTOZ(#5#))*(AUTOZ(#6#)) + (AUTOZ(#4#))*(AUTOZ(#7#))) , &
+           1 - 2*((AUTOZ(#4#))^2 + (AUTOZ(#5#))^2)                   ]
+    }
+  }
+ELSEIF( #NUM_ARGS# != 6) {echo("Error: Incorrect number of arguments in DIRCOS.\A\K")}
+ELSEIF( Strcmpi(#3#,RODRIGUES) == 0 )
+  {
+#1#_#2# = [(1 + (AUTOZ(#4#))^2 - (AUTOZ(#5#))^2 - (AUTOZ(#6#))^2)  ,  &
+           2*((AUTOZ(#4#))*(AUTOZ(#5#)) - (AUTOZ(#6#)))            ,  &
+           2*((AUTOZ(#6#))*(AUTOZ(#4#)) + (AUTOZ(#5#)))            ;  &
+           2*((AUTOZ(#4#))*(AUTOZ(#5#)) + (AUTOZ(#6#)))            ,  &
+           (1 + (AUTOZ(#5#))^2 - (AUTOZ(#6#))^2 - (AUTOZ(#4#))^2)  ,  &
+           2*((AUTOZ(#5#))*(AUTOZ(#6#)) - (AUTOZ(#4#)))            ;  &
+           2*((AUTOZ(#6#))*(AUTOZ(#4#)) - (AUTOZ(#5#)))            ,  &
+           2*((AUTOZ(#5#))*(AUTOZ(#6#)) + (AUTOZ(#4#)))            ,  &
+           (1 + (AUTOZ(#6#))^2 - (AUTOZ(#4#))^2 - (AUTOZ(#5#))^2)  ]  &
+           / AUTOZ(1 + (AUTOZ(#4#))^2 + (AUTOZ(#5#))^2 + (AUTOZ(#6#))^2)
+  }
+ELSEIF( Strcmpi(#3#,BODY123) == 0 )
+  {
+#1#_#2# = [COS(AUTOZ(#5#))*COS(AUTOZ(#6#))                 ,  &
+          -COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))                 ,  &
+           SIN(AUTOZ(#5#))                                 ;  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))    &
+          +SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                 ,  &
+          -SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))    &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                 ,  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))                 ;  &
+          -COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))    &
+          +SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                 ,  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))    &
+          +COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                 ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))                 ]
+  }
+ELSEIF( Strcmpi(#3#,BODY231) == 0 )
+  {
+#1#_#2# = [COS(AUTOZ(#4#))*COS(AUTOZ(#5#))                 ,  &
+          -COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))    &
+          +SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                 ,  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))    &
+          +COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                 ;  &
+           SIN(AUTOZ(#5#))                                 ,  &
+           COS(AUTOZ(#5#))*COS(AUTOZ(#6#))                 ,  &
+          -COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))                 ;  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))                 ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))    &
+          +SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                 ,  &
+          -SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))    &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                 ]
+  }
+ELSEIF( Strcmpi(#3#,BODY312) == 0 )
+  {
+#1#_#2# = [-SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))    &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ;  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ,  &
+          -COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ;  &
+          -COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ,  &
+           SIN(AUTOZ(#5#))                                  ,  &
+           COS(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,BODY132) == 0 )
+  {
+#1#_#2# = [COS(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ,  &
+          -SIN(AUTOZ(#5#))                                  ,  &
+           COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ;  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ,  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          -COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ;  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,BODY321) == 0 )
+  {
+#1#_#2# = [COS(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ,  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          -COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ;  &
+           SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ;  &
+          -SIN(AUTOZ(#5#))                                  ,  &
+           COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ,  &
+           COS(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,BODY213) == 0 )
+  {
+#1#_#2# = [SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ;  &
+           COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ,  &
+           COS(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ,  &
+          -SIN(AUTOZ(#5#))                                  ;  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          -COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,BODY121) == 0 )
+  {
+#1#_#2# = [COS(AUTOZ(#5#))                                  ,  &
+           SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ,  &
+           SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ;  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ,  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ;  &
+          -COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,BODY131) == 0 )
+  {
+#1#_#2# = [COS(AUTOZ(#5#))                                  ,  &
+          -SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ,  &
+           SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ;  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+          -COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          -COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ;  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ,  &
+           SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,BODY212) == 0 )
+  {
+#1#_#2# = [-SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))    &
+           +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                 ,  &
+            SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))                 ,  &
+            SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))    &
+           +SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                 ;  &
+            SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))                 ,  &
+            COS(AUTOZ(#5#))                                 ,  &
+           -SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))                 ;  &
+           -COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))    &
+           -COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                 ,  &
+            COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))                 ,  &
+            COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))    &
+           -SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                 ]
+  }
+ELSEIF( Strcmpi(#3#,BODY232) == 0 )
+  {
+#1#_#2# = [COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+          -COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ;  &
+           SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ,  &
+           COS(AUTOZ(#5#))                                  ,  &
+           SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ;  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ,  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,BODY313) == 0 )
+  {
+#1#_#2# = [-SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))    &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ;  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+          -COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ;  &
+           SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ,  &
+           SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ,  &
+           COS(AUTOZ(#5#))                                  ]
+  }
+ELSEIF( Strcmpi(#3#,BODY323) == 0 )
+  {
+#1#_#2# = [COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+          -COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          -COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ;  &
+           SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ;  &
+          -SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ,  &
+           SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ,  &
+           COS(AUTOZ(#5#))                                  ]
+  }
+ELSEIF( Strcmpi(#3#,SPACE123) == 0 )
+  {
+#1#_#2# = [COS(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ;  &
+           COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          -COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ;  &
+          -SIN(AUTOZ(#5#))                                  ,  &
+           SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,SPACE231) == 0 )
+  {
+#1#_#2# = [COS(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ,  &
+          -SIN(AUTOZ(#5#))                                  ,  &
+           SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ;  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ;  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          -COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,SPACE312) == 0 )
+  {
+#1#_#2# = [SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          -COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ;  &
+           SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ,  &
+          -SIN(AUTOZ(#5#))                                  ;  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,SPACE132) == 0 )
+  {
+#1#_#2# = [COS(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ,  &
+          -COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ;  &
+           SIN(AUTOZ(#5#))                                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ,  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ;  &
+          -COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ,  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+          -SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,SPACE321) == 0 )
+  {
+#1#_#2# = [COS(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ,  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ,  &
+           SIN(AUTOZ(#5#))                                  ;  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+          -SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+          -COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ;  &
+          -COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,SPACE213) == 0 )
+  {
+#1#_#2# = [-SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))    &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+          -COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ,  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ;  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ,  &
+          -COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ;  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ,  &
+           SIN(AUTOZ(#5#))                                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,SPACE121) == 0 )
+  {
+#1#_#2# = [COS(AUTOZ(#5#))                                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ,  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ;  &
+           SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ,  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+          -COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          -COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ;  &
+          -SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ,  &
+           SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,SPACE131) == 0 )
+  {
+#1#_#2# = [COS(AUTOZ(#5#))                                  ,  &
+          -COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ;  &
+           SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ;  &
+           SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,SPACE212) == 0 )
+  {
+#1#_#2# = [-SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))    &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ;  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ,  &
+           COS(AUTOZ(#5#))                                  ,  &
+          -COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ;  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,SPACE232) == 0 )
+  {
+#1#_#2# = [COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+          -SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ,  &
+           SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ;  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ,  &
+           COS(AUTOZ(#5#))                                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ;  &
+          -COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          -COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+           SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ,  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ]
+  }
+ELSEIF( Strcmpi(#3#,SPACE313) == 0 )
+  {
+#1#_#2# = [-SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))    &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+          -COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          -COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+           SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ;  &
+           SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          +SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+          -SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ;  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ,  &
+           COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ,  &
+           COS(AUTOZ(#5#))                                  ]
+  }
+ELSEIF( Strcmpi(#3#,SPACE323) == 0 )
+  {
+#1#_#2# = [COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*COS(AUTOZ(#6#))     &
+          -SIN(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           SIN(AUTOZ(#5#))*COS(AUTOZ(#6#))                  ;  &
+           COS(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*SIN(AUTOZ(#4#))                  ,  &
+          -SIN(AUTOZ(#4#))*COS(AUTOZ(#5#))*SIN(AUTOZ(#6#))     &
+          +COS(AUTOZ(#6#))*COS(AUTOZ(#4#))                  ,  &
+           SIN(AUTOZ(#5#))*SIN(AUTOZ(#6#))                  ;  &
+          -COS(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ,  &
+           SIN(AUTOZ(#4#))*SIN(AUTOZ(#5#))                  ,  &
+           COS(AUTOZ(#5#))                                  ]
+  }
+ELSE {echo("Error: #3# is invalid as the third argument of DIRCOS.\a\k")}
+
+

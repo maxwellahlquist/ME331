@@ -1,0 +1,49 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetInertiaScalar  (inertia scalar of a rigid body)
+   (3) %--------------------------------------------------------------------
+   (4) RigidBody  B
+   (5) B.SetInertia( Bcm, Ixx, Iyy, Izz )
+   (6) BInertiaScalarAboutBcmForBxBx = B.GetInertiaScalar( Bcm, Bx>, Bx> )
+-> (7) BInertiaScalarAboutBcmForBxBx = Ixx
+
+   (8) %--------------------------------------------------------------------
+   (9) % Example 2: GetInertiaScalar  (inertia scalar in another basis)
+   (10) %--------------------------------------------------------------------
+   (11) RigidFrame A
+   (12) Variable  theta
+   (13) B.SetRotationMatrixZ( A, theta )
+-> (14) B_A = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+
+   (15) BInertiaScalarAboutBcmForAxAx = B.GetInertiaScalar( Bcm, Ax>, Ay> )
+-> (16) BInertiaScalarAboutBcmForAxAx = (Ixx-Iyy)*sin(theta)*cos(theta)
+
+   (17) %--------------------------------------------------------------------
+   (18) % Example 3: GetInertiaScalar  (inertia scalar of a particle)
+   (19) %--------------------------------------------------------------------
+   (20) Particle   Q
+   (21) Q.SetMass( mQ )
+   (22) Variable   x, y, z
+   (23) Q.SetPosition( Bo, x*Bx> + y*By> + z*Bz> )
+-> (24) p_Bo_Q> = x*Bx> + y*By> + z*Bz>
+
+   (25) QInertiaScalarAboutBoForBxBx = Q.GetInertiaScalar( Bo, Bx>, Bx> )
+-> (26) QInertiaScalarAboutBoForBxBx = mQ*(y^2+z^2)
+
+   (27) QInertiaScalarAboutBoForByBz = Q.GetInertiaScalar( Bo, By>, Bz> )
+-> (28) QInertiaScalarAboutBoForByBz = -mQ*y*z
+
+   (29) %--------------------------------------------------------------------
+   (30) % Example 4: GetInertiaScalar  (inertia scalar of a system)
+   (31) %--------------------------------------------------------------------
+   (32) B.SetMass( mB )
+   (33) Bcm.SetPosition( Bo, 2*Bx> + 3*By> + 4*Bz> )
+-> (34) p_Bo_Bcm> = 2*Bx> + 3*By> + 4*Bz>
+
+   (35) SystemInertiaScalarAboutBoForByBy = System.GetInertiaScalar( Bo, By>, By> )
+-> (36) SystemInertiaScalarAboutBoForByBy = Iyy + 20*mB + mQ*(x^2+z^2)
+
+   (37) SystemInertiaScalarAboutBoForAyAy = System.GetInertiaScalar( Bo, Ay>, Ay> )
+-> (38) SystemInertiaScalarAboutBoForAyAy = Iyy + 20*mB + mQ*(x^2+z^2) - sin(
+        theta)*(Iyy*sin(theta)+12*mB*cos(theta)+mQ*x^2*sin(theta)+2*mQ*x*y*cos(
+        theta)-5*mB*sin(theta)-Ixx*sin(theta)-mQ*y^2*sin(theta))
+

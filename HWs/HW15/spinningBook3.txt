@@ -1,0 +1,42 @@
+% MotionGenesis file:  MGTemplateBasic.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N                % Example: Earth.
+RigidBody       B
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    wx', wy', wz'        % Angular Speeds
+Constant Ixx = 1 kg*m^2, Iyy = 2 kg*m^2, Izz = 3 kg*m^2 %Create a body with different moments
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+% A.SetMass( mA = 2 kg ) % Does this need to be able to happen?
+B.SetInertia( Bcm,  Ixx, Iyy, Izz )
+%--------------------------------------------------------------------
+% Translational
+Bcm.SetPosition(No, 0*Bx>)
+Bcm.SetVelocityAcceleration(N, 0*Bx>)
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+B.SetAngularVelocity( N, wx*Bx> + wy*By> + wz*Bz> )
+%--------------------------------------------------------------------
+% Set equations of motion
+
+H> = System.GetAngularMomentum(Bcm)
+KE = System.GetKineticEnergy()
+Hx = dot(H>, Bx>)
+Hy = dot(H>, By>)
+Hz = dot(H>, Bz>)
+Hmag = GetMagnitude(H>)
+
+wx' = ((Iyy - Izz)*wz*wy) / Ixx
+wy' = ((Izz - Ixx)*wz*wx) / Iyy
+wz' = ((Ixx - Iyy)*wx*wy) / Izz
+
+OutputPlot  t sec,  wx rad/sec, wy rad/sec, wz rad/sec, Hx, Hy, Hz, Hmag, KE
+
+Input  tFinal = 4 sec,  tStep = 0.02 sec,  absError = 1.0E-07, wx = 0.2 rad/sec,   wy = 7.0 rad/sec,  wz = 0.2 rad/sec
+ODE() CoupledODEFirstOrder
+
+Save spinningBook3.html
+Quit

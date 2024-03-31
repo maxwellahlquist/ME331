@@ -1,0 +1,85 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: IsPositive  and  IsPositiveOr0
+   (3) %--------------------------------------------------------------------
+   (4) a = IsPositive( 2.3 )
+-> (5) a = true
+
+   (6) b = IsPositive( 0 )
+-> (7) b = false
+
+   (8) c = IsPositiveOr0( 0 )
+-> (9) c = true
+
+   (10) d = IsPositive(  2.3 ) + IsPositiveOr0(  2.3 ) + IsPositive(5+t)
+-> (11) d = 2 + IsPositive(5+t)
+
+   (12) e = IsPositive( -2.3 ) + IsPositiveOr0( -2.3 ) + IsPositive(5+t)
+-> (13) e = IsPositive(5+t)
+
+   (14) %--------------------------------------------------------------------
+   (15) % Example 2: IsNegative  and  IsNegativeOr0
+   (16) %--------------------------------------------------------------------
+   (17) f = IsNegative( 2.3 )
+-> (18) f = false
+
+   (19) g = IsNegative( 0 )
+-> (20) g = false
+
+   (21) h = IsNegativeOr0( 0 )
+-> (22) h = true
+
+   (23) i = IsNegative(  2.3 ) + IsNegativeOr0(  2.3 ) + IsNegative(5+t)
+-> (24) i = IsNegative(5+t)
+
+   (25) j = IsNegative( -2.3 ) + IsNegativeOr0( -2.3 ) + IsNegative(5+t)
+-> (26) j = 2 + IsNegative(5+t)
+
+   (27) %--------------------------------------------------------------------
+   (28) % Example 3:  if t < 0,  Fx = sin(t),  else Fx = cos(t)
+   (29) %--------------------------------------------------------------------
+   (30) Fx = IsNegative(t) * sin(t)  +  IsPositiveOr0(t) * cos(t)     
+-> (31) Fx = IsNegative(t)*sin(t) + IsPositiveOr0(t)*cos(t)
+
+   (32) %--------------------------------------------------------------------
+   (33) % Example 4:  if t <= 5,  Fy = sin(t),  else Fy = cos(t)
+   (34) %--------------------------------------------------------------------
+   (35) isTLessThanOrEqualTo5 = IsNegativeOr0(-5 + t)
+-> (36) isTLessThanOrEqualTo5 = IsNegativeOr0(-5+t)
+
+   (37) isTGreaterThan5 = IsPositive(-5 + t)  
+-> (38) isTGreaterThan5 = IsPositive(-5+t)
+
+   (39) Fy = isTLessThanOrEqualTo5 * sin(t)  +  isTGreaterThan5 * cos(t)
+-> (40) Fy = sin(t)*isTLessThanOrEqualTo5 + cos(t)*isTGreaterThan5
+
+   (41) %--------------------------------------------------------------------
+   (42) % Example 5:  IsPositive used to implement a logical OR 
+   (43) %--------------------------------------------------------------------
+   (44) orA = IsPositive( false + false )
+-> (45) orA = false
+
+   (46) orB = IsPositive( false + true  )
+-> (47) orB = true
+
+   (48) orC = IsPositive( true  + false )
+-> (49) orC = true
+
+   (50) orD = IsPositive( true  + true  )
+-> (51) orD = true
+
+   (52) %--------------------------------------------------------------------
+   (53) % Example 6:  IsPositive used as "if" statement for calculations.
+   (54) %--------------------------------------------------------------------
+   (55) isTLessThanPi = isPositive(pi-t)      % true   if t < pi, otherwise 0 (false).
+-> (56) isTLessThanPi = IsPositive(pi-t)
+
+   (57) sintOrZero = sin(t) * isTLessThanPi   % sin(t) if t < pi, otherwise 0 (false).
+-> (58) sintOrZero = sin(t)*isTLessThanPi
+
+   (59) Variable y' = sintOrZero
+-> (60) y' = sintOrZero
+
+   (61) Input  tFinal = 4,  y = 0             % Arbitrary input values.
+   (62) Output  t,  y,  y'                   
+   (63) ODE()  simulateWithIfStatement
+

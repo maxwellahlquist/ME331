@@ -1,0 +1,15 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example:  CODE Nonlinear( ... ) 
+   (3) % Creates C code to find the intersection of a circle and line.
+   (4) %--------------------------------------------------------------------
+   (5) Variable  x, y
+   (6) Constant  R,  m = 1 noUnits,  b = 0 noUnits
+   (7) Zero[1] = x^2 + y^2 - R^2     
+-> (8) Zero[1] = x^2 + y^2 - R^2
+
+   (9) Zero[2] = y - (m*x + b)  
+-> (10) Zero[2] = y - b - m*x
+
+   (11) Input  x = 13,  y = 10      % Guesses for solution
+   (12) Code Nonlinear( Zero, x, y ) [R=1,8,1] CircleLineIntersection.c
+

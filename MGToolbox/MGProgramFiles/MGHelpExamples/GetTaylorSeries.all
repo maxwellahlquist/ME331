@@ -1,0 +1,53 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  GetTaylorSeries   (one function with one variable)
+   (3) %--------------------------------------------------------------------
+   (4) Variable x, dx
+   (5) TaylorCosAbout0 = GetTaylorSeries( cos(x), 0:4, x )
+-> (6) TaylorCosAbout0 = 1 + 0.04166667*x^4 - 0.5*x^2
+
+   (7) TaylorCosAbout1 = GetTaylorSeries( cos(x), 0:3, x=1 )
+-> (8) TaylorCosAbout1 = 1.381773 + 0.1402452*(-1+x)^3 - 0.841471*x - 0.2701512
+       *(-1+x)^2
+
+   (9) TaylorCosAbout1Dx = GetTaylorSeries( cos(x), 0:3, x=1:dx )
+-> (10) TaylorCosAbout1Dx = 0.5403023 + 0.1402452*dx^3 - 0.841471*dx - 0.2701512
+        *dx^2
+
+   (11) %--------------------------------------------------------------------
+   (12) % Example 2:  GetTaylorSeries   (one function with two variables)
+   (13) %--------------------------------------------------------------------
+   (14) Variable y, dy
+   (15) TaylorExpXYAbout0 = GetTaylorSeries( exp(x+y), 0:1, x, y )
+-> (16) TaylorExpXYAbout0 = 1 + x + y
+
+   (17) TaylorExpXYAbout2 = GetTaylorSeries( exp(x+y), 0:1, x=2, y=2 )
+-> (18) TaylorExpXYAbout2 = -163.7945 + 54.59815*x + 54.59815*y
+
+   (19) TaylorExpXYAbout2Dxy = GetTaylorSeries( exp(x+y), 0:1, x=2:dx, y=2:dy )
+-> (20) TaylorExpXYAbout2Dxy = 54.59815 + 54.59815*dx + 54.59815*dy
+
+   (21) %--------------------------------------------------------------------
+   (22) % Example 3:  GetTaylorSeries   (matrix of functions with one variable)
+   (23) %--------------------------------------------------------------------
+   (24) matrix = [sin(x); cos(x); exp(x)]
+-> (25) matrix = [sin(x);  cos(x);  exp(x)]
+
+   (26) matrixExpanded = GetTaylorSeries( matrix, 0:4, x=0 )
+-> (27) matrixExpanded[1] = -0.1666667*x*(-6+x^2)
+-> (28) matrixExpanded[2] = 1 + 0.04166667*x^4 - 0.5*x^2
+-> (29) matrixExpanded[3] = 1 + x + 0.04166667*x^4 + 0.1666667*x^3 + 0.5*x^2
+
+   (30) %--------------------------------------------------------------------
+   (31) % Example 4:  GetTaylorSeries   (vector function of two variable)
+   (32) %--------------------------------------------------------------------
+   (33) z = sin(x) + cos(y)
+-> (34) z = sin(x) + cos(y)
+
+   (35) RigidFrame  N
+   (36) vector> = sin(x)*Nx> + cos(y)*Ny> + z*Nz>
+-> (37) vector> = sin(x)*Nx> + cos(y)*Ny> + z*Nz>
+
+   (38) vectorExpanded> = GetTaylorSeries( vector>, 0:1, x=1:dx, y=2:dy )
+-> (39) vectorExpanded> = (0.841471+0.5403023*dx)*Nx> + (-0.4161468-0.9092974*
+        dy)*Ny> + (0.4253241+0.5403023*dx-0.9092974*dy)*Nz>
+

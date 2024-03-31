@@ -1,0 +1,42 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetInertiaVector  (inertia vector of a rigid body)
+   (3) %--------------------------------------------------------------------
+   (4) RigidBody  B
+   (5) B.SetInertia( Bcm, Ixx, Iyy, Izz )
+   (6) BInertiaVectorAboutBcmForBx> = B.GetInertiaVector( Bcm, Bx> )
+-> (7) BInertiaVectorAboutBcmForBx> = Ixx*Bx>
+
+   (8) %--------------------------------------------------------------------
+   (9) % Example 2: GetInertiaVector  (inertia vector for Ax>)
+   (10) %--------------------------------------------------------------------
+   (11) RigidFrame A
+   (12) Variable  theta
+   (13) B.SetRotationMatrixZ( A, theta )
+-> (14) B_A = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+
+   (15) BInertiaVectorAboutBcmForAx> = B.GetInertiaVector( Bcm, Ax> )
+-> (16) BInertiaVectorAboutBcmForAx> = Ixx*cos(theta)*Bx> - Iyy*sin(theta)*By>
+
+   (17) %--------------------------------------------------------------------
+   (18) % Example 3: GetInertiaVector  (inertia vector of a particle)
+   (19) %--------------------------------------------------------------------
+   (20) Particle   Q
+   (21) Q.SetMass( mQ )
+   (22) Variable   x, y, z
+   (23) Q.SetPosition( Bo, x*Bx> + y*By> + z*Bz> )
+-> (24) p_Bo_Q> = x*Bx> + y*By> + z*Bz>
+
+   (25) QInertiaVectorAboutBoForBx> = Q.GetInertiaVector( Bo, Bx> )
+-> (26) QInertiaVectorAboutBoForBx> = mQ*(y^2+z^2)*Bx> - mQ*x*y*By> - mQ*x*z*Bz>
+
+   (27) %--------------------------------------------------------------------
+   (28) % Example 4: GetInertiaVector  (inertia vector of a system)
+   (29) %--------------------------------------------------------------------
+   (30) B.SetMass( mB )
+   (31) Bcm.SetPosition( Bo, 2*Bx> + 3*By> + 4*Bz> )
+-> (32) p_Bo_Bcm> = 2*Bx> + 3*By> + 4*Bz>
+
+   (33) SInertiaVectorAboutBoForBx> = System.GetInertiaVector( Bo, Bx> )
+-> (34) SInertiaVectorAboutBoForBx> = (Ixx+25*mB+mQ*(y^2+z^2))*Bx> + (-6*mB-mQ*
+        x*y)*By> + (-8*mB-mQ*x*z)*Bz>
+

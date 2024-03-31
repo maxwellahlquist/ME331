@@ -1,0 +1,97 @@
+% MotionGenesis file:  22.8.txt
+% Copyright (c) 2009 Motion Genesis LLC.  All rights reserved.
+%--------------------------------------------------------------------
+NewtonianFrame  N                 % Ground link.
+RigidBody       A, B, C           % Crank, coupler, rocker links.
+Point           BC( B )           % Point of B connected to C.
+Point           CB( C )           % Point of C connected to B.
+
+%--------------------------------------------------------------------
+Constant   LN = 1 m,  LA = 1 m    % Length of ground link, crank link.
+Constant   LB = 2 m,  LC = 2 m    % Length of coupler link, rocker link.
+Constant   g = 9.81 m/s^2         % Earth's gravitational acceleration.
+Specified  H = 200                % Horizontal force at point CB.
+Variable   qA'',  qB'',  qC''     % Link angles (relative to ground).
+Variable   FCx, FCy               % Contact forces on C from B.
+%--------------------------------------------------------------------
+A.SetMassInertia( mA = 10 kg,  0,  IA = mA*LA^2/12,  IA  )
+B.SetMassInertia( mB = 20 kg,  0,  IB = mB*LB^2/12,  IB  )
+C.SetMassInertia( mC = 20 kg,  0,  IC = mC*LC^2/12,  IC  )
+
+%---------------------------------------------------------------
+%   Rotational kinematics.
+A.RotateZ( N,  qA )
+B.RotateZ( N,  qB )
+C.RotateZ( N,  qC )
+
+%--------------------------------------------------------------------
+%   Translational kinematics.
+Ao.Translate(   No,          0> )
+Acm.Translate(  Ao,  0.5*LA*Ax> )
+Bo.Translate(   Ao,      LA*Ax> )
+Bcm.Translate(  Bo,  0.5*LB*Bx> )
+BC.Translate(   Bo,      LB*Bx> )
+Co.Translate(   No,      LN*Ny> )
+Ccm.Translate(  Co,  0.5*LC*Cx> )
+CB.Translate(   Co,      LC*Cx> )
+
+%--------------------------------------------------------------------
+%   Add relevant forces and torques.
+System.AddForceGravity(  g * Nx>  )
+CB.AddForce(  H * Ny>  )
+CB.AddForce( BC,  FCx*Nx> + FCy*Ny> )   % "Cut" linkage at CB/BC
+
+%--------------------------------------------------------------------
+%   Form equations of motion ("cut" linkage at CB/BC).
+Dynamics[1] = Dot( Nz>,  System(A,B).GetDynamics(Ao) )
+Dynamics[2] = Dot( Nz>,            B.GetDynamics(Bo) )
+Dynamics[3] = Dot( Nz>,            C.GetDynamics(Co) )
+
+setGeneralizedSpeeds(qA', qB', qC')
+dynamicsKane = System.GetDynamicsKane()
+
+% Below, just proves that the dyanmics are the same.
+solveA = solve(Dynamics = 0, qA'', qB'', qC'' )
+solveB = Solve( dynamicsKane = 0, qA'', qB'', qC'' )
+shouldBeZero = solveA - solveB
+Expand( shouldBeZero )
+
+%--------------------------------------------------------------------
+%   Configuration (loop) constraints and their time-derivatives.
+Loop> = LA*Ax> + LB*Bx> - LC*Cx> - LN*Ny>
+Loop[1] = Dot( Loop>, Nx> )
+Loop[2] = Dot( Loop>, Ny> )
+LoopDt = Dt( Loop )
+LoopDtDt = Dt( LoopDt )
+
+%--------------------------------------------------------------------
+%   Use the loop constraints to solve for initial values of qB, qC and qB',qC'
+%   (results depend on constants and initial values of qA and qA').
+Input  qA = 30 deg,  qA' = 0 rad/sec
+SolveSetInput(   Loop = 0,   qB = 60 deg,      qC  = 20 deg )
+SolveSetInput( LoopDt = 0,   qB' = 0 rad/sec,  qC' = 0 rad/sec )
+
+%--------------------------------------------------------------------
+%   Numerical integration parameters.
+Input  tFinal = 7 sec,  tStep = 0.02 sec,  absError = 1.0E-07
+
+%--------------------------------------------------------------------
+%   List quantities to be output from ODE.
+Output  t sec,  qA deg,  qB deg,  qC deg,  FCx Newtons,  FCy  Newtons
+
+%--------------------------------------------------------------------
+%   Augment dynamics with constraints and solve ODEs (plot results).
+ODE( [Dynamics; LoopDtDt] = 0,  qA'', qB'', qC'', FCx, FCy )  MGFourBarDynamicsFBD
+Plot MGFourBarDynamicsFBD.1 [1, 2, 3, 4]
+
+%********************************************************************
+%   Statics via dynamics - simulate with damping..
+H := 200 - 80 * qC'
+Input  tFinal := 5 sec
+ODE( [Dynamics; LoopDtDt] = 0,  qA'', qB'', qC'', FCx, FCy ) MGFourBarDynamicsFBDdamped
+Plot MGFourBarDynamicsFBDdamped.1 [1, 2, 3, 4]
+
+%--------------------------------------------------------------------
+%   Save input together with program responses.
+Save 22.8.html
+Quit

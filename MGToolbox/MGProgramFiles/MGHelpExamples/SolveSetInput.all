@@ -1,0 +1,61 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: SolveSetInput  (1 equation in 1 unknown) 
+   (3) %--------------------------------------------------------------------
+   (4) Variable z
+   (5) SolveSetInput(  z^2 + sin(z)^2.2 = 1,   z = 2 )
+
+->  %  INPUT has been assigned as follows:
+->  %   z                         0.7528386616717591
+
+   (6) %--------------------------------------------------------------------
+   (7) % Example 2: SolveSetInput  (2 equations in 2 unknowns) 
+   (8) %--------------------------------------------------------------------
+   (9) Variable  x, y
+   (10) eqn[1] = -1 + x^2 + y^2                   % Equation for a circle.
+-> (11) eqn[1] = -1 + x^2 + y^2
+
+   (12) eqn[2] = y - sin(x)                       % Sine function.
+-> (13) eqn[2] = y - sin(x)
+
+   (14) SolveSetInput(  eqn = 0,   x=2, y=3 )     % x=2, y=3 is a guess.
+
+->   %  INPUT has been assigned as follows:
+->   %   x                         0.7390851332151607
+->   %   y                         0.6736120291832148
+
+   (15) %--------------------------------------------------------------------
+   (16) % Example 3: SolveSetInput  (2 equations in 2 unknowns with input) 
+   (17) %--------------------------------------------------------------------
+   (18) Constant  a = 2 meters,  b = 1 meter
+   (19) funct[1] = -1 + x^2/a^2 + y^2/b^2         % Equation for an ellipse.
+-> (20) funct[1] = -1 + x^2/a^2 + y^2/b^2
+
+   (21) funct[2] = y - sin(x)                     % Sine function.
+-> (22) funct[2] = y - sin(x)
+
+   (23) SolveSetInput( funct = 0,  x=1, y=9 )     % x=1, y=9 is a guess.
+
+->   %  INPUT has been assigned as follows:
+->   %   x                         1.029866529322259
+->   %   y                         0.8572302683325125
+
+   (24) %--------------------------------------------------------------------
+   (25) % Example 4: SolveSetInput  (guess and solution have units) 
+   (26) %--------------------------------------------------------------------
+   (27) SolveSetInput( [sin(x); sin(y)] = [0.3; 0.3],  x=30 deg,  y=150 deg )
+
+->   %  INPUT has been assigned as follows:
+->   %   x                         17.45760312372209       deg
+->   %   y                         162.5423968762779       deg
+
+   (28) %--------------------------------------------------------------------
+   (29) % Example 5: SolveSetInput (SolveSetInput for x, return solution) 
+   (30) %--------------------------------------------------------------------
+   (31) answer = SolveSetInput(  cos(x) = 0,   x = 1 degree )
+
+->   %  INPUT has been assigned as follows:
+->   %   x                         90                      degree
+
+->   %  Note: x = 1.570796 radian  was converted from  x = 90 degree.
+-> (32) answer = [1.570796]
+

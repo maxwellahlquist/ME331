@@ -1,0 +1,58 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetEnergyCheckKane
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame  N
+   (5) Particle        A          % Cart moving horizontally on N.
+   (6) RigidBody       B          % Inverted pendulum on cart.
+   (7) %------------------
+   (8) Constant   L = 1 m         % Length of uniform rod B.
+   (9) Constant   g = 9.8 m/s^2   % Earth's gravitational acceleration.
+   (10) Variable   x''             % Measure of A's horizontal position on N.
+   (11) Specified  phi''           % B's angle with Earth's local vertical.
+   (12) SetGeneralizedSpeed( x' )
+   (13) SetDt( phi = 3*sin(2*t) )
+-> (14) phi = 3*sin(2*t)
+-> (15) phi' = 6*cos(2*t)
+-> (16) phi'' = -12*sin(2*t)
+
+   (17) A.SetMass( mA = 1 kg )
+   (18) B.SetMassInertia( mB = 1 kg,  IB = mB*L^2/12, 0, IB )
+-> (19) IB = 0.08333333*mB*L^2
+
+   (20) B.RotateZ( N, phi )
+-> (21) B_N = [cos(phi), sin(phi), 0;  -sin(phi), cos(phi), 0;  0, 0, 1]
+-> (22) w_B_N> = phi'*Bz>
+-> (23) alf_B_N> = phi''*Bz>
+
+   (24) A.Translate( No, x*Nx> )
+-> (25) p_No_A> = x*Nx>
+-> (26) v_A_N> = x'*Nx>
+-> (27) a_A_N> = x''*Nx>
+
+   (28) Bcm.Translate( A, 0.5*L*By> )
+-> (29) p_A_Bcm> = 0.5*L*By>
+-> (30) v_Bcm_N> = -0.5*L*phi'*Bx> + x'*Nx>
+-> (31) a_Bcm_N> = -0.5*L*phi''*Bx> - 0.5*L*phi'^2*By> + x''*Nx>
+
+   (32) System.AddForceGravity( -g*Ny> )
+-> (33) Force_A> = -mA*g*Ny>
+-> (34) Force_Bcm> = -mB*g*Ny>
+
+   (35) Dynamics = System.GetDynamicsKane()
+-> (36) Dynamics = [0.5*mB*L*(sin(phi)*phi'^2-cos(phi)*phi'') + (mA+mB)*x'']
+
+   (37) EnergyCheck = System.GetEnergyCheckKane()
+-> (38) WCheck1' = 0.5*mB*L*(sin(phi)*phi'^2-cos(phi)*phi'')*x'
+-> (39) EnergyCheck = WCheck1 + 0.5*(mA+mB)*x'^2
+
+   (40) Input  x = 0,  x' = 0
+   (41) Input  tFinal = 10 s, tStep = 0.1, absError = 1.0E-9, relError = 1.0E-9
+   (42) Output t sec,  EnergyCheck Joules,  x m,  phi degrees 
+   (43) ODE( Dynamics = 0,  x'' ) GetEnergyCheckKane
+
+   (44) sigmaB = B.GetEnergyCheckSigmaR()
+-> (45) sigmaB = 0.5*mB*L*(sin(phi)*phi'^2-cos(phi)*phi'')*x'
+
+   (46) isVerifySigmaB = IsSimplifyEqual( sigmaB, WCheck1' )
+-> (47) isVerifySigmaB = true
+

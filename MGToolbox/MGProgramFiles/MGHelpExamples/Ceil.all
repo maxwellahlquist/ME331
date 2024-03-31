@@ -1,0 +1,105 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: ceil 
+   (3) %--------------------------------------------------------------------
+   (4) A = ceil(  2.9999 ) 
+-> (5) A = 3
+
+   (6) B = ceil(  3.0001 ) 
+-> (7) B = 4
+
+   (8) C = ceil( -2.9999 ) 
+-> (9) C = -2
+
+   (10) D = ceil( -3.0001 ) 
+-> (11) D = -3
+
+   (12) E = ceil( 2.9 + t ) 
+-> (13) E = ceil(2.9+t)
+
+   (14) isPositiveA = Evaluate( ceil( sign(t)/2 ),  t =  200   )
+-> (15) isPositiveA = 1
+
+   (16) isPositiveB = Evaluate( ceil( sign(t)/2 ),  t = -200   )
+-> (17) isPositiveB = 0
+
+   (18) isPositiveC = Evaluate( ceil( sign(t)/2 ),  t =  0     )
+-> (19) isPositiveC = 0
+
+   (20) isPositiveD = Evaluate( ceil( sign(t)/2 ),  t =  1E-21 )
+-> (21) isPositiveD = 1
+
+   (22) isPositiveE = Evaluate( ceil( sign(t)/2 ),  t = -1E-21 )
+-> (23) isPositiveE = 0
+
+   (24) isNonNegativeA = Evaluate( ceil( sign(t)/2 + 1E-200 ),  t =  0     )
+-> (25) isNonNegativeA = 1
+
+   (26) isNonNegativeB = Evaluate( ceil( sign(t)/2 + 1E-200 ),  t =  1E-21 )
+-> (27) isNonNegativeB = 1
+
+   (28) isNonNegativeC = Evaluate( ceil( sign(t)/2 + 1E-200 ),  t = -1E-21 )
+-> (29) isNonNegativeC = 0
+
+   (30) %--------------------------------------------------------------------
+   (31) % Example: floor 
+   (32) %--------------------------------------------------------------------
+   (33) F = floor(  2.9999 ) 
+-> (34) F = 2
+
+   (35) G = floor(  3.0001 ) 
+-> (36) G = 3
+
+   (37) H = floor( -2.9999 ) 
+-> (38) H = -3
+
+   (39) I = floor( -3.0001 ) 
+-> (40) I = -4
+
+   (41) J = floor( 2.9 + t ) 
+-> (42) J = floor(2.9+t)
+
+   (43) isNegativeA = Evaluate( floor( sign(t)/2 ),  t =  200   )
+-> (44) isNegativeA = 0
+
+   (45) isNegativeB = Evaluate( floor( sign(t)/2 ),  t = -200   )
+-> (46) isNegativeB = -1
+
+   (47) isNegativeC = Evaluate( floor( sign(t)/2 ),  t =  0     )
+-> (48) isNegativeC = 0
+
+   (49) isNegativeD = Evaluate( floor( sign(t)/2 ),  t =  1E-21 )
+-> (50) isNegativeD = 0
+
+   (51) isNegativeE = Evaluate( floor( sign(t)/2 ),  t = -1E-21 )
+-> (52) isNegativeE = -1
+
+   (53) isNonPositiveA = Evaluate( floor( sign(t)/2 - 1E-200 ),  t =  0     )
+-> (54) isNonPositiveA = -1
+
+   (55) isNonPositiveB = Evaluate( floor( sign(t)/2 - 1E-200 ),  t =  1E-21 )
+-> (56) isNonPositiveB = 0
+
+   (57) isNonPositiveC = Evaluate( floor( sign(t)/2 - 1E-200 ),  t = -1E-21 )
+-> (58) isNonPositiveC = -1
+
+   (59) %--------------------------------------------------------------------
+   (60) % Example: Combine the sign function with ceil or floor for if statements.
+   (61) %--------------------------------------------------------------------
+   (62) isTLessThan9 = ceil( sign(9-t) / 2 )
+-> (63) isTLessThan9 = ceil(0.5*sign(9-t))
+
+   (64) isTGreaterThan5 = ceil( sign(t-5) / 2 )  
+-> (65) isTGreaterThan5 = ceil(0.5*sign(-5+t))
+
+   (66) isTBetween5And9 = isTGreaterThan5 * isTLessThan9 
+-> (67) isTBetween5And9 = isTGreaterThan5*isTLessThan9
+
+   (68) forceA = isTLessThan9    * 88    % if t < 9, forceA = 88 else forceA = 0.
+-> (69) forceA = 88*isTLessThan9
+
+   (70) forceB = isTGreaterThan5 * 77    % if t > 5, forceB = 77 else forceB = 0.
+-> (71) forceB = 77*isTGreaterThan5
+
+   (72) forceC = isTBetween5And9 * 66    % if 5 < t < 9, forceC = 66 else forceC = 0.
+-> (73) forceC = 66*isTBetween5And9
+

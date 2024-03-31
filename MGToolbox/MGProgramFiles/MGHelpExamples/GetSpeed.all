@@ -1,0 +1,15 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetSpeed  and  GetSpeedSquared
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame N
+   (5) Point      Q            
+   (6) Variable   vx, vy
+   (7) Q.SetVelocity( N, vx*Nx> + vy*Ny> )
+-> (8) v_Q_N> = vx*Nx> + vy*Ny>
+
+   (9) speed = Q.GetSpeed( N )   
+-> (10) speed = sqrt(vx^2+vy^2)
+
+   (11) speedSquared = Q.GetSpeedSquared( N )   
+-> (12) speedSquared = vx^2 + vy^2
+

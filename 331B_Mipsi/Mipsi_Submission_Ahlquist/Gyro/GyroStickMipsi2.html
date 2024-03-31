@@ -1,0 +1,121 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: GyroStickMipsi2.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">GyroStickMipsi2.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  GyroStickMipsi2.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N                % Example: Earth.
+   (6) RigidBody       A
+   (7) RigidBody       B
+   (8) RigidBody       C
+   (9) %--------------------------------------------------------------------
+   (10) %   Mathematical declarations.
+   (11) %Variable    wA', wC'
+   (12) Variable    TBy, TBz
+   (13) Specified   qB''
+   (14) SetDt( qB = (pi/4)*t )
+-> (15) qB = 0.7853982*t
+-> (16) qB' = 0.7853982
+-> (17) qB'' = 0
+
+   (18) Specified    wA'', wC''
+   (19) SetDt( wA = 0 )
+-> (20) wA = 0
+-> (21) wA' = 0
+-> (22) wA'' = 0
+
+   (23) SetDt( wC = 600 * 2*pi/60 ) % rpm to rad/s
+-> (24) wC = 62.83185
+-> (25) wC' = 0
+-> (26) wC'' = 0
+
+   (27) Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+   (28) Constant    L = 1.2 m, R = 0.3 m
+   (29) Constant    mA = 70 kg, mC = 1.5 kg
+   (30) Constant    Ic = mc*R^2, Jc = 0.5*mc*R^2
+-> (31) Ic = mC*R^2
+-> (32) Jc = 0.5*mC*R^2
+
+   (33) %--------------------------------------------------------------------
+   (34) %   Mass and inertia properties.
+   (35) A.SetMass( mA )
+   (36) B.SetMass( 0 )
+   (37) C.SetMass( mC )
+   (38) A.SetInertia( Acm, 0>> )
+   (39) B.SetInertia( Bcm,  0, 0, 0 )
+   (40) C.SetInertia( Ccm, B, Ic, Jc, Jc, 0, 0, 0 )
+   (41) %--------------------------------------------------------------------
+   (42) %   Rotational kinematics.
+   (43) A.SetAngularVelocityAcceleration( N, wA*Ay> )
+-> (44) w_A_N> = wA*Ay>
+-> (45) alf_A_N> = wA'*Ay>
+
+   (46) B.RotateZ( A, qB )
+-> (47) B_A = [cos(qB), sin(qB), 0;  -sin(qB), cos(qB), 0;  0, 0, 1]
+-> (48) w_B_A> = qB'*Bz>
+-> (49) w_B_N> = wA*Ay> + qB'*Bz>
+-> (50) alf_B_A> = qB''*Bz>
+-> (51) alf_B_N> = wA*qB'*Ax> + wA'*Ay> + qB''*Bz>
+
+   (52) C.SetAngularVelocityAcceleration( B, wC*Bx> )
+-> (53) w_C_B> = wC*Bx>
+-> (54) w_C_N> = (wC+wA*sin(qB))*Bx> + wA*cos(qB)*By> + qB'*Bz>
+-> (55) alf_C_B> = wC'*Bx>
+-> (56) alf_C_N> = (wC'+sin(qB)*wA'+wA*cos(qB)*qB')*Bx> + (wC*qB'+cos(qB)*wA'-
+        wA*sin(qB)*qB')*By> + (qB''-wA*wC*cos(qB))*Bz>
+
+   (57) %--------------------------------------------------------------------
+   (58) %   Translational kinematics.
+   (59) Bo.SetVelocityAcceleration(N, 0>)
+-> (60) v_Bo_N> = 0>
+-> (61) a_Bo_N> = 0>
+
+   (62) Ccm.Translate( Bo, L*Bx> )
+-> (63) p_Bo_Ccm> = L*Bx>
+-> (64) v_Ccm_N> = L*qB'*By> - L*wA*cos(qB)*Bz>
+-> (65) a_Ccm_N> = -L*wA^2*cos(qB)*Ax> - L*qB'^2*Bx> + L*qB''*By> - L*(cos(qB)*
+        wA'-2*wA*sin(qB)*qB')*Bz>
+
+   (66) %--------------------------------------------------------------------
+   (67) %   Add relevant contact/distance forces.
+   (68) System.AddForceGravity( -g*Ay> )            % Add's gravity force to each massive object.
+-> (69) Force_Acm> = -g*mA*Ay>
+-> (70) Force_Ccm> = -g*mC*Ay>
+
+   (71) %--------------------------------------------------------------------
+   (72) %   Add relevant torques.
+   (73) B.AddTorque( A, TBy*By> + TBz*Bz> )
+-> (74) Torque_B_A> = TBy*By> + TBz*Bz>
+
+   (75) %--------------------------------------------------------------------
+   (76) %   Translational dynamic equations (F = m*a).
+   (77) Dynamics[1] = Dot(  System(B,C).GetDynamics(Bo),  Bz>  )
+-> (78) Dynamics[1] = L*mC*cos(qB)*(g+L*wA^2*sin(qB)) + mC*L^2*qB'' - (Ic-Jc)*
+        wA*cos(qB)*(wC+wA*sin(qB)) - Jc*(wA*wC*cos(qB)-qB'') - TBz
+
+   (79) Dynamics[2] = Dot(  System(B,C).GetDynamics(Bo),  By>  )
+-> (80) Dynamics[2] = (Ic-Jc)*(wC+wA*sin(qB))*qB' + Jc*(wC*qB'+cos(qB)*wA'-wA*
+        sin(qB)*qB') + mC*L^2*(cos(qB)*wA'-2*wA*sin(qB)*qB') - TBy
+
+   (81) Solve( Dynamics = 0, TBy, TBz)
+-> (82) TBy = (Ic-Jc)*(wC+wA*sin(qB))*qB' + Jc*(wC*qB'+cos(qB)*wA'-wA*sin(qB)*
+        qB') + mC*L^2*(cos(qB)*wA'-2*wA*sin(qB)*qB')
+
+-> (83) TBz = L*mC*cos(qB)*(g+L*wA^2*sin(qB)) + mC*L^2*qB'' - (Ic-Jc)*wA*cos(
+        qB)*(wC+wA*sin(qB)) - Jc*(wA*wC*cos(qB)-qB'')
+
+   (84) %--------------------------------------------------------------------
+   (85) % Plotting
+   (86) OutputPlot t sec, TBy N*m, TBz N*m
+   (87) Input tFinal = 2 sec
+   (88) Variable dumb' = 0.1
+-> (89) dumb' = 0.1
+
+   (90) Input dumb = 0
+   (91) ODE()
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

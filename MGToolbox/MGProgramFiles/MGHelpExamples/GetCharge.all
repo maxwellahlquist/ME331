@@ -1,0 +1,9 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetCharge
+   (3) %--------------------------------------------------------------------
+   (4) Point   P, Q             
+   (5) P.SetCharge( 17 )   
+   (6) Q.SetCharge( cQ ) 
+   (7) chargeOnPAndQ = P.GetCharge() + Q.GetCharge()
+-> (8) chargeOnPAndQ = 17 + cQ
+

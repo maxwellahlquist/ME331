@@ -1,0 +1,96 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: pulley.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">pulley.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  pulley.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N                % Example: Earth.
+   (6) RigidBody       P                % Example: Upper forearm.
+   (7) Particle        A, B             % Comment.
+   (8) Point PA(P), PB(P)
+   (9) %--------------------------------------------------------------------
+   (10) %   Mathematical declarations.
+   (11) Variable    x'', TA, TB, theta'' 
+   (12) Constant    g    % Earth's gravitational acceleration.
+   (13) Constant    R    % Pulley radius
+   (14) %--------------------------------------------------------------------
+   (15) %   Mass and inertia properties.
+   (16) A.SetMass( m )
+   (17) B.SetMass( m )
+   (18) P.SetInertia( Pcm,  Ixx,  Iyy,  I )
+   (19) %--------------------------------------------------------------------
+   (20) %   Rotational kinematics.
+   (21) P.RotatePositiveZ( N, theta )
+-> (22) P_N = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+-> (23) w_P_N> = theta'*Pz>
+-> (24) alf_P_N> = theta''*Pz>
+
+   (25) %--------------------------------------------------------------------
+   (26) %   Translational kinematics.
+   (27) A.Translate( No, x*Nx> )          % Sets position, velocity, acceleration.
+-> (28) p_No_A> = x*Nx>
+-> (29) v_A_N> = x'*Nx>
+-> (30) a_A_N> = x''*Nx>
+
+   (31) B.SetVelocityAcceleration( N, -x'*Ny> ) 
+-> (32) v_B_N> = -x'*Ny>
+-> (33) a_B_N> = -x''*Ny>
+
+   (34) PA.SetPosition( Pcm, R*Ny> )
+-> (35) p_Pcm_PA> = R*Ny>
+
+   (36) PB.SetPosition( PCm, R*Nx> )
+-> (37) p_Pcm_PB> = R*Nx>
+
+   (38) %--------------------------------------------------------------------
+   (39) %   Motion constraints (if any).
+   (40) SolveDt( x' = -theta'*R,  theta' )
+-> (41) theta' = -x'/R
+-> (42) theta'' = -x''/R
+
+   (43) %--------------------------------------------------------------------
+   (44) %   Add relevant contact/distance forces.
+   (45) A.AddForce( -m*g*Ny> )            % Add's gravity force to each massive object.
+-> (46) Force_A> = -m*g*Ny>
+
+   (47) B.AddForce( -m*g*Ny> )
+-> (48) Force_B> = -m*g*Ny>
+
+   (49) A.AddForce( PA, TA*Nx> )       % External force.
+-> (50) Force_A_PA> = TA*Nx>
+
+   (51) B.AddForce( PB, TB*Ny> )       % Law of action/reaction.
+-> (52) Force_B_PB> = TB*Ny>
+
+   (53) %--------------------------------------------------------------------
+   (54) %   Translational dynamic equations (F = m*a).
+   (55) %   For static analysis, use  B.GetStatics()  or  System.GetStatics().
+   (56) Dynamics[1] = Dot(  A.GetDynamics(),  Nx>  )
+-> (57) Dynamics[1] = m*x'' - TA
+
+   (58) Dynamics[2] = Dot(  B.GetDynamics(),  Ny>  )
+-> (59) Dynamics[2] = m*g - TB - m*x''
+
+   (60) %--------------------------------------------------------------------
+   (61) %   Rotational dynamic equations (M = DH/Dt + ...).
+   (62) %   For static analysis, use  B.GetStatics( aboutPoint ).
+   (63) Dynamics[3] = Dot(  P.GetDynamics(Pcm),  Nz>  )
+-> (64) Dynamics[3] = I*theta'' - R*(TA-TB)
+
+   (65) %--------------------------------------------------------------------
+   (66) %   Solve algebraic equations for list of unknowns.
+   (67) Solve( Dynamics = 0,   x'', TA, TB )
+-> (68) x'' = m*g*R^2/(I+2*m*R^2)
+-> (69) TA = m^2*g*R^2/(I+2*m*R^2)
+-> (70) TB = m*g*(I+m*R^2)/(I+2*m*R^2)
+
+   (71) DeltaTension = Rhs(TB-TA)
+-> (72) DeltaTension = I*m*g/(I+2*m*R^2)
+
+   (73) %--------------------------------------------------------------------
+   (74) %   Record input together with responses.
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

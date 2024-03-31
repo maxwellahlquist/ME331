@@ -1,0 +1,28 @@
+% MotionGenesis file:  7.5.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+%NewtonianFrame  N                % Example: Earth.
+RigidFrame      A                % Frame to rotate from
+RigidFrame      B                % Frame for 1
+RigidFrame      C                % Frame for 2
+RigidFrame      D                % Frame for 3
+%--------------------------------------------------------------------
+%   
+lambda1> = Az>					% Unit vector for first rotation
+lambda2> = Az>					% Unit vector for second rotation
+lambda3> = -0.46*Ax> -0.46*Ay> + 0.76*Az>	% Unit vector for third rotation
+
+theta1 = pi/3		% Radians
+theta2 = 1.08		% Radians
+theta3 = 0.858		% Radians
+
+
+%--------------------------------------------------------------------
+B.SetRotationMatrix( A, lambda1>, theta1 )
+C.SetRotationMatrix( A, lambda2>, theta2 )
+D.SetRotationMatrix( A, lambda3>, theta3 )
+
+Save  7.5.html
+Quit
+

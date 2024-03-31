@@ -1,0 +1,40 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 3.10ii.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">3.10ii.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  3.10ii.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) %   Mathematical declarations.
+   (6) Variable    d, y, theta
+   (7) Constant    r = 1 m
+   (8) %--------------------------------------------------------------------
+   (9) u> = GetUnitVector( 3*Nx> - Ny> + Nz> )
+-> (10) u> = 0.904534*Nx> - 0.3015113*Ny> + 0.3015113*Nz>
+
+   (11) p1> = Nx> + 2*Ny>	% Position vector No to Ao
+-> (12) p1> = Nx> + 2*Ny>
+
+   (13) p2> = 5*Nx> + 2*Nz>	% Position vector No to Bo
+-> (14) p2> = 5*Nx> + 2*Nz>
+
+   (15) Dynamics[1] = Dot( Nx> , p1> + d*u> + r*cos(theta)*Nx> + r*sin(theta)*Nz> - y*Ny> - p2> )
+-> (16) Dynamics[1] = -4 + 0.904534*d + r*cos(theta)
+
+   (17) Dynamics[2] = Dot( Ny> , p1> + d*u> + r*cos(theta)*Nx> + r*sin(theta)*Nz> - y*Ny> - p2> )
+-> (18) Dynamics[2] = 2 - y - 0.3015113*d
+
+   (19) Dynamics[3] = Dot( Nz> , p1> + d*u> + r*cos(theta)*Nx> + r*sin(theta)*Nz> - y*Ny> - p2> )
+-> (20) Dynamics[3] = -2 + 0.3015113*d + r*sin(theta)
+
+   (21) %--------------------------------------------------------------------
+   (22) %   Solve algebraic equations for list of unknowns.
+   (23) Solve( Dynamics = 0, d, y, theta )
+-> (24) d = 3.830871
+-> (25) y = 0.844949
+-> (26) theta = 1.00647
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

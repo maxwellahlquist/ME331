@@ -1,0 +1,12 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: numerator or denominator
+   (3) %--------------------------------------------------------------------
+   (4) expression = 3*(2+t)/(5 + cos(t))
+-> (5) expression = 3*(2+t)/(5+cos(t))
+
+   (6) num = numerator( expression ) 
+-> (7) num = 6 + 3*t
+
+   (8) den = denominator( expression ) 
+-> (9) den = 5 + cos(t)
+

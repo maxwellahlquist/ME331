@@ -1,0 +1,67 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  IsSimplifyZero( scalarExpression )
+   (3) %--------------------------------------------------------------------
+   (4) isZeroA = IsSimplifyZero( 2 - 2 )
+-> (5) isZeroA = true
+
+   (6) isZeroB = IsSimplifyZero( 2 + 2 )
+-> (7) isZeroB = false
+
+   (8) isZeroC = IsSimplifyZero( 0.001,  0.002 )
+-> (9) isZeroC = true
+
+   (10) isZeroD = IsSimplifyZero( 0.003,  0.002 )
+-> (11) isZeroD = false
+
+   (12) isZeroE = IsSimplifyZero( sin(1.01*t) - sin(t),     0.02 )
+-> (13) isZeroE = true
+
+   (14) isZeroF = IsSimplifyZero( sin(1.03*t) - sin(t),     0.02 )
+-> (15) isZeroF = false
+
+   (16) isZeroG = IsSimplifyZero( sin(10.1*t) - sin(10*t),  0, 0.02 )
+-> (17) isZeroG = true
+
+   (18) isZeroH = IsSimplifyZero( sin(10.3*t) - sin(10*t),  0, 0.02 )
+-> (19) isZeroH = false
+
+   (20) isZeroI = IsSimplifyZero( t^7.33 - t^7.34,  0.02 )
+-> (21) isZeroI = true
+
+   (22) isZeroJ = IsSimplifyZero( t^7.33 - t^7.36,  0.02 )
+-> (23) isZeroJ = false
+
+   (24) isZeroK = IsSimplifyZero( t^10.1 - t^10,    0, 0.02 )
+-> (25) isZeroK = true
+
+   (26) isZeroL = IsSimplifyZero( t^10.3 - t^10,    0, 0.02 )
+-> (27) isZeroL = false
+
+   (28) isZeroM = IsSimplifyZero( t^10.3 - t^10.4,   0, 0.02 ) 
+-> (29) isZeroM = false
+
+   (30) isZeroN = IsSimplifyZero( t^10.3 - t^10.4,   0.02, 0 ) 
+-> (31) isZeroN = false
+
+   (32) %--------------------------------------------------------------------
+   (33) % Example 2:  IsSimplifyZero( vectorExpression ) 
+   (34) %--------------------------------------------------------------------
+   (35) RigidBody  B
+   (36) isZeroO = IsSimplifyZero( Bx> - Bx> )
+-> (37) isZeroO = true
+
+   (38) isZeroP = IsSimplifyZero( Bx> - By> )
+-> (39) isZeroP = false
+
+   (40) isZeroQ = IsSimplifyZero( Bx> - 1.01*Bx>,  0.02 )
+-> (41) isZeroQ = true
+
+   (42) isZeroR = IsSimplifyZero( Bx> - 0.03*Bx>,  0.02 )
+-> (43) isZeroR = false
+
+   (44) %--------------------------------------------------------------------
+   (45) % Example 3:  IsSimplifyZero( matrixExpression ) 
+   (46) %--------------------------------------------------------------------
+   (47) isZeroS = IsSimplifyZero( [ 2-2,  Bx> - Bx>;  Bx>*By> - Bx>*By>,  0] )
+-> (48) isZeroS = true
+

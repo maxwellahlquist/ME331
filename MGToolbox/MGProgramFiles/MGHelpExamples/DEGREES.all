@@ -1,0 +1,18 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: DEGREES  
+   (3) %--------------------------------------------------------------------
+   (4) SetDefaults( AUTOLEV )
+   (5) Degrees ON
+   (6) sin30Degrees = sin(30)
+-> (7) sin30Degrees = 0.5
+
+   (8) atan1InDegrees = atan(1)
+-> (9) atan1InDegrees = 45
+
+   (10) Degrees OFF
+   (11) sin30Radians = sin(30)
+-> (12) sin30Radians = -0.9880316
+
+   (13) atan1InRadians = atan(1)
+-> (14) atan1InRadians = 0.7853982
+

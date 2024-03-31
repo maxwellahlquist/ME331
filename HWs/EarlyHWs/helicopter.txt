@@ -1,0 +1,7 @@
+Constant g = 9.8 m/s^2
+Variable L = 50 - t
+Variable L' = -1
+Variable theta'' = (-2*theta'*L' - g*sin(theta)) / L
+Input theta = 1 deg,   theta' = 0 deg/s ,  tFinal = 49.84 sec, tStep = 0.02 sec     
+OutputPlot  t sec,  theta deg
+ODE()

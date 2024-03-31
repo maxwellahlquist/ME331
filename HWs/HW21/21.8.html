@@ -1,0 +1,66 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 21.8.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">21.8.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  MGTemplateBasic.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N                % Example: Earth.
+   (6) RigidBody       A                % Example: Upper forearm.
+   (7) RigidBody      	B                % Comment.
+   (8) Particle        Q                % Comment.
+   (9) %--------------------------------------------------------------------
+   (10) %   Mathematical declarations.
+   (11) Variable    thetaA'', thetaB''
+   (12) Variable    omegaA'
+   (13) Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+   (14) Constant    L
+   (15) %--------------------------------------------------------------------
+   (16) %   Mass and inertia properties.
+   (17) A.SetMass( 0 )
+   (18) B.SetMass( 0 )
+   (19) Q.SetMass( m )
+   (20) A.SetInertia( Acm,  0,  Iyy,  0 )
+   (21) B.SetInertia( Bcm,  0,  0,  0 )
+   (22) %--------------------------------------------------------------------
+   (23) %   Rotational kinematics.
+   (24) A.RotateY( N, thetaA )
+-> (25) A_N = [cos(thetaA), 0, -sin(thetaA);  0, 1, 0;  sin(thetaA), 0, cos(thetaA)]
+-> (26) w_A_N> = thetaA'*Ay>
+-> (27) alf_A_N> = thetaA''*Ay>
+
+   (28) B.RotateNegativeZ( A, thetaB )
+-> (29) B_A = [cos(thetaB), -sin(thetaB), 0;  sin(thetaB), cos(thetaB), 0;  0, 0, 1]
+-> (30) w_B_A> = -thetaB'*Bz>
+-> (31) w_B_N> = thetaA'*Ay> - thetaB'*Bz>
+-> (32) alf_B_A> = -thetaB''*Bz>
+-> (33) alf_B_N> = -thetaA'*thetaB'*Ax> + thetaA''*Ay> - thetaB''*Bz>
+
+   (34) %--------------------------------------------------------------------
+   (35) %   Translational kinematics.
+   (36) Bo.SetVelocityAcceleration( N, 0> )
+-> (37) v_Bo_N> = 0>
+-> (38) a_Bo_N> = 0>
+
+   (39) Q.Translate( Bo, -L*By> )
+-> (40) p_Bo_Q> = -L*By>
+-> (41) v_Q_N> = -L*thetaB'*Bx> + L*sin(thetaB)*thetaA'*Bz>
+-> (42) a_Q_N> = L*sin(thetaB)*thetaA'^2*Ax> - L*thetaB''*Bx> + L*thetaB'^2*By>
+        + L*(2*cos(thetaB)*thetaA'*thetaB'+sin(thetaB)*thetaA'')*Bz>
+
+   (43) %--------------------------------------------------------------------
+   (44) %   Add relevant contact/distance forces.
+   (45) System.AddForceGravity( -g*Ny> )            % Add's gravity force to each massive object.
+-> (46) Force_Q> = -m*g*Ny>
+
+   (47) SetGeneralizedSpeeds(thetaA')
+   (48) eq = System.GetDynamicsKane()
+-> (49) eq = [2*m*L^2*sin(thetaB)*cos(thetaB)*thetaA'*thetaB' + (Iyy+m*L^2*sin(thetaB)^2)*thetaA'']
+
+   (50) ans = Evaluate(Solve( eq , thetaA'' ), thetaA' = omegaA )
+-> (51) ans = [-2*m*L^2*omegaA*sin(thetaB)*cos(thetaB)*thetaB'/(Iyy+m*L^2*sin(thetaB)^2)]
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

@@ -1,0 +1,62 @@
+% MotionGenesis file:  GyroStickMipsi2.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N                % Example: Earth.
+RigidBody       A
+RigidBody       B
+RigidBody       C
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+%Variable    wA', wC'
+Variable    TBy, TBz
+Specified   qB''
+SetDt( qB = (pi/4)*t )
+Specified    wA'', wC''
+SetDt( wA = 0 )
+SetDt( wC = 600 * 2*pi/60 ) % rpm to rad/s
+
+Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+Constant    L = 1.2 m, R = 0.3 m
+Constant    mA = 70 kg, mC = 1.5 kg
+Constant    Ic = mc*R^2, Jc = 0.5*mc*R^2
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+A.SetMass( mA )
+B.SetMass( 0 )
+C.SetMass( mC )
+
+A.SetInertia( Acm, 0>> )
+B.SetInertia( Bcm,  0, 0, 0 )
+C.SetInertia( Ccm, B, Ic, Jc, Jc, 0, 0, 0 )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+A.SetAngularVelocityAcceleration( N, wA*Ay> )
+B.RotateZ( A, qB )
+C.SetAngularVelocityAcceleration( B, wC*Bx> )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+Bo.SetVelocityAcceleration(N, 0>)
+Ccm.Translate( Bo, L*Bx> )
+Dot( Ccm.GetAcceleration(N), By> )
+%--------------------------------------------------------------------
+%   Add relevant contact/distance forces.
+System.AddForceGravity( -g*Ay> )            % Add's gravity force to each massive object.
+%--------------------------------------------------------------------
+%   Add relevant torques.
+B.AddTorque( A, TBy*By> + TBz*Bz> )
+%--------------------------------------------------------------------
+%   Translational dynamic equations (F = m*a).
+Dynamics[1] = Dot(  System(B,C).GetDynamics(Bo),  Bz>  )
+Dynamics[2] = Dot(  System(B,C).GetDynamics(Bo),  By>  )
+Solve( Dynamics = 0, TBy, TBz)
+
+%--------------------------------------------------------------------
+% Plotting
+OutputPlot t sec, TBy N*m, TBz N*m
+Input tFinal = 2 sec
+Variable dumb' = 0.1
+Input dumb = 0
+ODE()
+Save GyroStickMipsi2.html
+quit

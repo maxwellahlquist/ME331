@@ -1,0 +1,49 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetStatics 
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N             
+   (5) RigidBody      B           % Rigid pendulum
+   (6) Constant       g           % Local gravitational constant
+   (7) Constant       L           % Length of pendulum
+   (8) Variable       theta       % Pendulum angle
+   (9) Variable       Tz          % Torque applied to B from N
+   (10) Variable       Fx, Fy      % Support force on Bo from No
+   (11) B.SetMass( m )
+   (12) B.SetRotationMatrixZ( N, theta )  
+-> (13) B_N = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+
+   (14) Bcm.SetPosition( Bo, -L*By> )
+-> (15) p_Bo_Bcm> = -L*By>
+
+   (16) Bo.AddForce( No, Fx*Nx> + Fy*Ny> ) 
+-> (17) Force_Bo_No> = Fx*Nx> + Fy*Ny>
+
+   (18) Bcm.AddForce( -m*g*Ny> )
+-> (19) Force_Bcm> = -m*g*Ny>
+
+   (20) B.AddTorque( Tz*Bz> )  
+-> (21) Torque_B> = Tz*Bz>
+
+   (22) % Resultant of all forces on B    
+   (23) BStaticForces> = B.GetStatics()
+-> (24) BStaticForces> = Fx*Nx> + (Fy-m*g)*Ny>
+
+   (25) % Resultant of the moments of all forces on B about Bo    
+   (26) BStaticMoments> = B.GetStatics( Bo )
+-> (27) BStaticMoments> = Tz*Bz> - m*g*L*sin(theta)*Nz>
+
+   (28) % Solve scalar equations for Fx, Fy, and Tz
+   (29) BStatics[1] = Dot( BStaticForces>,  Nx> )
+-> (30) BStatics[1] = Fx
+
+   (31) BStatics[2] = Dot( BStaticForces>,  Ny> )
+-> (32) BStatics[2] = Fy - m*g
+
+   (33) BStatics[3] = Dot( BStaticMoments>, Nz> )
+-> (34) BStatics[3] = Tz - m*g*L*sin(theta)
+
+   (35) Solve( BStatics, Fx, Fy, Tz )
+-> (36) Fx = 0
+-> (37) Fy = m*g
+-> (38) Tz = m*g*L*sin(theta)
+

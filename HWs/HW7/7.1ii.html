@@ -1,0 +1,92 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 7.1ii.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">7.1ii.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  7.1ii.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) RigidBody C
+   (6) Point Ao(N)
+   (7) Point Bo(N)
+   (8) Point CB(C)
+   (9) Point Q(C)
+   (10) %----------------------------------------
+   (11) %   Mathematical declarations.
+   (12) Variable    d, x, y, z
+   (13) Constant    theta = 30 deg
+   (14) Constant    a = 2 m, b = 1 m, c = 1 m
+   (15) u> = GetUnitVector( 3*Nx> - 1*Ny> + Nz> )			% direction of Ao to Q
+-> (16) u> = 0.904534*Nx> - 0.3015113*Ny> + 0.3015113*Nz>
+
+   (17) %--------------------------------------------------------------------
+   (18) C.RotateZ( N, theta )
+-> (19) C_N = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+-> (20) w_C_N> = 0>
+-> (21) alf_C_N> = 0>
+
+   (22) %   Translational kinematics.
+   (23) Ao.SetPosition( No, Nx> + 2*Ny> )
+-> (24) p_No_Ao> = Nx> + 2*Ny>
+
+   (25) Q.SetPosition( Ao, d*u> )
+-> (26) p_Ao_Q> = 0.904534*d*Nx> - 0.3015113*d*Ny> + 0.3015113*d*Nz>
+
+   (27) Q.SetPosition( Co, x*Cx> + y*Cy> + z*Cz> )
+-> (28) p_Co_Q> = x*Cx> + y*Cy> + z*Cz>
+
+   (29) CB.SetPosition( Co, -1*b*Cy> )
+-> (30) p_Co_CB> = -b*Cy>
+
+   (31) Bo.SetPosition( CB, -2*Cx> )
+-> (32) p_CB_Bo> = -2*Cx>
+
+   (33) Bo.SetPosition( No, 4*Nx> + Nz> )
+-> (34) p_No_Bo> = 4*Nx> + Nz>
+
+   (35) NoAo> = Ao.GetPosition( No )
+-> (36) NoAo> = Nx> + 2*Ny>
+
+   (37) AoQ> = Q.GetPosition( Ao )
+-> (38) AoQ> = 0.904534*d*Nx> - 0.3015113*d*Ny> + 0.3015113*d*Nz>
+
+   (39) QCo> = Co.GetPosition( Q )
+-> (40) QCo> = -x*Cx> - y*Cy> - z*Cz>
+
+   (41) CoCB> = CB.GetPosition( Co )
+-> (42) CoCB> = -b*Cy>
+
+   (43) CBBo> = Bo.GetPosition( CB )
+-> (44) CBBo> = -2*Cx>
+
+   (45) BoNo> = No.GetPosition( Bo )
+-> (46) BoNo> = -4*Nx> - Nz>
+
+   (47) Loop> = NoAo> + AoQ> + QCo> + CoCB> + CBBo> + BoNo>
+-> (48) Loop> = (-2-x)*Cx> + (-b-y)*Cy> + (-3+0.904534*d)*Nx> + (2-0.3015113*d)*Ny>
+        + (-1+0.3015113*d-z)*Nz>
+
+   (49) %--------------------------------------------------------------------
+   (50) Dynamics[1] = Dot( Nx> , Loop>)
+-> (51) Dynamics[1] = -3 + 0.904534*d + sin(theta)*(b+y) - cos(theta)*(2+x)
+
+   (52) Dynamics[2] = Dot( Ny> , Loop> )
+-> (53) Dynamics[2] = 2 - 0.3015113*d - sin(theta)*(2+x) - cos(theta)*(b+y)
+
+   (54) Dynamics[3] = Dot( Nz> , Loop> )
+-> (55) Dynamics[3] = -1 + 0.3015113*d - z
+
+   (56) Dynamics[4] = (x^2/a^2) + (y^2/b^2) + (z^2/c^2) - 1
+-> (57) Dynamics[4] = -1 + x^2/a^2 + y^2/b^2 + z^2/c^2
+
+   (58) %--------------------------------------------------------------------
+   (59) %   Solve algebraic equations for list of unknowns.
+   (60) Solve( Dynamics = 0,  d = 2 m, x = -2 m , y = 0.5 m, z = 0 m )
+-> (61) d = 2.718746
+-> (62) x = -1.878215
+-> (63) y = 0.2925425
+-> (64) z = -0.1802673
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

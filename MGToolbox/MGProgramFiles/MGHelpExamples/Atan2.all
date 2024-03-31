@@ -1,0 +1,21 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: atan2   
+   (3) %--------------------------------------------------------------------
+   (4) angleInRadians = atan2(  3,  3 ) 
+-> (5) angleInRadians = 0.7853982
+
+   (6) angleInDegrees = atan2Degrees(  3,  3 ) 
+-> (7) angleInDegrees = 45
+
+   (8) angleQuadrant2 = atan2Degrees(  3, -3 )
+-> (9) angleQuadrant2 = 135
+
+   (10) angleQuadrant3 = atan2Degrees( -3, -3 ) 
+-> (11) angleQuadrant3 = -135
+
+   (12) angleQuadrant4 = atan2Degrees( -3,  3 ) 
+-> (13) angleQuadrant4 = -45
+
+   (14) angle4Degrees  = atan2( -3, 3 ) * ConvertUnits( rad, deg )
+-> (15) angle4Degrees = -45
+

@@ -1,0 +1,87 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 22.16.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">22.16.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  22.16.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N
+   (6) RigidFrame      A
+   (7) RigidBody      	B
+   (8) RigidBody      	C
+   (9) Point		BN (B)
+   (10) %--------------------------------------------------------------------
+   (11) %   Mathematical declarations.
+   (12) Variable    qA'', wB', qC'', x''
+   (13) Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+   (14) Constant    m, I, J, K
+   (15) Constant    LC, rB
+   (16) %--------------------------------------------------------------------
+   (17) %   Mass and inertia properties.
+   (18) B.SetMass( 0 )
+   (19) C.SetMass( m )
+   (20) B.SetInertia( Bcm,  0>> )
+   (21) C.SetInertia( Ccm,  I, J, K )
+   (22) %--------------------------------------------------------------------
+   (23) %   Rotational kinematics.
+   (24) A.RotateX( N, -qA )
+-> (25) A_N = [1, 0, 0;  0, cos(qA), -sin(qA);  0, sin(qA), cos(qA)]
+-> (26) w_A_N> = -qA'*Ax>
+-> (27) alf_A_N> = -qA''*Ax>
+
+   (28) B.SetAngularVelocity( A, wB*Ay> )
+-> (29) w_B_A> = wB*Ay>
+
+   (30) C.RotateY( A, qC )
+-> (31) C_A = [cos(qC), 0, -sin(qC);  0, 1, 0;  sin(qC), 0, cos(qC)]
+-> (32) w_C_A> = qC'*Cy>
+-> (33) w_C_N> = -cos(qC)*qA'*Cx> + qC'*Cy> - sin(qC)*qA'*Cz>
+-> (34) alf_C_A> = qC''*Cy>
+-> (35) alf_C_N> = (sin(qC)*qA'*qC'-cos(qC)*qA'')*Cx> + qC''*Cy> + (-cos(qC)*
+        qA'*qC'-sin(qC)*qA'')*Cz>
+
+   (36) %--------------------------------------------------------------------
+   (37) %   Translational kinematics.
+   (38) Bo.Translate( No, x*Nx> + rB*Az> )
+-> (39) p_No_Bo> = rB*Az> + x*Nx>
+-> (40) v_Bo_N> = rB*qA'*Ay> + x'*Nx>
+-> (41) a_Bo_N> = rB*qA''*Ay> - rB*qA'^2*Az> + x''*Nx>
+
+   (42) BN.SetPositionVelocity( Bo, -rB*Az> )
+-> (43) p_Bo_BN> = -rB*Az>
+-> (44) v_BN_N> = (x'-rB*wB)*Nx>
+
+   (45) Ccm.Translate( Bo, LC*Cz> )
+-> (46) p_Bo_Ccm> = LC*Cz>
+-> (47) v_Ccm_N> = (rB+LC*cos(qC))*qA'*Ay> + LC*qC'*Cx> + x'*Nx>
+-> (48) a_Ccm_N> = (rB*qA''-LC*(2*sin(qC)*qA'*qC'-cos(qC)*qA''))*Ay> - rB*qA'^2*Az>
+        + LC*(sin(qC)*cos(qC)*qA'^2+qC'')*Cx> - LC*(qC'^2+cos(qC)^2*qA'^2)*Cz> + x''*Nx>
+
+   (49) %--------------------------------------------------------------------
+   (50) %   Motion constraints (if any).
+   (51) MotionConstraint = Dot( BN.GetVelocity( N ), Ax> )
+-> (52) MotionConstraint = x' - rB*wB
+
+   (53) SolveDT( MotionConstraint, x' )
+-> (54) x' = rB*wB
+-> (55) x'' = rB*wB'
+
+   (56) %--------------------------------------------------------------------
+   (57) %   Add relevant contact/distance forces.
+   (58) System.AddForceGravity( -g*Nz> )            % Add's gravity force to each massive object.
+-> (59) Force_Ccm> = -g*m*Nz>
+
+   (60) P = System.GetPower()
+-> (61) P = g*m*(LC*sin(qC)*cos(qA)*qC'+sin(qA)*(rB+LC*cos(qC))*qA')
+
+   (62) U = System.GetForceGravityPotentialEnergy(-g*Nz>, No)
+-> (63) U = g*m*cos(qA)*(rB+LC*cos(qC))
+
+   (64) KE = System.GetKineticEnergy()
+-> (65) KE = 0.5*I*qA'^2 + 0.5*J*qC'^2 + 0.5*m*(x'^2+LC^2*qC'^2+2*LC*cos(qC)*
+        qC'*x'+(rB+LC*cos(qC))^2*qA'^2) - 0.5*(I-K)*sin(qC)^2*qA'^2
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

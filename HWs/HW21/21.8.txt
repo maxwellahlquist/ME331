@@ -1,0 +1,39 @@
+% MotionGenesis file:  MGTemplateBasic.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N                % Example: Earth.
+RigidBody       A                % Example: Upper forearm.
+RigidBody      	B                % Comment.
+Particle        Q                % Comment.
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    thetaA'', thetaB''
+Variable    omegaA'
+Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+Constant    L
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+A.SetMass( 0 )
+B.SetMass( 0 )
+Q.SetMass( m )
+A.SetInertia( Acm,  0,  Iyy,  0 )
+B.SetInertia( Bcm,  0,  0,  0 )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+A.RotateY( N, thetaA )
+B.RotateNegativeZ( A, thetaB )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+Bo.SetVelocityAcceleration( N, 0> )
+Q.Translate( Bo, -L*By> )
+%--------------------------------------------------------------------
+%   Add relevant contact/distance forces.
+System.AddForceGravity( -g*Ny> )            % Add's gravity force to each massive object.
+
+SetGeneralizedSpeeds(thetaA')
+
+eq = System.GetDynamicsKane()
+ans = Evaluate(Solve( eq , thetaA'' ), thetaA' = omegaA )
+Save 21.8.html
+Quit

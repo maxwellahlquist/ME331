@@ -1,0 +1,29 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetGeneralizedMomentum
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) Particle  A
+   (6) RigidBody B
+   (7) A.SetMass( mA )
+   (8) B.SetMass( mB )
+   (9) B.SetInertia( Bcm, Ixx, Iyy, Izz )
+   (10) Variable  w{1:3}', vA'
+   (11) SetGeneralizedSpeed( w{1:3}, vA )
+   (12) A.SetVelocity( N, vA*Nx> )
+-> (13) v_A_N> = vA*Nx>
+
+   (14) B.SetAngularVelocity( N, w1*Bx> + w2*By> + w3*Bz> )
+-> (15) w_B_N> = w1*Bx> + w2*By> + w3*Bz>
+
+   (16) Bcm.SetVelocity( N, 0> )
+-> (17) v_Bcm_N> = 0>
+
+   (18) generalizedMomentaA = A.GetGeneralizedMomentum()
+-> (19) generalizedMomentaA = [0;  0;  0;  mA*vA]
+
+   (20) generalizedMomentaB = B.GetGeneralizedMomentum()
+-> (21) generalizedMomentaB = [Ixx*w1;  Iyy*w2;  Izz*w3;  0]
+
+   (22) generalizedMomentaS = System.GetGeneralizedMomentum()
+-> (23) generalizedMomentaS = [Ixx*w1;  Iyy*w2;  Izz*w3;  mA*vA]
+

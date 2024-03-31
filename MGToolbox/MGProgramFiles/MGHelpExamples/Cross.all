@@ -1,0 +1,58 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: Cross( vector, vector )     Dot( vector, vector )
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame A
+   (5) Constant   x, y, z
+   (6) v> = x*Ax> + y*Ay> + z*Az>
+-> (7) v> = x*Ax> + y*Ay> + z*Az>
+
+   (8) w> =   Ax> + 2*Ay> + 3*Az>
+-> (9) w> = Ax> + 2*Ay> + 3*Az>
+
+   (10) vCrossw> = Cross( v>, w> )
+-> (11) vCrossw> = (3*y-2*z)*Ax> + (z-3*x)*Ay> + (2*x-y)*Az>
+
+   (12) vDotw = Dot( v>,  w> )
+-> (13) vDotw = x + 2*y + 3*z
+
+   (14) %--------------------------------------------------------------------
+   (15) % Example 2: Cross( vector, dyadic )     Dot(  vector, dyadic )
+   (16) %--------------------------------------------------------------------
+   (17) d>> = Ay>*Ax> - 2*Az>*Az>
+-> (18) d>> = Ay>*Ax> - 2*Az>*Az>
+
+   (19) dCrossv>> = Cross( d>>, v> )
+-> (20) dCrossv>> = -z*Ay>*Ay> + y*Ay>*Az> + 2*y*Az>*Ax> - 2*x*Az>*Ay>
+
+   (21) dDotv> = Dot( d>>, v> )
+-> (22) dDotv> = x*Ay> - 2*z*Az>
+
+   (23) %--------------------------------------------------------------------
+   (24) % Example 3: Cross( vector, matrixOfVectors )  Dot( vector, matrixOfVectors )
+   (25) %--------------------------------------------------------------------
+   (26) vCrossMatrix = Cross( v>,  [w>; t*Ax> + sin(t)*Ay>] )
+-> (27) vCrossMatrix[1] = (3*y-2*z)*Ax> + (z-3*x)*Ay> + (2*x-y)*Az>
+-> (28) vCrossMatrix[2] = -z*sin(t)*Ax> + z*t*Ay> + (x*sin(t)-y*t)*Az>
+
+   (29) vDotMatrix   =   Dot( v>,  [w>; t*Ax> + sin(t)*Ay>] )
+-> (30) vDotMatrix = [x + 2*y + 3*z;  x*t + y*sin(t)]
+
+   (31) %--------------------------------------------------------------------
+   (32) % Example 4: Cross( matrixOfVectors, vector )  Dot( matrixOfVectors, vector )
+   (33) %--------------------------------------------------------------------
+   (34) matrixCrossV = Cross( [w>; t*Ax> + sin(t)*Ay>],  v> )
+-> (35) matrixCrossV[1] = (2*z-3*y)*Ax> + (3*x-z)*Ay> + (y-2*x)*Az>
+-> (36) matrixCrossV[2] = z*sin(t)*Ax> - z*t*Ay> + (y*t-x*sin(t))*Az>
+
+   (37) matrixDotV   =   Dot( [w>; t*Ax> + sin(t)*Ay>],  v> )
+-> (38) matrixDotV = [x + 2*y + 3*z;  x*t + y*sin(t)]
+
+   (39) %--------------------------------------------------------------------
+   (40) % Example 5: Cross( MatrixOfVectors, MixedMatrixWithDyadicAndVector )
+   (41) %--------------------------------------------------------------------
+   (42) MCrossN = Cross( [Ax>; Ay>],  [Ax>, Ay>*Az>] )
+-> (43) MCrossN = [0>, Az>*Az>;  -Az>, 0>>]
+
+   (44) MDotN   =   Dot( [Ax>; Ay>],  [Ax>, Ay>*Az>] )
+-> (45) MDotN = [1, 0>;  0, Az>]
+

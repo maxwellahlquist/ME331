@@ -1,0 +1,33 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetAcceleration 
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame N
+   (5) Point      Q            
+   (6) Variable   vx', vy'
+   (7) Q.SetAcceleration( N, vx'*Nx> + vy'*Ny> )
+-> (8) a_Q_N> = vx'*Nx> + vy'*Ny>
+
+   (9) QAccelerationInN> = Q.GetAcceleration( N )   
+-> (10) QAccelerationInN> = vx'*Nx> + vy'*Ny>
+
+   (11) %--------------------------------------------------------------------
+   (12) % Example: GetRelativeAcceleration
+   (13) %--------------------------------------------------------------------
+   (14) Point       P            
+   (15) Variable    x'', y''
+   (16) P.SetAcceleration( N,  x''*Nx> + y''*Ny> )
+-> (17) a_P_N> = x''*Nx> + y''*Ny>
+
+   (18) aQRelativeToP> = Q.GetRelativeAcceleration( P, N )
+-> (19) aQRelativeToP> = (vx'-x'')*Nx> + (vy'-y'')*Ny>
+
+   (20) %--------------------------------------------------------------------
+   (21) % Example: GetRelativeAcceleration  (via differentiation).
+   (22) %--------------------------------------------------------------------
+   (23) Point       S            
+   (24) S.SetPosition( P,  t^2*Nx> + t^3*Ny> )
+-> (25) p_P_S> = t^2*Nx> + t^3*Ny>
+
+   (26) aSRelativeToP> = S.GetRelativeAcceleration( P, N )
+-> (27) aSRelativeToP> = 2*Nx> + 6*t*Ny>
+

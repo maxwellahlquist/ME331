@@ -1,0 +1,26 @@
+   (1) %--------------------------------------------------------------------
+   (2) %Example 1: GetMassUnit, GetLengthUnit, GetTimeUnit, GetAngleUnit 
+   (3) %--------------------------------------------------------------------
+   (4) SetUnitSystem( kg, m, sec )
+   (5) KilogramsPerGram = ConvertUnits( GetMassUnit, gram )
+-> (6) KilogramsPerGram = 1000
+
+   (7) InchesPerMeter = ConvertUnits( inch, GetLengthUnit )
+-> (8) InchesPerMeter = 0.0254
+
+   (9) SecondSquaredPerMilliSecondSquared = ConvertUnits( GetTimeUnit^2, milliSecond^2 )
+-> (10) SecondSquaredPerMilliSecondSquared = 1000000
+
+   (11) RadianSecPerDegreeSecond = ConvertUnits( GetAngleUnit*sec, degrees*sec )
+-> (12) RadianSecPerDegreeSecond = 57.29578
+
+   (13) %--------------------------------------------------------------------
+   (14) %Example 2: GetMassUnit, GetLengthUnit, GetTimeUnit, GetAngleUnit 
+   (15) %--------------------------------------------------------------------
+   (16) Variable  x' = sin(t)
+-> (17) x' = sin(t)
+
+   (18) Input  x = 2 GetLengthUnit,  tFinal = 10 seconds
+   (19) Output t GetTimeUnit, x GetLengthUnit, x' GetLengthUnit/sec
+   (20) ODE() GetUnitExample
+

@@ -1,0 +1,851 @@
++----------------------------------------------------------------------------+
+% Copyright (c) 1988-2021 Paul Mitiguy and/or Motion Genesis LLC.  All rights reserved.
++----------------------------------------------------------------------------+
+%ARRANGE
+%Arrange    (Superseded by FactorLinear and FactorQuadratic)
+%
+% Purpose:  Arranges terms in groups of degree 1 or 2 in designated names.
+%
+%  Syntax:  Arrange( mathExpression, n, X )
+%
+%   Input:  mathExpression -- A scalar, vector, matrix, ... expression.
+%
+%           n -- 1 or 2
+%
+%           X -- The name of a scalar symbol (e.g., a constant or variable)
+%                or a comma-separated list of names of scalars
+%                or a matrix of scalar names.
+%
+%  Output:  mathExpression arranged so terms of degree n in X are
+%           grouped together.
+%
+%  Remark:  With SetAutoZee(ON), the command Arrange will Zee coefficients
+%           of terms of degree n in X.
+%
+%  Remark:  ARRANGE is superseded by FactorLinear and FactorQuadratic.
+%           ARRANGE is deprecated and provided for SetDefaults( AUTOLEV ).
+%
+% Related:  Arrange, Epsilon, Evaluate, Expand, Explicit
+%           Factor, FactorLinear, FactorQuadratic, ReplaceString
+%     Old:  SetDefaults( AUTOLEV )
+
+%CM
+%CM         (Superseded by GetCMPosition)
+%
+% Purpose:  Finds the mass center of a system of massive objects.
+%
+%Syntax 1:  CM( P, A1,A2, ...)
+%Syntax 2:  CM( P )
+%
+%   Input:  P -- A point or particle
+%           A1, A2, ... -- particles and/or bodies
+%
+%Output 1:  The position vector from P to the mass center of A1, A2, ...
+%
+%Output 2:  The position vector from P to the mass center of the system
+%           of all massive objects (i.e., particles and rigid bodies).
+%
+% Remark:   The following are used for the CM command:
+%           (a) the mass of each particle and body
+%           (b) the position vector from P to each particle
+%           (c) the position vector from P to the mass center of each body.
+%
+%  Remark:  CM is superseded by GetCMPosition.
+%           CM is deprecated and provided for SetDefaults( AUTOLEV ).
+%
+% Related:  SetMass,         GetMass,        SetInertia
+%           GetCMPosition,   GetCmVelocity,  GetCmAcceleration, CMSymbol
+%     Old:  SetDefaults( AUTOLEV )
+
+%CONSTRAIN
+%Constrain
+%
+% Purpose:  Expresses dependent motion variables in terms of auxiliary and
+%           and independent motion variables.  Expresses auxiliary motion
+%           variables in terms of independent motion variables.
+%
+%Syntax 1:  Constrain(         DEPENDENT[ UListD ] )
+%           Constrain( METHOD, DEPENDENT[ UListD ] )
+%Syntax 2:  Constrain(         AUXILIARY[ UListA ] )
+%           Constrain( METHOD, AUXILIARY[ UListA ] )
+%Syntax 3:  Constrain(         DEPENDENT[ UListD ], AUXILIARY[ UListA] )
+%           Constrain( METHOD, DEPENDENT[ UListD ], AUXILIARY[ UListA] )
+%
+%   Input:  UListD -- Comma separated list of names that appeared in a
+%                     MotionVariable declaration that will subsequently
+%                     be regarded as dependent motion variables.
+%           UListA -- Comma separated list of names that appeared in a
+%                     MotionVariable declaration that will subsequently
+%                     be regarded as auxiliary motion variables.
+%           METHOD -- GAUSS or MINORS
+%
+%Output 1:  Solves the linear set of equations Dependent[i] = 0 for UListD
+%           (Dependent[i] (i=1,2,...) are expressions in the workspace)
+%           for the dependent motion variables in UListD.
+%Output 2:  Solves the linear set of equations Auxiliary[j] = 0 for UListA
+%           (Auxiliary[j] (j=1,2,...) are expressions in the workspace)
+%Output 3:  Solves the linear set of equations Dependent[i] = 0 for UListD.
+%           Solves the linear set of equations Auxiliary[j] = 0 for UListA.
+%
+%  Remark:  Dependent[i] and Auxiliary[j] must be linear in all names
+%           that appeared in a MotionVariable declaration.
+%
+%  Remark:  If time-derivatives of motion variables have been declared,
+%           Dependent[i] and Auxiliary[j] are differentiated and solved for
+%           the time-derivatives of names appearing in UListA and UListA.
+%
+%  Remark:  The designation of a particular motion variable as dependent or
+%           auxiliary is accomplished by including it in UListD or UListA.
+%           Motion variables not listed in UListD or UListA are designated
+%           independent motion variables by default. Thus, until a CONSTRAIN
+%           command has been issued, all motion variables are independent.
+%
+%  Remark:  MINORS is advantageous for a small number of equations and
+%           for avoiding divide-by-zero problems other than when the
+%           set of equations are truly singular (the determinant of
+%           its coefficient matrix is zero).
+%
+%           GAUSS may be better than MINORS for solving larger number
+%           of equations when divide-by-zero problem associated with
+%           pivots in Gaussian elimination can be avoided.
+%
+%           If no method is specified, a method is chosen based on
+%           the number of equations and number of non-zero and
+%           non-numerical elements in the coefficient matrix.
+%
+% Related:  Constrain, SetGeneralizedSpeed
+%           GetDynamics, GetDynamicsKane, GetStatics, GetStaticsKane
+%    Old:   MotionVariable, MotionVariable', SetDefaults( AUTOLEV )
+
+%DEGREES
+%Degrees    (Superseded by ConvertUnits, Input, Output)
+%
+% Purpose:  Determines whether to regard the arguments of sin, cos,
+%           and tan, and the values of Asin, Acos, atan, and atan2
+%           as representing degrees or radians.
+%
+%Syntax 1:  Degrees ON
+%Syntax 2:  Degrees OFF
+%
+%  Remark:  DEGREES is superseded by  ConvertUnits, Input, and Output.
+%           DEGREES is deprecated and provided for SetDefaults( AUTOLEV ).
+%
+% Related:  ConvertUnits, GetUnitSystem, SetUnitSystem
+%           GetMassUnit,  GetLengthUnit,  GetTimeUnit,  GetAngleUnit
+%     Old:  SetDefaults( AUTOLEV )
+
+%DYNAMICS
+%DYNAMICS   -- Superseded by ODE(...)
+%
+% Purpose:  Writes a MATLAB, C, or Fortran program to solve ordinary
+%           differential or coupled differential/algebraic equations.
+%
+%Syntax 1:  CODE DYNAMICS()                           Filename.Ext
+%Syntax 2:  CODE DYNAMICS()                           Filename.Ext( Tx, Ty, Tz )
+%Syntax 3:  CODE DYNAMICS() [A=Astart, Astop, Astep]  Filename.Ext
+%Note:      The various options in Syntax 1-4 can be used together.
+%
+%   Input:  Filename -- a valid file name
+%           Ext -- nothing (immediate solution)
+%               -- .m    (produces MATLAB  code)
+%               -- .c    (produces C       code and input file Filename.in)
+%               -- .f    (produces FORTRAN code and input file Filename.in)
+%               -- .for  (same as .f except 72 character line length)
+%
+%           Tx, Ty, Tz -- scalar names (maybe with units) that allow for
+%           passing command-line arguments to MATLAB or C programs.
+%           Example:  Filename.m( Tx N*m,  Ty N*cm,  Tz lbf*ft )
+%
+%           A = Astart, Astop, Astep -- A is the name (maybe with units) of a
+%           scalar quantity used as a loop index.  Astart, Astop, Astep are
+%           numerical values.  Example:  [A cm = 0, 100, 2]
+%
+%  Output:  Solution of all kinematical and dynamical equations in
+%           the workspace.  If the ZERO matrix is in the workspace
+%           and no independent MotionVariable' have been assigned
+%           a right-hand side, the equations contained in the ZERO
+%           matrix  are solved at each numerical integration time-
+%           step for the independent MotionVariable's.
+%
+%           The  CODE  command  will write a Fortran, C, or MATLAB
+%           program, or if EXT is nothing, will immediately execute
+%           a program. This program performs whatever calculations
+%           are necessary to determine the numerical values of
+%           quantities named in OUTPUT statements.
+%
+%           The following files are created by the CODE command:
+%
+%           a) Filename.Ext  (for Fortran, C, MATLAB programs, to be
+%                             subsequently compiled or interpreted).
+%           b) Filename.in   (for Fortran C programs -- contains values
+%                             and units named in INPUT statements).
+%           c) Filename.dir  (lists the names of the output files
+%                             created whenever Filename is executed).
+%           d) Filename.i    (i = 1,2, ... which contains units and calculated
+%                            values of quantities listed in OUTPUT statements).
+%
+%Output 2:  To run Filename.m, type  Filename( 12, 56, 87 )  at MATLAB prompt.
+%           To run Filename.c, type  Filename 12 56 87       from OS shell.
+%
+%Output 3:  Incorporates Fortran DO-loops or C/MATLAB FOR-loops.
+%           To have multiple loops inside the program, use, e.g.,
+%           [ A = Astart, Astop, Astep;   B = Bstart, Bstop, Bstep; ... ]
+%
+%  Remark:  Input values and units are named in INPUT statements.
+%           Output quantities and units are named in OUTPUT statements.
+%
+%  Remark:  SetDigits sets the format of numbers output by programs created by
+%           the ODE command.  It does not affect calculation accuracy.
+%
+%  Remark:  The solution is approximate and its accuracy tends to improve
+%           as the input value assigned to absError gets smaller.
+%           The default value of absError can be changed via the Input command:
+%           Input  absError = 1.0E-5 cm,  relError = 1.0E-7
+%
+%  Remark:  Use the  .for  extension for FORTRAN whose line lengths cannot
+%           exceed 72 characters and which supports all line breaks.
+%           Use the  .f   extension for FORTRAN with lines less than 120
+%           characters and which cannot break lines in the middle of names.
+%
+%  Remark:  When  Filename.ext,NOSUBS  is entered, no subroutines for solving
+%           differential or algebraic equations are appended to Filename.ext.
+%
+%  Remark:  CODE DYNAMICS is superseded by  ODE.
+%           CODE DYNAMICS is deprecated and provided for SetDefaults( AUTOLEV ).
+%
+% Related:  Code, ALGEBRAIC, NONLINEAR, ODE;
+%           ConvertUnits, GetUnitSystem, SetUnitSystem
+%           SetDigits, Input, Output
+%     Old:  SetDefaults( AUTOLEV )
+
+%EIG
+%Eig        (Superseded by GetEigen)
+%
+% Purpose:  Finds  the  eigenvalues, or the eigenvalues and eigen-
+%           vectors, of a square matrix of real numbers.
+%
+%Syntax 1:  Eig( M )
+%Syntax 2:  Eig( M, eigenValueMatrixName, eigenVectorMatrixName )
+%
+%   Input:  M -- a square matrix whose elements are real numbers.
+%
+%           eigenValueMatrixName -- the name of a column matrix whose
+%                elements are to be the eigenvalues of M.
+%
+%           eigenVectorMatrixName -- the name of a square matrix whose
+%                columns are to be the eigenvectors of M.
+%
+%Output 1:  Returns the eigenvalues of M.
+%Output 2:  Calculates and sets eigenValueMatrixName and eigenVectorMatrixName.
+%
+%  Remark:  EIG is superseded by  GetEigen.
+%           EIG is deprecated and provided for SetDefaults( AUTOLEV ).
+%
+%  Remark:  The ROWS of eigenVectorMatrixName are the eigenvectors of M.
+%           The newer GetEigen command returns eigenvectors in COLUMNS.
+
+%INERTIA
+%INERTIA    (superseded by SetInertia and GetInertia)
+%
+% Purpose:  Expresses  the  central  inertia  dyadic  of a body in
+%           terms of unit vectors and symbolic names and/or numer-
+%           ical  values  of inertia scalars; forms the sum of the
+%           inertia  dyadics  of specified particles and/or bodies
+%           with respect to a specified point.
+%
+%Syntax 1:  INERTIA  B,      I11,I22,I33,I12,I23,I31
+%Syntax 2:  INERTIA  B(A),   J11,J22,J33,J12,J23,J31
+%Syntax 3:  INERTIA  B_P,    K11,K22,K33,K12,K23,K31
+%Syntax 4:  INERTIA  B_P(A), L11,L22,L33,L12,L23,L31
+%Syntax 5:  INERTIA( P, C1, C2, ... )
+%Syntax 6:  INERTIA( P )
+%
+%   Input:  B -- the name of a body
+%           A -- the name of a reference frame
+%           P -- the name of a point
+%           C1, C2, ... -- the names of particles or bodies
+%
+%           Imn -- the  dot-product of Bm> with the dot-product of
+%                  I_B_BO>> with Bn>, where B1>, B2>, B3> are unit
+%                  vectors fixed in B, and I_B_BO>> is the central
+%                  inertia dyadic of B.
+%
+%           Jmn -- the  dot-product of Am> with the dot-product of
+%                  I_B_Bo>> with An>, where A1>, A2>, A3> are unit
+%                  vectors fixed in A, and I_B_BO>> is the central
+%                  inertia dyadic of B.
+%
+%           Kmn -- the  dot-product of Bm> with the dot-product of
+%                  I_B_P>>  with Bn>, where B1>, B2>, B3> are unit
+%                  vectors  fixed in B, and I_B_P>> is the inertia
+%                  dyadic of B for P.
+%
+%           Lmn -- the  dot-product of Am> with the dot-product of
+%                  I_B_P>>  with An>, where A1>, A2>, A3> are unit
+%                  vectors  fixed in A, and I_B_P>> is the inertia
+%                  dyadic of B for P.
+%
+%Output 1:  I_B_BO>> = I11*B1>*B1> + I12*B1>*B2> + I31*B1>*B3>
+%                    + I12*B2>*B1> + I22*B2>*B2> + I23*B2>*B3>
+%                    + I31*B3>*B1> + I23*B3>*B2> + I33*B3>*B3>
+%
+%Output 2:  I_B_BO>> = J11*A1>*A1> + J12*A1>*A2> + J31*A1>*A3>
+%                    + J12*A2>*A1> + J22*A2>*A2> + J23*A2>*A3>
+%                    + J31*A3>*A1> + J23*A3>*A2> + J33*A3>*A3>
+%
+%Output 3:  I_B_P>>  = K11*B1>*B1> + K12*B1>*B2> + K31*B1>*B3>
+%                    + K12*B2>*B1> + K22*B2>*B2> + K23*B2>*B3>
+%                    + K31*B3>*B1> + K23*B3>*B2> + K33*B3>*B3>
+%
+%Output 4:  I_B_P>>  = L11*A1>*A1> + L12*A1>*A2> + L31*A1>*A3>
+%                    + L12*A2>*A1> + L22*A2>*A2> + L23*A2>*A3>
+%                    + L31*A3>*A1> + L23*A3>*A2> + L33*A3>*A3>
+%
+%Output 5:  I_C1_P>> + I_C2_P>> + ...
+%
+%Output 6:  The sum of the inertia dyadics, about point P, of all bodies
+%           and particles named in RigidBody and Particle declarations
+%
+%  Remark:  Any name appearing as one of the last six arguments of
+%           INERTIA is automatically regarded as a constant, which
+%           makes  it  unnecessary  to  list  it  in  a  CONSTANT
+%           declaration.   When  an  argument  of  INERTIA  is  an
+%           expression, each symbolic constant or variable in  the
+%           expression  must appear previously in a  CONSTANT   or
+%           VARIABLE   declaration.   An  inertia  scalar  that is
+%           equal to zero does not have to appear explicitly as an
+%           argument  unless a nonzero inertia scalar appears sub-
+%           sequently in the argument list.  Expressions for iner-
+%           tia dyadics may  be entered directly, that is, without
+%           use of the INERTIA command.
+%
+%           In  Cases  1 - 4, any of the last six arguments can be
+%           replaced  with  an equation of the form ARG=VAL, where
+%           ARG  is  the  name of an inertia scalar and VAL is the
+%           numerical value of ARG.
+%
+%  Remark:  INERTIA is superseded by  GetInertia and SetInertia.
+%           INERTIA is deprecated and provided for SetDefaults( AUTOLEV ).
+%
+% Related:  SetMass,         GetMass,        SetInertia
+%           GetCMPosition,   GetCmVelocity,  GetCmAcceleration
+%           GetInertiaDyadic, GetInertiaMatrix, GetMomentOfInertia
+%           GetProductOfInertia, GetRadiusOfGyration, GetInertiaVector
+%    Old:   CM, MASS, INERTIA, SetDefaults( AUTOLEV )
+
+%KANEAUTOLEV
+%Kane       (Superseded by GetDynamicsKane, GetStaticsKane, and Solve)
+%
+% Purpose:  Simplifies Kane's dynamical equations; determines force and/or
+%           torque measure numbers associated with auxiliary motion variables.
+%
+%Syntax 1:  Kane()
+%Syntax 2:  Kane( METHOD, X )
+%
+%   Input:  X -- comma-separated list of names of force or torque
+%                measure numbers or a matrix of such names;
+%
+%           METHOD --  nothing, GAUSS, MINORS, or IMPLICIT
+%
+%Output 1:  The row/column matrix called ZERO, each element of which is
+%           a linear function, fi, of the first time-derivatives of
+%           the independent motion variables (factored on these) and
+%           such that fi = 0 is one of Kane's dynamical equations.
+%
+%Output 2:  In addition to Output 1, expressions for the elements of X.
+%
+%  Remark:  The KANE command should be preceded by a command of the form:
+%           ZERO = GetStaticsKane()  or  Zero = GetDynamicsKane().
+%
+%  Remark:  The matrix ZERO is used by the KANE command to produce
+%           dynamical differential equations of motion.
+%
+%  Remark:  The elements of X should appear linearly in the dynamical
+%           equations that correspond to auxiliary motion variables.
+%
+%           Only the elements of the ZERO matrix associated with
+%           auxiliary  motion  variables  are used to solve for X.
+%           If the KANE command encounters a singular matrix, try
+%           the SOLVE command.
+%
+%  Remark:  The elements of X are solved by one of three methods.
+%
+%           MINORS is advantageous for a small number of equations and
+%           for avoiding divide-by-zero problems other than when the
+%           set of equations are truly singular (the determinant of
+%           its coefficient matrix is zero).
+%
+%           GAUSS may be better than MINORS for solving larger number
+%           of equations when divide-by-zero problem associated with
+%           pivots in Gaussian elimination can be avoided.
+%
+%           IMPLICIT may be more efficient than MINORS or GAUSS when
+%           some of the unknowns x1, x2, ... are allowed to be
+%           expressed in terms of other unknowns.
+%
+%           If no method is specified, a method is chosen based on
+%           the number of equations and number of non-zero and
+%           non-numerical elements in the coefficient matrix.
+%
+%  Remark:  KANE is superseded by  GetDynamicsKane, SetDynamicsKane, Solve.
+%           KANE is deprecated and provided for SetDefaults( AUTOLEV ).
+%
+% Related:  AddForce, AddTorque, SetMass, SetInertia, Rotate, Translate
+%           GetDynamics, GetDynamicsKane, GetStatics, GetStaticsKane
+%           Constrain, SetGeneralizedSpeed
+%     Old:  FR, FRSTAR, KANE
+%     Old:  MotionVariable, MotionVariable', SetDefaults( AUTOLEV )
+
+%KE
+%KE   (also see GetKineticEnergy)
+%
+% Purpose:  Forms the kinetic energy, in the NewtonianFrame, of massive
+%           objects (e.g., declared as a RigidBody or Particle).
+%           Forms the homogeneous kinetic energy functions of degrees
+%           zero, one, and two, in the NewtonianFrame, of massive objects
+%           (e.g., declared as a RigidBody or Particle).
+%
+%Syntax 1:  KE()
+%Syntax 2:  KE( A1, A2, ... )
+%Syntax 3:  KE( n )
+%Syntax 4:  KE( n, A1, A2, ... )
+%
+%   Input:  A1, A2, ... -- particles and/or bodies
+%           n -- 0, 1, or 2
+%
+%Output 1:  Kinetic energy, in the NewtonianFrame, of all massive objects.
+%
+%Output 2:  Kinetic energy, in the NewtonianFrame, of A1, A2, ...
+%
+%Output 3:  Homogeneous kinetic energy function, in the NewtonianFrame,
+%           of degree n in quantities named in a MotionVariable declaration,
+%           of all massive objects.
+%
+%Output 4:  Homogeneous kinetic energy function, in the NewtonianFrame,
+%           of degree n in quantities named in a MotionVariable declaration,
+%           of A1, A2, ...
+%
+%  Remark:  Before executing a KE command involving a RigidBody or Particle,
+%           expressions for the following must be in the workspace:
+%           --  Angular velocity of the RigidBody in the NewtonianFrame
+%           --  Velocity of the RigidBody mass center in the NewtonianFrame
+%           --  Velocity of the particle in the NewtonianFrame
+%           --  The mass of the RigidBody and/or Particle
+%           --  Inertia scalars of the RigidBody
+%
+% Related:  GetLinearMomentum, GetAngularMomentum, GetKineticEnergy
+%           GetKineticEnergy0, GetKineticEnergy1, GetKineticEnergy2
+%           GetDynamics, GetDynamicsKane, GetStatics, GetStaticsKane
+%           SetGeneralizedSpeed
+%     Old:  GYROSTAT, MotionVariable, MotionVariable'
+%           SetDefaults( AUTOLEV )
+
+%MASS
+%Mass       (Superseded by GetMass and SetMass)
+%
+% Purpose:  Assigns masses to particles and bodies.
+%           Returns the sum of the masses assigned to particles and/or bodies.
+%
+%Syntax 1:  Mass Object1=m1, Object2=m2, ...
+%Syntax 2:  Mass( Object1, Object2, ... )
+%           Mass()
+%
+%   Input:  Object1, Object2, ... -- particles and/or bodies
+%
+%           m1, m2, ... -- names of, or expressions for, the masses of
+%                          of Object1, Object2, ..., respectively.
+%
+%Output 2:  Returns mass of OBJECT1 + mass of OBJECT2 + ...
+%Output 3:  Returns the sum of the masses of all massive objects.
+%
+%  Remark:  m1 (or similarly for m2) can be replaced with an equation of the
+%           form  Name1 = Expression1, where Name1 is the name of the mass
+%           of Object1 and Expression1 is the scalar expression assigned to Name1.
+%
+%  Remark:  MASS is superseded by  GetMass and SetMass.
+%           MASS is deprecated and provided for SetDefaults( AUTOLEV ).
+%
+% Related:  SetMass,         GetMass,        SetInertia
+%           GetCMPosition,   GetCmVelocity,  GetCmAcceleration
+%           GetInertiaDyadic, GetInertiaMatrix, GetMomentOfInertia
+%           GetProductOfInertia, GetRadiusOfGyration, GetInertiaVector
+%    Old:   CM, MASS, INERTIA, SetDefaults( AUTOLEV )
+
+%%MOD (UNUSED help)
+%%mod (IN DEVELOPMENT - NOT RECOMMENDED FOR USE)
+%
+% Purpose:  Returns the floating point remainder of two real numbers.
+%
+%  Syntax:  mod( x, y )
+%
+%   Input:  x -- an expression that resolves to a real number.
+%           y -- an expression that resolves to a real number.
+%
+%  Output:  Returns the floating-point remainder f of x/y, i.e.,
+%           returns f in the equation x = i *y+f,  where i is an
+%           integer, f has the same sign as X, and the absolute value
+%           of f is less than the absolute value of y.  Unfortunately
+%           this is not consistent with MATLAB's REM or MOD commands.
+%           Verify with C and C++.
+%
+% Related:  ceil, floor, int, max, min, mod, round, sign, MathFunctions
+%% %--------------------------------------------------------------------
+%% % Example: mod
+%% %--------------------------------------------------------------------
+%% A = mod( 10, 3 )
+%% B = mod( 10, -3 )
+%% C = mod( -11, 3 )
+%% D = mod( 11.5, 3 )
+%% E = mod( 11, 3.3 )
+%% Save Mod.html
+%% Quit
+
+%MOMENTUM
+%Momentum   (superseded by GetLinearMomentum, GetAngularMomentum, ...)
+%
+% Purpose:  Forms linear, angular, or generalized momenta.
+%
+%Syntax 1:  Momentum( LINEAR,  A1,A2, ... )
+%Syntax 2:  Momentum( LINEAR )
+%Syntax 3:  Momentum( ANGULAR, aboutPoint, A1,A2, ... )
+%Syntax 4:  Momentum( ANGULAR, aboutPoint )
+%Syntax 5:  Momentum( GENERALIZED, A1,A2, ... )
+%Syntax 6:  Momentum( GENERALIZED)
+%
+%   Input:  A1, A2, ... --  a massive objects (e.g., Particle or RigidBody).
+%
+%           aboutPoint -- a point or particle
+%
+%Output 1:  The sum of the linear momenta of A1, A2, ...,
+%           in the NewtonianFrame.
+%
+%Output 2:  The sum of the linear momenta of all massive objects
+%           (e.g., named in Particle or RigidBody declarations)
+%           in the NewtonianFrame.
+%
+%Output 3:  The sum of the angular momenta of A1, A2, ...,
+%           relative to aboutPoint, in the NewtonianFrame.
+%
+%Output 4:  The sum of the angular momenta of all massive objects
+%           (e.g., named in Particle or RigidBody declarations)
+%           relative to aboutPoint, in the NewtonianFrame.
+%
+%Output 5:  The sum of the generalized momenta of A1, A2, ...,
+%           in the NewtonianFrame.
+%
+%Output 4:  The sum of the generalized momenta of all massive objects
+%           (e.g., named in Particle or RigidBody declarations)
+%           in the NewtonianFrame.
+%
+% Related:  GetGeneralizedMomentum, GetLinearMomentum, GetAngularMomentum.
+%           Constrain, MotionVariable, MotionVariable',  SetGeneralizedSpeed
+%           Gyrostat, SetMass, SetInertia, Rotate, Translate
+%           GetDynamics, GetDynamicsKane, GetStatics, GetStaticsKane
+%     Old:  SetDefaults( AUTOLEV )
+
+%MOTIONVARIABLE
+%MotionVariable  (superseded by SetGeneralizedSpeed)
+%
+% Purpose:  Declares  the  names of time-dependent quantities, not
+%           specified  explicitly  as  functions of time, that are
+%           treated as motion variables  (generalized  speeds);
+%           returns  a  column matrix whose elements are a certain
+%           type of MotionVariable.
+%
+%Syntax 1:  MotionVariable  v, w, ...
+%Syntax 2:  MotionVariable()
+%Syntax 3:  MotionVariable( INDEPENDENT )
+%Syntax 4:  MotionVariable( AUXILIARY )
+%Syntax 5:  MotionVariable( PARTIALS )
+%Syntax 6:  MotionVariable( DEPENDENT )
+%Syntax 7:  MotionVariable
+%
+%   Input:  v -- a name that starts with a letter and that may be followed by
+%           a reasonable number of alphanumeric characters (similarly for w).
+%
+%Output 2:  Column matrix of names that appeared in MotionVariable declarations.
+%Output 3:  Column matrix of names that appeared in MotionVariable declarations
+%           and which are independent MotionVariables.
+%Output 4:  Column matrix of names that appeared in MotionVariable declarations
+%           and which are auxiliary MotionVariables.
+%Output 5:  Column matrix of names that appeared in MotionVariable declarations
+%           and which are independent or auxiliary MotionVariables.
+%Output 6:  Column matrix of names that appeared in MotionVariable declarations
+%           and which are dependent MotionVariables.
+%Output 7:  List of names that appeared in a MotionVariable declaration, or if
+%           a CONSTRAIN command was issued, a list of independent, dependent,
+%           and/or  auxiliary MotionVariables
+%
+%  Remark:  Each MotionVariable belongs to one of more sets.
+%           The first set, called independent motion variables,
+%           provide a complete characterization of a system's motion;
+%           the second set, called auxiliary motion variables,
+%           are used to bring into evidence torque and/or force measure numbers
+%           that otherwise would not appear in generalized active forces;
+%           the third set, called dependent motion variables,
+%           are introduced solely to facilitate kinematical analysis.
+%
+%  Remark:  Symbols  named in MotionVariable declarations may be
+%           followed by + or - .  In the first case, the symbol is
+%           regarded as real and non-negative.  In the second case
+%           the  symbol  is  regarded  as  real  and non-positive.
+%           Declaring with + or - affects certain simplifications.
+%
+%  Remark:  Names such as a{i}Str   may be used to declare a1Str ... aiStr.
+%           Names such as a{i:j}Str may be used to declare aiStr ... ajStr,
+%           Note: i and j are non-negative integers with i <= j.
+%
+%           b(m,n)Str may be used to declare bmStr ... bnStr.
+%           b(m:x,n:y)Str may be used to declare bmnStr ... bxyStr.
+%           Note: m, n, x, y are integers 0 to 9 with m <= x and n <= y.
+%
+% Related:  Constant, ImaginaryNumber, Specified, Variable, SetGeneralizedSpeed
+%           Constrain
+%     Old:  MotionVariable, MotionVariable', SetDefaults( AUTOLEV )
+%
+% Example 1:
+%
+%   (0) SetDefaults( AUTOLEV )
+%   (1) NewtonianFrame N
+%   (2) Particle P
+%   (3) MotionVariable  vx, vy
+%   (4) P.SetVelocity( N, vx*Nx> + vy*Ny> )
+%-> (5) V_P_N> = vx*Nx> + vy*Ny>
+%   (6) P.AddForce( 3*Nx> + 4*Ny> )
+%-> (7) Force_P> = 3*Nx> + 4*Ny>
+%   (8) GeneralizedActiveForces = GetGeneralizedForces()
+%-> (9) GeneralizedActiveForces = [3; 4]
+%
+% Example 2:
+%
+%   (0) SetDefaults( AUTOLEV )
+%   (1) MotionVariable  q', x', y'
+%   (2) IndependentBeforeConstrain = MotionVariable( INDEPENDENT )
+%-> (3) IndependentBeforeConstrain = [q'; x'; y']
+%   (4) Auxiliary[1] = q' + x' - y'
+%-> (5) Auxiliary[1] = q' + x' - y'
+%   (6) Auxiliary[2] = x' + y'
+%-> (7) Auxiliary[2] = x' + y'
+%   (8) Constrain( Auxiliary[x',y'] )
+%-> (9) x' = -0.5*q'
+%-> (10) y' = 0.5*q'
+%   (11) IndependentAfterConstrain = MotionVariable( INDEPENDENT )
+%-> (12) IndependentAfterConstrain = [q']
+%   (13) AuxiliaryMotionVariables = MotionVariable( AUXILIARY )
+%-> (14) AuxiliaryMotionVariables = [x'; y']
+%
+% Example 3:
+%
+%   (0) SetDefaults( AUTOLEV )
+%   (1) MotionVariable u{5}
+%   (2) Dependent[1] = u2 + 2*u4 - u1 - u3
+%-> (3) Dependent[1] = u2 + 2*u4 - u1 - u3
+%   (4) Dependent[2] = u1 + u2
+%-> (5) Dependent[2] = u1 + u2
+%   (6) Dependent[3] = u1 + u3 + u5 + 5*u2 - u4
+%-> (7) Dependent[3] = u1 + u3 + u5 + 5*u2 - u4
+%   (8) Constrain( Dependent[u1,u2,u4] )
+%-> (9) u1 = 0.1*u3 + 0.2*u5
+%-> (10) u2 = -0.2*u5 - 0.1*u3
+%-> (11) u4 = 0.2*u5 + 0.6*u3
+%   (12) IndependentAfterConstrain = MotionVariable( INDEPENDENT )
+%-> (13) IndependentAfterConstrain = [u3; u5]
+%   (14) DependentMotionVariables = MotionVariable( DEPENDENT )
+%-> (15) DependentMotionVariables = [u1; u2; u4]
+%
+% Example 4:
+%
+%   (0) SetDefaults( AUTOLEV )
+%   (1) MotionVariable u{5}
+%   (2) Dependent[1] = u1 + u2
+%-> (3) Dependent[1] = u1 + u2
+%   (4) Auxiliary[1] = u2 + 2*u4 - u1 - u3
+%-> (5) Auxiliary[1] = u2 + 2*u4 - u1 - u3
+%   (6) Dependent[2] = u1 + u3 + u5 + 5*u2 - u4
+%-> (7) Dependent[2] = u1 + u3 + u5 + 5*u2 - u4
+%   (8) Constrain( Dependent[u1,u4], Auxiliary[u2] )
+%-> (9) u1 = -u2
+%-> (10) u4 = u3 + u5 + 4*u2
+%-> (11) u2 = -0.2*u5 - 0.1*u3
+%   (12) IndependentAfterConstrain = MotionVariable( INDEPENDENT )
+%-> (13) IndependentAfterConstrain = [u3; u5]
+%   (14) DependentMotionVariables = MotionVariable( DEPENDENT )
+%-> (15) DependentMotionVariables = [u1; u4]
+%   (16) AuxiliaryMotionVariables = MotionVariable( AUXILIARY )
+%-> (17) AuxiliaryMotionVariables = [u2]
+%   (18) MotionVariablesForPartialVelocities = MotionVariable( PARTIALS )
+%-> (19) MotionVariablesForPartialVelocities = [u3; u5; u2]
+%
+
+%MotionVariable'
+%MotionVariable'  (superseded by SetGeneralizedSpeed)
+%
+% Purpose:  Declares  the  names of time-dependent quantities, not
+%           specified  explicitly  as  functions of time, that are
+%           treated   as  time-derivatives  of  motion  variables;
+%           returns  a  column matrix whose elements are a certain
+%           type of MotionVariable'.
+%
+%Syntax 1:  MotionVariable'  V,W, ...
+%Syntax 2:  MotionVariable'()
+%Syntax 3:  MotionVariable'( INDEPENDENT )
+%Syntax 4:  MotionVariable'( AUXILIARY )
+%Syntax 5:  MotionVariable'( PARTIALS )
+%Syntax 6:  MotionVariable'( DEPENDENT )
+%Syntax 7:  MotionVariable'
+%
+%   Input:  v' -- a name that starts with a letter and that may be
+%           followed by a reasonable number of alphanumeric characters
+%           and that ends with the prime symbol ' (similarly for w').
+%
+%Output 2:  Column matrix of names that appeared in MotionVariable' declarations.
+%Output 3:  Column matrix of names that appeared in MotionVariable' declarations
+%           and which are independent MotionVariable'.
+%Output 4:  Column matrix of names that appeared in MotionVariable' declarations
+%           and which are auxiliary MotionVariable'.
+%Output 5:  Column matrix of names that appeared in MotionVariable' declarations
+%           and which are independent or auxiliary MotionVariable'.
+%Output 6:  Column matrix of names that appeared in MotionVariable' declarations
+%           and which are dependent MotionVariable'.
+%Output 7:  List of names that appeared in a MotionVariable' declaration, or if
+%           a CONSTRAIN command was issued, a list of independent, dependent,
+%           and/or  auxiliary MotionVariable'.
+%
+%  Remark:  Each MotionVariable belongs to one of more sets.
+%           The first set, called independent motion variables,
+%           provide a complete characterization of a system's motion;
+%           the second set, called auxiliary motion variables,
+%           are used to bring into evidence torque and/or force measure numbers
+%           that otherwise would not appear in generalized active forces;
+%           the third set, called dependent motion variables,
+%           are introduced solely to facilitate kinematical analysis.
+%
+%  Remark:  Symbols named in MotionVariable' declarations may be
+%           followed by + or - .  In the first case, the symbol is
+%           regarded as real and non-negative.  In the second case
+%           the  symbol  is  regarded  as  real  and non-positive.
+%           Declaring with + or - affects certain simplifications.
+%
+%  Remark:  Names such as a{i}Str   may be used to declare a1Str ... aiStr.
+%           Names such as a{i:j}Str may be used to declare aiStr ... ajStr,
+%           Note: i and j are non-negative integers with i <= j.
+%
+%           b(m,n)Str may be used to declare bmStr ... bnStr.
+%           b(m:x,n:y)Str may be used to declare bmnStr ... bxyStr.
+%           Note: m, n, x, y are integers 0 to 9 with m <= x and n <= y.
+%
+% Related:  Constant, ImaginaryNumber, Specified, Variable, SetGeneralizedSpeed
+%           Constrain
+%     Old:  MotionVariable, MotionVariable', SetDefaults( AUTOLEV )
+%
+% Example 1:
+%
+%   (0) SetDefaults( AUTOLEV )
+%   (1) NewtonianFrame N
+%   (2) Particle P
+%   (3) P.SetMass( m )
+%   (4) MotionVariable'  vx', vy'
+%   (5) P.SetVelocity( N, vx*Nx> + vy*Ny>
+%-> (6) V_P_N> = vx*Nx> + vy*Ny>
+%   (7) P.AddForce( 3*Nx> + 4*Ny> )
+%   (8) Force_P> = 3*Nx> + 4*Ny>
+%   (9) KanesEquations = System.GetDynamicsKane()
+%->(10) KanesEquations = [m*vx' - 3; m*vy' - 4]
+%
+% Example 2:
+%
+%   (0) SetDefaults( AUTOLEV )
+%   (1) MotionVariable'  q'', x'', y''
+%   (2) IndependentBeforeConstrain = MotionVariable'( INDEPENDENT )
+%-> (3) IndependentBeforeConstrain = [q''; x''; y'']
+%   (4) Dependent[1] = q' + x' - y'
+%-> (5) Dependent[1] = q' + x' - y'
+%   (6) Dependent[2] = x' + y'
+%-> (7) Dependent[2] = x' + y'
+%   (8) Constrain( Dependent[x',y'] )
+%-> (9) x' = -0.5*q'
+%-> (10) y' = 0.5*q'
+%-> (11) x'' = -0.5*q''
+%-> (12) y'' = 0.5*q''
+%   (11) IndependentAfterConstrain = MotionVariable'( INDEPENDENT )
+%-> (12) IndependentAfterConstrain = [q'']
+%   (13) DependentMotionDtVariables = MotionVariable'( DEPENDENT )
+%-> (14) DependentMotionDtVariables = [x''; y'']
+%
+% Example 3:
+%
+%   (0) SetDefaults( AUTOLEV )
+%   (1) MotionVariable' u{5}'
+%   (2) Dependent[1] = u1 + u2
+%-> (3) Dependent[1] = u1 + u2
+%   (4) Auxiliary[1] = u2 + 2*u4 - u1 - u3
+%-> (5) Auxiliary[1] = u2 + 2*u4 - u1 - u3
+%   (6) Dependent[2] = u1 + u3 + u5 + 5*u2 - u4
+%-> (7) Dependent[2] = u1 + u3 + u5 + 5*u2 - u4
+%   (8) Constrain( Dependent[u1,u4], Auxiliary[u2] )
+%-> (9) u1 = -u2
+%-> (10) u4 = u3 + u5 + 4*u2
+%-> (11) u2 = -0.2*u5 - 0.1*u3
+%-> (12) u1' = -u2'
+%-> (13) u4' = u3' + u5' + 4*u2'
+%-> (14) u2' = -0.2*u5' - 0.1*u3'
+%   (15) IndependentAfterConstrain = MotionVariable'( INDEPENDENT )
+%-> (16) IndependentAfterConstrain = [u3'; u5']
+%   (17) DependentMotionDtVariables = MotionVariable'( DEPENDENT )
+%-> (18) DependentMotionDtVariables = [u1'; u4']
+%   (19) AuxiliaryMotionDtVariables = MotionVariable'( AUXILIARY )
+%-> (20) AuxiliaryMotionDtVariables = [u2']
+%   (21) MotionDtVariablesForPartials = MotionVariable'( PARTIALS )
+%-> (22) MotionDtVariablesForPartials = [u3'; u5'; u2']
+%
+
+%REPRESENT
+%REPRESENT  (Superseded by Dyadic, Matrix, and Vector)
+%
+% Purpose:  Produces matrix representations of vectors and dyadics.
+%           Produces vector and dyadic representations of matrices.
+%
+%Syntax 1:  REPRESENT( Vector, refFrame )
+%Syntax 2:  REPRESENT( Dyadic, refFrame )
+%Syntax 3:  REPRESENT( threeElementMatrix, refFrame )
+%Syntax 4:  REPRESENT( nineElementMatrix,  refFrame )
+%
+%   Input:  Vector -- a vector.
+%           Dyadic -- a dyadic.
+%           threeElementMatrix  -- 1x3 or 3x1 matrix.
+%           3x3Matrix  -- 3x3 matrix.
+%
+%           refFrame -- a reference frame (e.g., RigidFrame or RigidBody)
+%
+%Output 1:  Returns a 3x1 matrix whose elements are the refFramei>
+%           (i = 1,2,3)  measure numbers of Vector.
+%Output 2:  Returns a 3x3 matrix whose elements are the refFramei> * refFramej>
+%           (i,j = 1,2,3)  measure numbers of Dyadic.
+%Output 3:  Returns a vector whose refFramei> (i = 1,2,3)
+%           measure number is threeElementMatrix[i].
+%Output 4:  Returns a dyadic whose refFramei> * refFramej>  (i,j = 1,2,3)
+%           measure number is nineElementMatrix[i,j].
+%
+%  Remark:  REPRESENT is superseded by  Dyadic, Matrix, and Vector.
+%           REPRESENT is deprecated and provided for SetDefaults( AUTOLEV ).
+%
+% Related:  Express, Dyadic, Matrix, Vector
+%           GetColumns, GetDeterminant, GetDiagonalMatrix, GetEigen
+%           GetElement, GetIdentityMatrix, GetInverse, GetRows, GetTrace
+%           GetTranspose, GetZeroMatrix, Solve
+%     Old:  SetDefaults( AUTOLEV )
+
+%TSTAR
+%TSTAR      (superseded by -GetMomentOfEffectiveForce)
+%
+% Purpose:  Forms an expression for the inertia torque of a rigid
+%           body in a reference frame.
+%
+%  Syntax:  TSTAR( B, N )
+%
+%   Input:  B -- a rigid body
+%           N -- a reference frame
+%
+%  Output:  The inertia torque of B in N
+%     Old:  SetDefaults( AUTOLEV )
+

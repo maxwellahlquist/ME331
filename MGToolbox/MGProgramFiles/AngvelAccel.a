@@ -1,0 +1,27 @@
+% AngvelAccel   Uses Angvel command to forms angular velocity, e.g., w_B_A>.
+%               Also forms angular acceleration,  e.g., alf_B_A>.
+% Copyright (c) 2020-2021 Motion Genesis LLC.  All rights reserved.
+%----------------------------------------------------------------------------
+% Syntax0: AngvelAccel( A, B )
+% Syntax1: AngvelAccel( A, B, Euler, E1, E2, E3, E4 )
+% Syntax2: AngvelAccel( A, B, Rodrigues, r1, r2, r3 )
+% Syntax3: AngvelAccel( A, B, Body123,   q1, q2, q3 )
+% Syntax4: AngvelAccel( A, B, Space123,  q1, q2, q3 )
+% e.g., Dt( w_#2#_#1#>, #1# )
+%----------------------------------------------------------------------------
+IF( #NUM_ARGS# == 2 ) 
+{ 
+   ANGVEL(#1#, #2#) 
+   alf_#2#_#1#> = #2#.GetAngularAcceleration(#1#)
+}
+ELSEIF( #NUM_ARGS# == 6 ) 
+{ 
+   ANGVEL(#1#, #2#, #3#, #4#, #5#, #6#) 
+   alf_#2#_#1#> = #2#.GetAngularAcceleration(#1#)
+}
+ELSEIF( #NUM_ARGS# == 7 ) 
+{ 
+   ANGVEL(#1#, #2#, #3#, #4#, #5#, #6#, #7#) 
+   alf_#2#_#1#> = #2#.GetAngularAcceleration(#1#)
+}
+ELSE {echo("\a\kError: Invalid number of arguments to the command AngvelAccel.\n")}

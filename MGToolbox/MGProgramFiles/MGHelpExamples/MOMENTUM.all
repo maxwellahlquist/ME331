@@ -1,0 +1,71 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: MOMENTUM   (linear momentum)
+   (3) %--------------------------------------------------------------------
+   (4) SetDefaults( AUTOLEV )
+   (5) NewtonianFrame   N
+   (6) Particle         A
+   (7) RigidBody        B
+   (8) Variable         u1', u2'
+   (9) Specified        q'
+   (10) Constant         L
+   (11) SetGeneralizedSpeed( u1, u2 )
+   (12) A.SetMass( mA )
+   (13) B.SetMass( mB )
+   (14) SIMPROT( N, B, 1, Q )
+-> (15) N_B = [1, 0, 0; 0, cos(q), -sin(q); 0, sin(q), cos(q)]
+
+   (16) W_B_N> = U2*B1>
+-> (17) W_B_N> = u2*B1>
+
+   (18) V_A_N> = U1*N3>
+-> (19) V_A_N> = u1*N3>
+
+   (20) P_A_Bo> = 0.5*L*B2>
+-> (21) P_A_Bo> = 0.5*L*B2>
+
+   (22) V2PTS(N,B,A,BO)
+-> (23) v_BO_N> = 0.5*L*u2*B3> + u1*N3>
+
+   (24) LinearMomentumOfAInN> = MOMENTUM( LINEAR, A )
+-> (25) LinearMomentumOfAInN> = mA*u1*N3>
+
+   (26) LinearMomentumOfSinN> = MOMENTUM( LINEAR )
+-> (27) LinearMomentumOfSinN> = 0.5*L*mB*u2*B3> + (mA+mB)*u1*N3>
+
+   (28) %--------------------------------------------------------------------
+   (29) % Example 2: MOMENTUM   (angular momentum)
+   (30) %--------------------------------------------------------------------
+   (31) Point   So      % System mass center
+   (32) INERTIA B,I,0,I
+-> (33) I_B_BO>> = I*B1>*B1> + I*B3>*B3>
+
+   (34) P_A_So> = CM( A )
+-> (35) P_A_So> = 0.5*L*mB/(mA+mB)*B2>
+
+   (36) AngularMomentumOfAAboutBoInN> = MOMENTUM( ANGULAR, BO, A )
+-> (37) AngularMomentumOfAAboutBoInN> = -0.5*L*mA*cos(q)*u1*N1>
+
+   (38) AngularMomentumOfBAboutBoInN> = MOMENTUM( ANGULAR, BO, B )
+-> (39) AngularMomentumOfBAboutBoInN> = I*u2*B1>
+
+   (40) AngularMomentumOfSAboutBoInN> = MOMENTUM( ANGULAR, BO )
+-> (41) AngularMomentumOfSAboutBoInN> = (I*u2-0.5*L*mA*cos(q)*u1)*B1>
+
+   (42) AngularMomentumOfSAbouSoInN> = MOMENTUM(ANGULAR,SO)
+-> (43) AngularMomentumOfSAbouSoInN> = (I*u2+0.25*L*mB*(1-mB/(mA+mB))*(L*u2+2*
+        cos(q)*u1)-0.5*L*mA*mB*cos(q)*u1/(mA+mB))*B1>
+
+   (44) %--------------------------------------------------------------------
+   (45) % Example 3: MOMENTUM   (generalized momentum)
+   (46) %--------------------------------------------------------------------
+   (47) GeneralizedMomentaOfA = MOMENTUM( GENERALIZED, A )
+-> (48) GeneralizedMomentaOfA = [mA*u1; 0]
+
+   (49) GeneralizedMomentaOfB = MOMENTUM( GENERALIZED, B)
+-> (50) GeneralizedMomentaOfB[1] = 0.5*mB*(2*u1+L*cos(q)*u2)
+-> (51) GeneralizedMomentaOfB[2] = I*u2 + 0.25*L*mB*(L*u2+2*cos(q)*u1)
+
+   (52) GeneralizedMomentaOfS = MOMENTUM( GENERALIZED )
+-> (53) GeneralizedMomentaOfS[1] = mA*u1 + 0.5*mB*(2*u1+L*cos(q)*u2)
+-> (54) GeneralizedMomentaOfS[2] = I*u2 + 0.25*L*mB*(L*u2+2*cos(q)*u1)
+

@@ -1,0 +1,15 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: SetEulerParameterODE
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame  A, B
+   (5) Variable    wx,  wy,  wz
+   (6) Variable    e0', e1', e2', e3' 
+   (7) B.SetAngularVelocity( A, wx*Bx> + wy*By> + wz*Bz> )
+-> (8) w_B_A> = wx*Bx> + wy*By> + wz*Bz>
+
+   (9) B.SetEulerParameterODE( A, e0, e1, e2, e3 )
+-> (10) e0' = -0.5*e1*wx - 0.5*e2*wy - 0.5*e3*wz
+-> (11) e1' = 0.5*e0*wx + 0.5*e2*wz - 0.5*e3*wy
+-> (12) e2' = 0.5*e0*wy + 0.5*e3*wx - 0.5*e1*wz
+-> (13) e3' = 0.5*e0*wz + 0.5*e1*wy - 0.5*e2*wx
+

@@ -1,0 +1,194 @@
+% MotionGenesis file:  22.17.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+
+%   Physical objects.
+NewtonianFrame  N                % Earth.
+RigidBody       A                % Vertical Post
+RigidBody       B                % Link 1
+RigidBody       C                % Link 2
+RigidBody	D		 % Shell
+RigidBody       E                % Sphere
+
+Point		AB( A )
+Point		BC( B )
+Point		CD( C )
+Point           EN( E )
+Particle	m
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    qA'', qB'', qC''	 % qA, qB, qC and its 1st and 2nd derivatives.
+Variable    wx', wy', wz'
+Variable    Fx, Fy, Fz		% Contact forces at EN
+Variable    Td			% Revolute motor torque at CD
+
+Constant    	g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+Constant	r = 0.4 m
+Constant	h = 0.6 m
+Constant	LB = 0.8 m
+Constant	LC = 1.2 m
+Constant	mE = 50 kg
+Constant	mm = 800 kg
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+%Come back here later
+A.SetMass( 0 )
+B.SetMass( 0 )
+C.SetMass( 0 )
+D.SetMass( 0 )
+% will this make everything go away
+E.SetMass( mE )
+m.SetMass( mm )
+A.SetInertia( Acm, 0, 0, 0 )
+B.SetInertia( Bcm, 0, 0, 0 )
+C.SetInertia( Ccm, 0, 0, 0 )
+D.SetInertia( Dcm, 0, 0, 0 )
+E.SetInertia( Ecm, A, IExx = 2/5*mE*r^2,  IEyy = 2/5*mE*r^2,  IEzz = 2/5*mE*r^2 )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+A.RotateY( N, qA )
+B.RotateZ( A, qB )
+C.RotateNegativeZ( A, qC )
+D.SetRotationMatrix( A, [1, 0, 0; 0, 1, 0; 0, 0, 1] )
+E.SetAngularVelocityAcceleration( A, wx*Ax> + wy*Ay> + wz*Az> )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+AB.SetPositionVelocityAcceleration( No, h*Ay> )
+Acm.SetPositionVelocityAcceleration( No, h/2*Ay> )
+BC.SetPositionVelocityAcceleration( AB, LB*Bx> )
+CD.SetPositionVelocityAcceleration( BC, LC*Cx> )
+Ecm.SetPositionVelocityAcceleration( CD, -r*Ay> )
+EN.SetPositionVelocityAcceleration( Ecm, -r*Ay> )
+m.SetPositionVelocityAcceleration( CD, 0> )
+
+NoAB> = AB.GetPosition( No )
+ABBC> = BC.GetPosition( AB )
+BCCD> = CD.GetPosition( BC )
+CDEcm> = Ecm.GetPosition( CD )
+EcmEN> = EN.GetPosition( Ecm )
+
+pseudoLoop> = NoAB> + ABBC> + BCCD> + CDEcm> + EcmEN> % Only a closed loop in Ay>
+Variable x = Dot(pseudoLoop>, Nx>)
+Variable z = Dot(pseudoLoop>, Nz>)
+%--------------------------------------------------------------------
+%   Motion constraints (if any).
+
+MotionConstraint[1] = DtDt( Dot( pseudoLoop>, Ay> )) % Pseudo Loop Constraint
+MotionConstraint[2] = Dt( Dot( EN.GetVelocity( N ), Ax> ) )
+MotionConstraint[3] = Dt( Dot( EN.GetVelocity( N ), Az> ) )
+%SolveDt( MotionConstraint[2:3] = 0,  wx', wz' ) % May need to come back and do this part...
+% Come back and look at the website
+% Do change variables???
+
+%--------------------------------------------------------------------
+m.AddForceGravity( -g*Ny> )
+E.AddForceGravity( -g*Ny> )
+EN.AddForce( Fx*Ax> + Fy*Ay> + Fz*Az> )
+D.AddTorque( C, Td*Az> )
+%--------------------------------------------------------------------
+%   Rotational dynamic equations (M = DH/Dt + ...).
+%   For static analysis, use  B.GetStatics( aboutPoint ).
+
+Dynamics[1] = Dot(  System(A, B, C, D, E).GetDynamics(No),  Ay>  )
+Dynamics[2] = Dot(  System(B, C, D, E).GetDynamics(AB),  Az>  )
+Dynamics[3] = Dot(  System(C, D, E).GetDynamics(BC),  Az>  )
+Dynamics[4] = Dot(  System(D, E).GetDynamics(CD),  Az>  )
+Dynamics[5] = Dot(  E.GetDynamics(Ecm),  Ax>  )
+Dynamics[6] = Dot(  E.GetDynamics(Ecm),  Ay>  )
+Dynamics[7] = Dot(  E.GetDynamics(Ecm),  Az>  )
+%--------------------------------------------------------------------
+%   Solve algebraic equations for list of unknowns.
+%Solve( [Dynamics; MotionConstraint] = 0,   qA'', qB'', qC'', wx', wy', wz', Td, Fx, Fy, Fz )
+Solve( Dynamics = 0,   qA'', qB'', qC'', wx', wy', wz', Td)
+
+Constant qAF = 2*pi	rad
+Constant qAo = 0	rad
+Constant qBF = 60	deg
+Constant qBo = 20	deg
+Constant tf = 16	sec
+Constant kpA = 3000	Newton*m
+Constant kpB = 3000	Newton*m
+Constant kdA = 300	Newton*m
+Constant kdB = 300	Newton*m
+
+Specified	qAD''
+SetDt( qAD =  (qAF - qAo)*t/tf )
+Specified	qBD''
+SetDt( qBD = qBo + (qBF - qBo)*t/tf - (qBF-qBo)*sin(2*pi*t/tf)/(2*pi) )
+
+Specified	TA = -kpA*(qA - qAD) - kdA*(qA' - qAD')
+Specified	TB = -kpB*(qB - qBD) - kdB*(qB' - qBD')
+
+A.AddTorque( N, TA*Ay> )
+B.AddTorque( A, TB*Az> )
+% Must redefine now that their are motor torques
+Dynamics[1] := Dot(  System(A, B, C, D, E).GetDynamics(No),  Ay>  )
+Dynamics[2] := Dot(  System(B, C, D, E).GetDynamics(AB),  Az>  )
+Dynamics[3] := Dot(  System(C, D, E).GetDynamics(BC),  Az>  )
+Dynamics[4] := Dot(  System(D, E).GetDynamics(CD),  Az>  )
+Dynamics[5] := Dot(  E.GetDynamics(Ecm),  Ax>  )
+Dynamics[6] := Dot(  E.GetDynamics(Ecm),  Ay>  )
+Dynamics[7] := Dot(  E.GetDynamics(Ecm),  Az>  )
+Solve( [Dynamics; MotionConstraint] := 0,   qA'', qB'', qC'', wx', wy', wz', Td, Fx, Fy, Fz )
+
+Input  tFinal = 16 sec,  tStep = 0.02 sec,  absError = 1.0E-07
+Variable KE = System.GetKineticEnergy()
+Variable Work' = System.GetPower()
+Variable KEMinusWork = KE - Work
+Input  qA = 0 deg,  qA' = 0 rad/sec, qB = 20 deg,  qB' = 0 rad/sec, qC' = 0 rad/sec, wx = 0, wy = 0, wz = 0, Work = 0
+SolveSetInput(   Dot(pseudoLoop>, Ny>) = 0,	qC  = -pi/6 rad ) % I think it gives the wrong initial qC.
+Output x m, z m, t sec, KEMinusWork
+ODE ()
+OutputPlot x m, z m
+Plot ODE.1
+Save  22.17.html
+Quit
+
+%--------------------------------------------------------------------
+%   Numerical integration parameters.
+Input  tFinal = 16 sec,  tStep = 0.02 sec,  absError = 1.0E-07
+
+%--------------------------------------------------------------------
+%   List quantities to be output from ODE.
+Output  t sec,  qA deg,  qB deg,  qC deg,  FCx Newtons,  FCy  Newtons
+// must define some variable to get position
+%--------------------------------------------------------------------
+%   Augment dynamics with constraints and solve ODEs (plot results).
+ODE( [Dynamics; LoopDtDt] = 0,  qA'', qB'', qC'', FCx, FCy )  MGFourBarDynamicsFBD
+% Plot MGFourBarDynamicsFBD.1 [1, 2, 3, 4]
+
+
+Quit
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+%   Energy calculations (if needed).
+Variable workDone' = Dot( someForce>, someVelocity> )
+KE = System.GetKineticEnergy()
+PEgravity = System.GetForceGravityPotentialEnergy( -g*Ny>, No )
+MechanicalEnergy = KE + PEgravity - workDone
+%--------------------------------------------------------------------
+%   Momentum calculations (if needed).
+H> = System.GetAngularMomentum( aboutPoint )
+L> = EvaluateToNumber( System.GetLinearMomentum() )
+%--------------------------------------------------------------------
+%   Other calculations (e.g., for output).
+xQ = Dot(  Q.GetPosition(No),  Nx>  )
+%--------------------------------------------------------------------
+%   Set initial values for variables (for subsequent ODE command).
+Input  qA = 30 deg,  qA' = 0 rad/sec
+Input  qB = 90 deg,  qB' = 0 rad/sec
+%--------------------------------------------------------------------
+%   List output quantities (e.g., from the ODE command).
+Output      t sec,  x m,  Fx Newton,  Fy Newton
+OutputPlot  t sec,  qA degrees  qB degrees
+%--------------------------------------------------------------------
+%   Set numerical integration parameters and solve ODEs.
+%   Or auto-generate MATLAB, C, or Fortran code.
+Input  tFinal = 10 sec,  tStep = 0.02 sec,  absError = 1.0E-07
+ODE()  Filename    % or ODE( Zero = 0, listOfVariablesToSolve ) Filename.m
+%--------------------------------------------------------------------
+%   Record input together with responses.
+Save  someFileName.html
+Quit
+

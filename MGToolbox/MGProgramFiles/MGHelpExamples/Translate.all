@@ -1,0 +1,61 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: Translate 
+   (3) % Set Q1's velocity and acceleration in N by differentiation. 
+   (4) %--------------------------------------------------------------------
+   (5) NewtonianFrame N             
+   (6) Point     Q1            
+   (7) Variable  x1'', y1''           
+   (8) Q1.Translate( No,  x1*Nx> + y1*Ny> )
+-> (9) p_No_Q1> = x1*Nx> + y1*Ny>
+-> (10) v_Q1_N> = x1'*Nx> + y1'*Ny>
+-> (11) a_Q1_N> = x1''*Nx> + y1''*Ny>
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2: Translate 
+   (14) % Set Q2's velocity and acceleration in N by differentiation.
+   (15) %--------------------------------------------------------------------
+   (16) Point     Q2            
+   (17) Variable  x2'', y2''  
+   (18) Q2.Translate( Q1,  x2*Nx> + y2*Ny> )
+-> (19) p_Q1_Q2> = x2*Nx> + y2*Ny>
+-> (20) v_Q2_N> = (x1'+x2')*Nx> + (y1'+y2')*Ny>
+-> (21) a_Q2_N> = (x1''+x2'')*Nx> + (y1''+y2'')*Ny>
+
+   (22) %--------------------------------------------------------------------
+   (23) % Example 3: Translate
+   (24) % Set Q3's velocity and acceleration in N via two points fixed on B.
+   (25) %--------------------------------------------------------------------
+   (26) RigidBody B                  % Body B translates and rotates in N.
+   (27) Point     Q3( B )            % Q3 is a point fixed on B.
+   (28) Constant  L                  % Distance between Bo and Q3.
+   (29) Variable  wB'                % Angular speed and time-derivative.
+   (30) B.SetAngularVelocityAcceleration( N,  wB*Bz> )
+-> (31) w_B_N> = wB*Bz>
+-> (32) alf_B_N> = wB'*Bz>
+
+   (33) Bo.Translate( No,  0.5*t^2*Nx> )
+-> (34) p_No_Bo> = 0.5*t^2*Nx>
+-> (35) v_Bo_N> = t*Nx>
+-> (36) a_Bo_N> = Nx>
+
+   (37) Q3.Translate( Bo,  L*Bx>,  B )
+-> (38) p_Bo_Q3> = L*Bx>
+-> (39) v_Q3_N> = L*wB*By> + t*Nx>
+-> (40) a_Q3_N> = -L*wB^2*Bx> + L*wB'*By> + Nx>
+
+   (41) %--------------------------------------------------------------------
+   (42) % Example 4: Translate
+   (43) % Set Q4's velocity and acceleration in N via one point moving on B.
+   (44) %--------------------------------------------------------------------
+   (45) Point      Q4,  BQ4( B )     % BQ4 is point of B coincident with Q4.
+   (46) Variable   x4''  
+   (47) Q4.Translate( Bo,  x4*Bx>,  B,  BQ4 )
+-> (48) p_Bo_Q4> = x4*Bx>
+-> (49) p_Bo_BQ4> = x4*Bx>
+-> (50) v_BQ4_N> = wB*x4*By> + t*Nx>
+-> (51) v_Q4_B> = x4'*Bx>
+-> (52) v_Q4_N> = x4'*Bx> + wB*x4*By> + t*Nx>
+-> (53) a_BQ4_N> = -x4*wB^2*Bx> + x4*wB'*By> + Nx>
+-> (54) a_Q4_B> = x4''*Bx>
+-> (55) a_Q4_N> = (x4''-x4*wB^2)*Bx> + (x4*wB'+2*wB*x4')*By> + Nx>
+

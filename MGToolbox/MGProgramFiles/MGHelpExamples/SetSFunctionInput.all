@@ -1,0 +1,15 @@
+   (1) %---------------------------------------------------------------------
+   (2) % Example: SetSFunctionInput
+   (3) %---------------------------------------------------------------------
+   (4) Specified  Fx = 0
+-> (5) Fx = 0
+
+   (6) Constant   m = 1000 kg
+   (7) Variable   x'' = Fx / m
+-> (8) x'' = Fx/m
+
+   (9) SetSFunctionInput( Fx )
+   (10) Input  x=2 m, x'=0 km/sec
+   (11) Output t sec,  x meter,  x' km/sec
+   (12) ODE() CarCruiseControl.mSFunction
+

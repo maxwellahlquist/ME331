@@ -1,0 +1,62 @@
+% MotionGenesis file: MGIceSkaterWithTurntableDynamics.txt
+% Copyright (c) 2015 Motion Genesis LLC.  All rights reserved.
+%------------------------------------------------------------
+NewtonianFrame N           % Earth.
+RigidBody      A           % Head, torsion, legs.
+RigidFrame     B           % Arms.
+Particle       Q           % Heavy dumbbell.
+%------------------------------------------------------------
+Specified   qB''           % Arm angle.
+Variable    wA'            % Ay> measure of A's angular velocity in N.
+Constant    g = 9.8 m/s^2  % Earth's gravitational acceleration.
+Constant    hA             % Distance between Acm and Bo.
+Constant    L = 0.7 m      % Distance between Bo and Q.
+Q.SetMass( m = 12 kg )
+A.SetInertia( Acm,  Ixx = 18.6 kg*m^2,  Iyy = 0.6 kg*m^2,  Izz = 18 kg*m^2 )
+%------------------------------------------------------------
+%   Rotational kinematics.
+A.SetAngularVelocity(  N,  wA*Ay> )
+B.RotateZ(  A,  qB )
+%------------------------------------------------------------
+%   Translational kinematics.
+Acm.SetVelocity(  N,  0>  )
+Bo.Translate(  Acm,  hA*Ay>  )
+Q.Translate(  Bo,  -L*By>  )
+%------------------------------------------------------------
+%   Add relevant contact and distance forces.
+Q.AddForceGravity(  -g*Ay>  )
+%------------------------------------------------------------
+%   Equation of motion with angular momentum principle (MG road-maps).
+Dynamics = Dot( Ay>,  System(A,B,Q).GetDynamics(Bo)  )
+%------------------------------------------------------------
+%   Optional: Equation of motion with Kane's method.
+SetGeneralizedSpeed( wA )
+KaneDynamics = System.GetDynamicsKane()
+%------------------------------------------------------------
+%   Angular momentum (Ay> measure is constant, magnitude not constant).
+SystemAngularMomentumAboutBo> = System.GetAngularMomentum(Bo)
+Hy = Dot(  SystemAngularMomentumAboutBo>,  Ay>  )
+HMag = GetMagnitude(  SystemAngularMomentumAboutBo>  )
+%------------------------------------------------------------
+%   Sum of kinetic and potential energy (not constant).
+KineticEnergy = System.GetKineticEnergy()
+GravityPotentialEnergy = Q.GetForceGravityPotentialEnergy(  -g*Ay>,  Bo  )
+MechanicalEnergy = KineticEnergy + GravityPotentialEnergy
+%------------------------------------------------------------
+%   Integration parameters and initial value of wA.
+Input  tFinal = 4 sec,  tStep = 0.02 sec,  absError = 1.0E-08
+Input  wA = 6 rad/sec
+%------------------------------------------------------------
+%   Specified expressions
+SetDt( qB = pi/4*t )
+%--------------------------------------------------------------------
+%   Solve equation of motion for wA'.
+Solve( Dynamics = 0,  wA' )
+%------------------------------------------------------------
+%   List output quantities and solve ODE for wA(t).
+Output  t sec,  wA rad/sec,  qB degrees,  HMag kg*m^2/sec,  Hy kg*m^2/sec,  MechanicalEnergy Joules
+ODE() MGIceSkaterWithTurntableDynamics
+Plot MGIceSkaterWithTurntableDynamics.1
+%------------------------------------------------------------
+Save MGIceSkaterWithTurntableDynamics.html
+Quit

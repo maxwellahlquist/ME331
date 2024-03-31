@@ -1,0 +1,28 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetAngularVelocity 
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame N             
+   (5) RigidBody  A, B
+   (6) Variable   wx, wy, wz,  w1, w2, w3
+   (7) A.SetAngularVelocity( N, wx*Ax> + wy*Ay> + wz*Az> )
+-> (8) w_A_N> = wx*Ax> + wy*Ay> + wz*Az>
+
+   (9) B.SetAngularVelocity( A, w1*Ax> + w2*Ay> + w3*Az> )
+-> (10) w_B_A> = w1*Ax> + w2*Ay> + w3*Az>
+
+   (11) BAngularVelocityInN> = B.GetAngularVelocity( N )
+-> (12) BAngularVelocityInN> = (w1+wx)*Ax> + (w2+wy)*Ay> + (w3+wz)*Az>
+
+   (13) %--------------------------------------------------------------------
+   (14) % Example: GetAngularVelocity (via RigidFrame C fixed to RigidBody B).
+   (15) %--------------------------------------------------------------------
+   (16) RigidFrame C( B )
+   (17) CAngularVelocityInB> = C.GetAngularVelocity( B )
+-> (18) CAngularVelocityInB> = 0>
+
+   (19) CAngularVelocityInA> = C.GetAngularVelocity( A )
+-> (20) CAngularVelocityInA> = w1*Ax> + w2*Ay> + w3*Az>
+
+   (21) CAngularVelocityInN> = C.GetAngularVelocity( N )
+-> (22) CAngularVelocityInN> = (w1+wx)*Ax> + (w2+wy)*Ay> + (w3+wz)*Az>
+

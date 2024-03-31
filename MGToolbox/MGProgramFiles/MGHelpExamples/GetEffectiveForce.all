@@ -1,0 +1,32 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetEffectiveForce  (particle moving in a plane)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N             
+   (5) Particle       Q             
+   (6) Q.SetMass( mQ )
+   (7) Variable       x'', y'', z''    
+   (8) Q.SetAcceleration( N, x''*Nx> + y''*Ny> + z''*Nz> )
+-> (9) a_Q_N> = x''*Nx> + y''*Ny> + z''*Nz>
+
+   (10) QEffectiveForce> = Q.GetEffectiveForce()
+-> (11) QEffectiveForce> = mQ*x''*Nx> + mQ*y''*Ny> + mQ*z''*Nz>
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2: GetEffectiveForce  (rigid body moving in a plane)
+   (14) %--------------------------------------------------------------------
+   (15) RigidBody  B             
+   (16) B.SetMass( mB )
+   (17) Variable   vx', vy', vz'    
+   (18) Bcm.SetAcceleration( N, vx'*Nx> + vy'*Ny> + vz'*Nz> )
+-> (19) a_Bcm_N> = vx'*Nx> + vy'*Ny> + vz'*Nz>
+
+   (20) BEffectiveForce> = B.GetEffectiveForce()
+-> (21) BEffectiveForce> = mB*vx'*Nx> + mB*vy'*Ny> + mB*vz'*Nz>
+
+   (22) %--------------------------------------------------------------------
+   (23) % Example 3: GetEffectiveForce  (linear momentum of a system)
+   (24) %--------------------------------------------------------------------
+   (25) SEffectiveForce> = System.GetEffectiveForce()
+-> (26) SEffectiveForce> = (mB*vx'+mQ*x'')*Nx> + (mB*vy'+mQ*y'')*Ny> + (mB*vz'+
+        mQ*z'')*Nz>
+

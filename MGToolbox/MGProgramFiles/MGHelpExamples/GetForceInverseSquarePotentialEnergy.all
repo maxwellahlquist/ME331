@@ -1,0 +1,13 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetForceInverseSquarePotentialEnergy
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N             
+   (5) Particle   P, Q             
+   (6) Variable   x, y
+   (7) Constant   coef
+   (8) Q.SetPosition( P, x*Nx> + y*Ny> )
+-> (9) p_P_Q> = x*Nx> + y*Ny>
+
+   (10) PotentialEnergy = Q.GetForceInverseSquarePotentialEnergy( P, coef )
+-> (11) PotentialEnergy = coef/sqrt(x^2+y^2)
+

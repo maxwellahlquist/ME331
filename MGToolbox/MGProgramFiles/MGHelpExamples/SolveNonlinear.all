@@ -1,0 +1,94 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: SolveNonlinear  (one equation in one unknown) 
+   (3) %--------------------------------------------------------------------
+   (4) Variable z
+   (5) ExpressionEqualToZero = -1 + z^2 + sin(z)^2.2
+-> (6) ExpressionEqualToZero = -1 + z^2 + sin(z)^2.2
+
+   (7) SolveNonlinear( ExpressionEqualToZero, z=2 )
+-> (8) z = 0.7528387
+
+   (9) %--------------------------------------------------------------------
+   (10) % Example 2: SolveNonlinear  (two equations in two unknowns) 
+   (11) %--------------------------------------------------------------------
+   (12) Variable  x, y
+   (13) ZeroMatrix[1] = -1 + x^2 + y^2         % Equation for  circle
+-> (14) ZeroMatrix[1] = -1 + x^2 + y^2
+
+   (15) ZeroMatrix[2] = y - sin(x)             % Sine function
+-> (16) ZeroMatrix[2] = y - sin(x)
+
+   (17) SolveNonlinear( ZeroMatrix, x=2, y=3 )
+-> (18) x = 0.7390851
+-> (19) y = 0.673612
+
+   (20) %--------------------------------------------------------------------
+   (21) % Example 3: SolveNonlinear  (two equations in two unknowns w/ input) 
+   (22) %--------------------------------------------------------------------
+   (23) Variable  x1, x2
+   (24) Constant  a, b
+   (25) Zero[1] = -1 + x1^2/a^2 + x2^2/b^2     % Equation for an ellipse
+-> (26) Zero[1] = -1 + x1^2/a^2 + x2^2/b^2
+
+   (27) Zero[2] = x2 - sin(x1)                 % Sine function
+-> (28) Zero[2] = x2 - sin(x1)
+
+   (29) Input  a=2, b=1
+   (30) SolveNonlinear( Zero, x1=1, x2=25 )
+-> (31) x1 = 1.029867
+-> (32) x2 = 0.8572303
+
+   (33) %--------------------------------------------------------------------
+   (34) % Example 4: SolveNonlinear  (return the solution without assignment) 
+   (35) %--------------------------------------------------------------------
+   (36) Variable  z1, z2
+   (37) ZeroEqn[1] = -27 + exp(z1) + cosh(z2)
+-> (38) ZeroEqn[1] = -27 + exp(z1) + cosh(z2)
+
+   (39) ZeroEqn[2] = -0.3 + sin(z1) + cos(z1)
+-> (40) ZeroEqn[2] = -0.3 + sin(z1) + cos(z1)
+
+   (41) solutionMatrix = SolveNonlinear( ZeroEqn, z1=1, z2=2 )
+-> (42) solutionMatrix = [2.142438; 3.609093]
+
+   (43) %--------------------------------------------------------------------
+   (44) % Example 5: SolveNonlinear  (guess and solution have units) 
+   (45) %--------------------------------------------------------------------
+   (46) SolveNonlinear( sin(z1), z1=91 deg )
+-> (47) z1 = 3.141593       %  or  z1 = 180 deg.
+
+   (48) %--------------------------------------------------------------------
+   (49) % Example 6: SolveNonlinearDt  (differentiates to also solve for q2') 
+   (50) %--------------------------------------------------------------------
+   (51) Variable q1'', q2''
+   (52) Input q1 = 0 deg
+   (53) SolveNonlinearDt( q2 + cos(q2) + sin(q1), q2= 20 deg )
+-> (54) q2 = -0.7390852       %  or  q2 = -42.34646 deg.
+-> (55) q2' = -cos(q1)*q1'/(1-sin(q2))
+-> (56) q2'' = (sin(q1)*q1'^2+cos(q2)*q2'^2-cos(q1)*q1'')/(1-sin(q2))
+
+   (57) %--------------------------------------------------------------------
+   (58) % Example 7: SolveNonlinearSetInput (Solves and sets input value) 
+   (59) %--------------------------------------------------------------------
+   (60) Variable s
+   (61) solution = SolveNonlinearSetInput( cos(s), s= 2 deg )
+
+->   %  INPUT has been assigned as follows:
+->   %   s                         89.99999972461573       deg
+
+->   %  Note: s = 1.570796  was converted from  s = 90 deg.
+-> (62) solution = [1.570796]
+
+   (63) %--------------------------------------------------------------------
+   (64) % Example 8: SolveNonlinearSetInputDt (solve, differentiate, set input) 
+   (65) %--------------------------------------------------------------------
+   (66) Variable w'
+   (67) answer = SolveNonlinearSetInputDt( cos(w), w= 178 deg )
+
+->   %  INPUT has been assigned as follows:
+->   %   w                         90.00000027538428       deg
+
+->   %  Note: w = 1.570796  was converted from  w = 90 deg.
+-> (68) w' = 0
+-> (69) answer = [1.570796]
+

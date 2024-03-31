@@ -1,0 +1,21 @@
+   (1) %--------------------------------------------------------------------
+   (2) %Example: ConvertUnits 
+   (3) %--------------------------------------------------------------------
+   (4) inchToCentimeter = ConvertUnits( inch, cm )
+-> (5) inchToCentimeter = 2.54
+
+   (6) ounceMassToMilligram = ConvertUnits( ozm, mg )
+-> (7) ounceMassToMilligram = 28349.52
+
+   (8) poundForceToNewton = ConvertUnits( lbf, Newton )
+-> (9) poundForceToNewton = 4.448222
+
+   (10) sevenMPHToMeterPerSecond =  7 * ConvertUnits( MPH,  m/sec )
+-> (11) sevenMPHToMeterPerSecond = 3.12928
+
+   (12) sixtyMPHToMeterPerSecond = ConvertUnits( (30+30) MPH,  m/sec )
+-> (13) sixtyMPHToMeterPerSecond = 26.8224
+
+   (14) tMinuteToSecond = ConvertUnits( t minutes,  seconds )
+-> (15) tMinuteToSecond = 60*t
+

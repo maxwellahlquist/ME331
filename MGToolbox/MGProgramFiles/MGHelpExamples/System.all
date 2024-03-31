@@ -1,0 +1,15 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: System
+   (3) %--------------------------------------------------------------------
+   (4) RigidBody  A, B
+   (5) A.SetMass( mA )            
+   (6) B.SetMass( mB )            
+   (7) massSystemAB = System.GetMass()
+-> (8) massSystemAB = mA + mB
+
+   (9) Particle   P, Q
+   (10) P.SetMass( mP )            
+   (11) Q.SetMass( mQ )            
+   (12) massSystemABPQ = System.GetMass()
+-> (13) massSystemABPQ = mA + mB + mP + mQ
+

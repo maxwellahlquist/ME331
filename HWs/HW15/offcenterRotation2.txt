@@ -1,0 +1,67 @@
+% MotionGenesis file:  offcenterRotation2.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N                
+RigidBody       B                % Rotor
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    	wz', Fx, Fy, Fz, Tx, Ty
+% best practices to declare the highest order derivative I will be using?
+Constant    	g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+Constant 	xcm
+Constant	zcm
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+B.SetMass( m )
+B.SetInertia( Bo,  IBxx, IByy, IBzz,  IBxy, IByz, IBzx )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+B.SetAngularVelocity( N, wz*Bz> )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+Bo.Translate( No, 0> )
+Bcm.Translate(Bo, xcm*Bx> + zcm*Bz>)
+%--------------------------------------------------------------------
+%   Add relevant contact/distance forces.
+B.AddForceGravity( -g*Bz> )            % Add's gravity force to each massive object. %On the right location???
+Bo.AddForce( Fx*Bx> + Fy*By> + Fz*Bz>)                   % External force.
+%--------------------------------------------------------------------
+%   Add relevant torques.
+B.AddTorque( Tx*Bx> + Ty*By>)                  % External torque.
+%--------------------------------------------------------------------
+%   Translational dynamic equations (F = m*a).
+Dynamics[1] = Dot(  B.GetDynamics(),  Bx>  )
+Dynamics[2] = Dot(  B.GetDynamics(),  By>  )
+Dynamics[3] = Dot(  B.GetDynamics(),  Bz>  )
+%--------------------------------------------------------------------
+%   Rotational dynamic equations (M = DH/Dt + ...).
+Dynamics[4] = Dot(  B.GetDynamics(Bo),  Bx>  )
+Dynamics[5] = Dot(  B.GetDynamics(Bo),  By>  )
+Dynamics[6] = Dot(  B.GetDynamics(Bo),  Bz>  )
+%--------------------------------------------------------------------
+%   Solve algebraic equations for list of unknowns.
+Solve( Dynamics = 0,   wz', Fx, Fy, Fz, Tx, Ty )
+%--------------------------------------------------------------------
+%   Energy calculations
+KE = B.GetKineticEnergy()
+%--------------------------------------------------------------------
+%   Momentum calculations
+Variable theta
+B.RotateZ(N, theta)
+HB> = B.GetAngularMomentum( Bo )
+HN> = Express(HB>, N) % For visual comfirmation
+LB> = B.GetLinearMomentum(N)
+LN> = Express(LB>, N) % For visual comfirmation
+LMag = GetMagnitude( LB> )
+HMag = GetMagnitude( HB> )
+%--------------------------------------------------------------------
+%   List output quantities (e.g., from the ODE command).
+OutputPlot  t sec,  wz rad/sec, LMag, HMag, KE
+%--------------------------------------------------------------------
+ODE()  offcenterRotation2
+%--------------------------------------------------------------------
+%   Record input together with responses.
+Save  offcenterRotation2.html
+Quit
+

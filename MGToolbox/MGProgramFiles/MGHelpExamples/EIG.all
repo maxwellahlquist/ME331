@@ -1,0 +1,24 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: EIG   (eigenvalues of a matrix)
+   (3) %--------------------------------------------------------------------
+   (4) A = [1, 2, 3; 4, 5, 6; 5, 3, 7]
+-> (5) A = [1, 2, 3;  4, 5, 6;  5, 3, 7]
+
+   (6) EigenValuesOfA = EIG( A )
+-> (7) EigenValuesOfA = [-0.9412871;  1.542281;  12.39901]
+
+   (8) %--------------------------------------------------------------------
+   (9) % Example 2: EIG   (eigenvalues and eigenvectors of a matrix)
+   (10) %--------------------------------------------------------------------
+   (11) SetDefaults( AUTOLEV )
+   (12) B = [1, 2; 3, 4]
+-> (13) B = [1, 2; 3, 4]
+
+   (14) EIG( B, EigenValuesOfB, EigenVectorsOfB )
+-> (15) EigenValuesOfB = [-0.3722813; 5.372281]
+-> (16) EigenVectorsOfB = [-0.8245648, 0.5657675; -0.4159736, -0.9093767]
+
+   (17) %
+   (18) % Note: The old  EIG   command returns eigenvectors in ROWS.
+   (19) % The newer  GetEigen  command returns eigenvectors in COLUMNS.
+   (20) %

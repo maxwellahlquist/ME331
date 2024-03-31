@@ -1,0 +1,9 @@
+% To change a default setting, un-comment the proper line (remove the percent sign).
+%---------------------------------------------------------------------------------------
+% SetDefaults          AUTOLEV       % For help, type  HELP SetDefaults
+% SetBeepSoundOnError  OFF           % For help, type  HELP SetBeepSoundOnError
+% SetLineSpacing       0             % For help, type  HELP SetLineSpacing
+% SetPauseOnWarning    WAIT          % For help, type  HELP SetPauseOnWarning
+% SetPlotInterface     OFF           % Settings include: AUTO, OFF, Gnuplot, PlotGenesis
+% SetScratchDirectory  C:\SomeFolder
+% SetWorkingDirectory  C:\SomeFolder

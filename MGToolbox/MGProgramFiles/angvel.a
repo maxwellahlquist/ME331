@@ -1,0 +1,23 @@
+% ANGVEL   Forms angular velocity, e.g., W_B_A>
+% Portions copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.
+%----------------------------------------------------------------------------
+% Syntax0: ANGVEL( A, B )
+% Syntax1: ANGVEL( A, B, Euler, E1, E2, E3, E4 )
+% Syntax2: ANGVEL( A, B, Rodrigues, r1, r2, r3 )
+% Syntax3: ANGVEL( A, B, Body123,   q1, q2, q3 )
+% Syntax4: ANGVEL( A, B, Space123,  q1, q2, q3 )
+%----------------------------------------------------------------------------
+IF( #NUM_ARGS# == 2) {w_#2#_#1#> = #2#.GetAngularVelocityFromRotationMatrix(#1#)}
+ELSEIF( Strcmpi(#3#,EULER) == 0  ||  Strcmpi(#3#,EULERPARAMETERS) == 0   ||  Strcmpi(#3#,QUATERNION) == 0 )
+{
+ IF(#NUM_ARGS# != 7) {echo("\a\k\KError: ANGVEL command must have 7 arguments when the third argument is #3#.\n")}
+ ELSE { #2#.SetAngularVelocity(#1#, #3#, #7#, #4#, #5#, #6#) }
+}
+ELSEIF( Strcmpi(#3#,RODRIGUES) == 0  ||  Strcmpi(#3#,RODRIGUESPARAMETERS) == 0 )
+{
+  IF(#NUM_ARGS# != 6) {echo("\a\k\KError: ANGVEL command must have 7 arguments when the 3rd argument is #3#.\n")}
+  ELSE { #2#.SetAngularVelocity(#1#, #3#, #4#, #5#, #6#) }
+}
+ELSEIF(#NUM_ARGS# != 6) {echo("\a\kError: ANGVEL command must have 6 arguments when the 3rd\eargument is BODYijk, or SPACEijk.\n")}
+ELSE { #2#.SetAngularVelocity(#1#, AngularVelocityFromBodySpaceIJK(#2#, #3#, #4#, #5#, #6#)) }
+

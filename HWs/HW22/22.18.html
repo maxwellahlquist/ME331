@@ -1,0 +1,119 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 22.18.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">22.18.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  22.18.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N                % Example: Earth.
+   (6) RigidBody       A                % Example: Upper forearm.
+   (7) RigidBody      	B                % Comment.
+   (8) Point           AH( A )
+   (9) Point           BN( B )
+   (10) %--------------------------------------------------------------------
+   (11) %   Mathematical declarations.
+   (12) Variable    theta'', w', y''
+   (13) %Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+   (14) Constant	L = 1.5 m
+   (15) Constant	r = 0.25 m
+   (16) Constant	k = 9000 N/m
+   (17) Constant	b = 900 N*s/m
+   (18) Constant	m = 20 kg
+   (19) Constant	IA = 400 kg*m^2
+   (20) Constant	IB = 0.5*m*r^2
+-> (21) IB = 0.5*m*r^2
+
+   (22) Constant	JB = 0.25*m*r^2
+-> (23) JB = 0.25*m*r^2
+
+   (24) Constant	v = 10 m/sec
+   (25) %--------------------------------------------------------------------
+   (26) %   Mass and inertia properties.
+   (27) A.SetMass( 0 )
+   (28) B.SetMass( m )
+   (29) A.SetInertia( AH,  0,  0,  IA )
+   (30) B.SetInertia( Bcm, A, JB, IB, JB )
+   (31) %--------------------------------------------------------------------
+   (32) %   Rotational kinematics.
+   (33) A.RotateZ( N, theta )
+-> (34) A_N = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+-> (35) w_A_N> = theta'*Az>
+-> (36) alf_A_N> = theta''*Az>
+
+   (37) B.SetAngularVelocity( A, w*Ay> )
+-> (38) w_B_A> = w*Ay>
+
+   (39) %--------------------------------------------------------------------
+   (40) %   Translational kinematics.
+   (41) AH.SetVelocityAcceleration( N, v*Nx> )
+-> (42) v_AH_N> = v*Nx>
+-> (43) a_AH_N> = 0>
+
+   (44) Ao.Translate( AH, -L*Ax> )
+-> (45) p_AH_Ao> = -L*Ax>
+-> (46) v_Ao_N> = -L*theta'*Ay> + v*Nx>
+-> (47) a_Ao_N> = L*theta'^2*Ax> - L*theta''*Ay>
+
+   (48) Bcm.Translate( Ao, y*Ay> )
+-> (49) p_Ao_Bcm> = y*Ay>
+-> (50) v_Bcm_N> = -y*theta'*Ax> + (y'-L*theta')*Ay> + v*Nx>
+-> (51) a_Bcm_N> = (L*theta'^2-2*theta'*y'-y*theta'')*Ax> + (y''-y*theta'^2-L*
+        theta'')*Ay>
+
+   (52) BN.SetPositionVelocity( Bcm, -r*Az> )
+-> (53) p_Bcm_BN> = -r*Az>
+-> (54) v_BN_N> = (-r*w-y*theta')*Ax> + (y'-L*theta')*Ay> + v*Nx>
+
+   (55) %--------------------------------------------------------------------
+   (56) %   Motion constraints (if any).
+   (57) MotionConstraint[1] = Dot( BN.GetVelocity(N), Ax> )
+-> (58) MotionConstraint[1] = v*cos(theta) - r*w - y*theta'
+
+   (59) MotionConstraint[2] = Dot( BN.GetVelocity(N), Ay> )
+-> (60) MotionConstraint[2] = y' - v*sin(theta) - L*theta'
+
+   (61) SolveDt( MotionConstraint = 0,  w, y' )
+-> (62) w = (v*cos(theta)-y*theta')/r
+-> (63) y' = v*sin(theta) + L*theta'
+-> (64) w' = -(theta'*y'+v*sin(theta)*theta'+y*theta'')/r
+-> (65) y'' = v*cos(theta)*theta' + L*theta''
+
+   (66) % We only need to solve for w', the other one for specific circumstances doesn't need to be differentiated.
+   (67) %--------------------------------------------------------------------
+   (68) %   Add relevant contact/distance forces.
+   (69) Bcm.AddForce( Ao, -(k*y + b*y')*Ay> )
+-> (70) Force_Bcm_Ao> = (-k*y-b*y')*Ay>
+
+   (71) SetGeneralizedSpeeds( theta', y', w )
+   (72) Eq = System.GetDynamicsKane()
+-> (73) Eq[1] = 2*m*y*theta'*y' + (IA+JB+m*(L^2+y^2))*theta'' - L*m*y''
+-> (74) Eq[2] = k*y + b*y' + m*y'' - m*y*theta'^2 - L*m*theta''
+-> (75) Eq[3] = IB*w'
+
+   (76) Solve( Eq := 0, theta'', y'', w' ) 
+-> (77) theta'' = (L*m*y*theta'^2-2*m*y*theta'*y'-L*(k*y+b*y'))/(IA+JB+m*y^2)
+-> (78) y'' = -2*L*m*y*theta'*y'/(IA+JB+m*y^2) - (IA+JB+m*(L^2+y^2))*(k*y+b*y'-
+        m*y*theta'^2)/(m*(IA+JB+m*y^2))
+
+-> (79) w' = 0
+
+   (80) Input  tFinal = 8 sec,  tStep = 0.04 sec,  absError = 1.0E-07
+   (81) Input  theta = 1 deg, y = 0 cm, theta' = 0 rad/sec
+   (82) OutputPlot t sec, theta deg
+   (83) OutputPlot t sec, y cm
+   (84) ODE ()
+
+   (85) v := -5
+-> (86) v = -5
+
+   (87) ODE()
+
+   (88) v := 20
+-> (89) v = 20
+
+   (90) ODE()
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

@@ -1,0 +1,10 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: SetCharge 
+   (3) %--------------------------------------------------------------------
+   (4) Point      P, Q
+   (5) Particle   R, S            
+   (6) Variable   cS'
+   (7) P.SetCharge( 17 )   
+   (8) Q.SetCharge( cQ )               % Declares cQ as a constant.
+   (9) R.SetCharge( cR = 3 Coulombs )  % Declares cR and sets it INPUT to 3 Coulombs
+   (10) S.SetCharge( cS )               % cS may be governed by an ODE or equation

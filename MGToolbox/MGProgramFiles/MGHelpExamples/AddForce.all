@@ -1,0 +1,49 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: AddForce  (add force to a point or particle)
+   (3) %--------------------------------------------------------------------
+   (4) RigidBody  A, B    
+   (5) Ao.AddForce( Ax> + 2*Ay> )               
+-> (6) Force_Ao> = Ax> + 2*Ay>
+
+   (7) Ao.AddForce( 3*Az> )               
+-> (8) Force_Ao> = Ax> + 2*Ay> + 3*Az>
+
+   (9) Acm.AddForce( 4*Ax> + 5*Ay>  + 6*Az> )               
+-> (10) Force_Acm> = 4*Ax> + 5*Ay> + 6*Az>
+
+   (11) ResultantForceOnA> = A.GetResultantForce()
+-> (12) ResultantForceOnA> = 5*Ax> + 7*Ay> + 9*Az>
+
+   (13) %--------------------------------------------------------------------
+   (14) % Example 2: AddForce (action/reaction with two points/particles)
+   (15) %--------------------------------------------------------------------
+   (16) Ao.AddForce( Bo,  3*Az> )   
+-> (17) Force_Ao_Bo> = 3*Az>
+
+   (18) ResultantForceBoFromAo> = Bo.GetResultantForce( Ao )
+-> (19) ResultantForceBoFromAo> = -3*Az>
+
+   (20) ResultantForceOnAo> = Ao.GetResultantForce()
+-> (21) ResultantForceOnAo> = Ax> + 2*Ay> + 6*Az>
+
+   (22) Acm.AddForce( Bcm,  6*Az> ) 
+-> (23) Force_Acm_Bcm> = 6*Az>
+
+   (24) ResultantForceOnA> := A.GetResultantForce()
+-> (25) ResultantForceOnA> = 5*Ax> + 7*Ay> + 18*Az>
+
+   (26) ResultantForceOnB> := B.GetResultantForce()
+-> (27) ResultantForceOnB> = -9*Az>
+
+   (28) ResultantForceOnS> := System.GetResultantForce()
+-> (29) ResultantForceOnS> = 5*Ax> + 7*Ay> + 9*Az>
+
+   (30) %--------------------------------------------------------------------
+   (31) % Example 3+4: ResetForce (reset force on a point or particle)
+   (32) %--------------------------------------------------------------------
+   (33) Ao.ResetForce( sin(t)*Ax> )               
+-> (34) Force_Ao> = sin(t)*Ax>
+
+   (35) Ao.ResetForce( Bo,  cos(t)*Az> )   
+-> (36) Force_Ao_Bo> = cos(t)*Az>
+

@@ -1,0 +1,24 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: acos   (real scalar expressions)
+   (3) %--------------------------------------------------------------------
+   (4) angleInRadians = acos( 0.5 ) 
+-> (5) angleInRadians = 1.047198
+
+   (6) angleInDegrees = acosDegrees( 0.5 )  
+-> (7) angleInDegrees = 60
+
+   (8) Arad = acos(0.5+2*t) 
+-> (9) Arad = acos(0.5+2*t)
+
+   (10) Adeg = acos(0.5+2*t) * ConvertUnits(rad,deg) 
+-> (11) Adeg = 57.29578*acos(0.5+2*t)
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2: acos   (complex scalar expressions)
+   (14) %--------------------------------------------------------------------
+   (15) B = acos( 3*GetImaginaryNumber() )
+-> (16) B = 1.570796 - 1.818446*imaginary
+
+   (17) C = acos( t - 3*GetImaginaryNumber() )
+-> (18) C = acos(t-3*imaginary)
+

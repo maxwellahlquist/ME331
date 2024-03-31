@@ -1,0 +1,36 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 3.10iN.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">3.10iN.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  3.10iN.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) %   Mathematical declarations.
+   (6) Variable    d, x, z
+   (7) %--------------------------------------------------------------------
+   (8) u> = GetUnitVector( 3*Nx> - Ny> + Nz> )
+-> (9) u> = 0.904534*Nx> - 0.3015113*Ny> + 0.3015113*Nz>
+
+   (10) p> = Nx> + 2*Ny>	% Position vector No to Ao
+-> (11) p> = Nx> + 2*Ny>
+
+   (12) Dynamics[1] = Dot( Nx> , p> + d*u> + x*Nx> - z*Nz> )
+-> (13) Dynamics[1] = 1 + x + 0.904534*d
+
+   (14) Dynamics[2] = Dot( Ny> , p> + d*u> + x*Nx> - z*Nz> )
+-> (15) Dynamics[2] = 2 - 0.3015113*d
+
+   (16) Dynamics[3] = Dot( Nz> , p> + d*u> + x*Nx> - z*Nz> )
+-> (17) Dynamics[3] = 0.3015113*d - z
+
+   (18) %--------------------------------------------------------------------
+   (19) %   Solve algebraic equations for list of unknowns.
+   (20) Solve( Dynamics = 0,   d, x, z )
+-> (21) d = 6.63325
+-> (22) x = -7
+-> (23) z = 2
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

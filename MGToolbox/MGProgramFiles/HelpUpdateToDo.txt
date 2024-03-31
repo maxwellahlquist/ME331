@@ -1,0 +1,196 @@
+% Copyright (c) 1988-2021 Paul Mitiguy and/or Motion Genesis LLC.  All rights reserved.
+%---------------------------------------------------------------------------------------
+% TODO: In code, mimic functionality for particle, calculate gravity force uniform for universal forces
+%       Also, maybe add Help for methods for various objects as shown below
+%----------------------------------------------------------------------------
+% PointMethods
+%           GetCharge  SetCharge  GetForceElectrostaticPotentialEnergy
+%           SetPosition  GetPosition  SetPositionVelocity  Translate
+%           GetDistance  GetDistanceSquared  GetElongation  GetUnitVector
+%           SetVelocity  SetAcceleration  SetVelocityAcceleration  SetRelativeVelocity
+%           GetVelocity  GetAcceleration  GetSpeed  GetSpeedSquared
+%           AddForce  AddForceDamper  AddForceElectrostatic  ResetForce
+%           AddForceInverseSquare  AddForceLinearActuator  AddForceSpring
+%           GetMomentOfForces  GetResultantForce
+%           GetForceSpringPotentialEnergy
+%           GetForceElectrostaticPotentialEnergy
+%           GetForceInverseSquarePotentialEnergy
+%           GetStatics   GetStaticsKane   GetStaticsLagrange
+%----------------------------------------------------------------------------
+%ParticleMethods (also see PointMethods)
+%           SetMass  GetForceInverseSquarePotentialEnergy  AddForceGravity  GetForceGravityPotentialEnergy
+%           GetStatics   GetStaticsKane   GetStaticsLagrange
+%           GetDynamics  GetDynamicsKane  GetDynamicsLagrange
+%----------------------------------------------------------------------------
+%RigidFrameMethods
+%           Rotate  SetRotationMatrix  GetRotationMatrix  SetRotationMatrixAndPosition
+%           SetRotationMatrixODE  SetQuaternionODE  SetRodriguesParameterODE   SetPoissonParameterODE
+%           SetAngularVelocity   SetAngularAcceleration  SetAngularVelocityAcceleration
+%           GetAngularVelocity   GetAngularAcceleration  GetPartialAngularVelocity  GetAngularVelocityJacobian
+%           GetAngularSpeed  GetAngularSpeedSquared
+%           AddTorque  AddTorqueDamper  GetResultantForce  GetResultantTorque
+%           GetStatics   GetStaticsKane   GetStaticsLagrange
+%----------------------------------------------------------------------------
+%RigidBodyMethods (also see RigidFrameMethods)
+%           SetMass  SetInertia  SetMassInertia
+%           GetStatics   GetStaticsKane   GetStaticsLagrange
+%           GetDynamics  GetDynamicsKane  GetDynamicsLagrange
+%----------------------------------------------------------------------------
+%SystemMethods (also see RigidBodyMethods, RigidFrameMethods, ParticleMethods, PointMethods
+%----------------------------------------------------------------------------
+% Potential energy and dissipation functions
+% GetForceDamperDissipationEnergy  GetTorqueDamperDissipationEnergy (INCOMPLETE)
+%----------------------------------------------------------------------------
+%UPDATE
+%Experimental new features (see new program 4.x features below)
+%
+%  There is improved zeeing, e.g., with Rodrigues parameters, Euler parameters, etc.
+%
+%  RigidBody and RigidFrame declarations replace BODIES and FRAMES declarations
+%  Point       Q(A)  welds Q to A.
+%  RigidFrame  B(A)  welds B to A.
+%
+%  The System declaration and constructors were created.
+%  The GetDynamics(), GetStatics(), GetDynamicsKane(), GetStaticsKane() commands were created.
+%
+%  Numerator and Denominator commands were created
+%
+%  Quantities names in Specified declarations can be governed by an ODE
+%
+%  Unit conversion were enhanced and updated with NIST/CODATA 2006 data.
+%
+%  Plotting with Alplot (Windows only) was enhanced and simplified.
+%
+%  The ODE command and SOLVE commands immediately solves ordinary
+%  differential and linear/nonlinear algebraic equations without
+%  first writing C, Fortran, or MATLAB(R) code.
+%
+%  SetBasisSubscripts( x, y, z )
+%  Introduce unit vectors Bx>, By>, Bz> when
+%  B is created in a RigidBody, RigidFrame, or NewtonianFrame declaration.
+%
+%  GetBasisVector(B,1)
+%  returns the first unit vector associated with B
+%
+%  SetCMSymbol( cm )
+%  allows the center of mass symbol to be named.
+%
+%  The ANGLE command returns the angle between two vectors.
+%
+%  The GetZeroMatrix command creates square or rectangular zero matrices.
+%
+%  The GetIdentityMatrix command creates identity matrices.
+%
+%  The UNITS command has two new syntaxes.  For example,
+%  UNITS( hours, GetUnitSystem ) converts from hours to the units in GetUnitSystem.
+%  UNITS( GetUnitSystem, miles ) converts from the units in GetUnitSystem to miles.
+%
+%  UnitSystem has been updated with 2006 NIST/CODATA values.
+%  New units and prefixes have been added to the UnitSystem.
+%
+%  The Solve command also solves sets of numerical and nonlinear algebraic equations.
+%  For example, to solve for the intersection of a circle and a sine-wave,
+%  enter the following commands. Note: x=2 and y=3 are an initial guess to the solution.
+%     Zero[1] = x^2 - y^2 + 1
+%     Zero[2] = y - sin(x)
+%     Solve( Zero, x=2, y=3 )
+%
+%  To ensure uniformity, several settings can no longer be set at startup in
+%  the defaults file. Type HELP GetDefaults for more information.
+%
+%  Previously, the matrix argument representing the set of algebraic
+%  equations to be solved in the SOLVE and ODE command had to be
+%  one-dimensional.  Now, this matrix may be multi-dimensional.
+%
+%  A small column scaling pivoting bug was fixed in C-generated code.
+%  The C-generated code was reformatted to improve readability.
+%
+%New features in Program 4.1 (see Program 4.0 features below)
+%
+%  Advanced simplification routines have been added.
+%
+%  The MotionVariable  declaration names generalized speeds.
+%  The MotionVariable' declaration names the time-derivatives
+%                      of generalized speeds.
+%
+%  Program 4.1 does not convert input to uppercase.
+%  For example, when Joe is named in a CONSTANT declaration,
+%  it is subsequently reported as Joe (exactly as it was first typed).
+%  Prior to Program 4.1, the name was converted to JOE.
+%
+%  The default name of the imaginary number sqrt(-1) is "imaginary".
+%
+%  Setting AutoOverWrite ALL allows files to be automatically overwritten.
+%
+%
+%New features in Program 4.0
+%
+%  The ODE command now produces MATLAB(R) code, e.g.,
+%  ODE() someFileName.m
+%
+%  New linearization algorithm
+%
+%  The UNITS command has a new syntax that calculates the conversion
+%  factor between various sets of units, e.g.,
+%  X = Units( newtons*kg*m^3/sec^2, lbf*slug*mile^3/day^2 )
+%
+%  The  new  SetUnitSystem declaration replaces the old UNITS command
+%  and  allows  for  units  conversions during input and output in
+%  conjunction with the CODE command (MATLAB, C, Fortran, etc.).
+%
+%  The INPUT command has new syntaxes:
+%  INPUT x = 3 meters        % Assigns input value of 3 meters to X
+%  INPUT( x )                % Returns input value assigned to X
+%  INPUT( x, GetUnitSystem ) % Returns input value assigned to X
+%                            % after conversion to GetUnitSystem
+%  INPUT( x, NoUnitSystem )  % Returns input value assigned to X
+%                            % (no conversion to GetUnitSystem)
+%
+%  The OUTPUT command has a new syntax for unit conversions, e.g.,
+%  OUTPUT T seconds, X meters, X' meters/sec, X' miles/hour
+%
+%  Vector, Dyadic, and Matrix constructors were added, e.g.,
+%  Vector( FrameName, x, y, z )
+%  Dyadic( FrameName, XX, XY, XZ, YX, YY, YZ, ZX, ZY, ZZ )
+%  Matrix( FrameName, Fx> + 2*Fy> + 3*Fz> )
+%
+%  REPRESENT is obsolete. Use Vector, Dyadic, or Matrix.
+%
+%  FORCE( Point, Vector> )  is obsolete.  Use
+%  FORCE_Point>  += Vector>
+%
+%  TORQUE( Frame, Vector> ) is obsolete.  Use
+%  TORQUE_Frame> += Vector>
+%
+%  The FRAMES and NEWTONIAN declarations now create a point, e.g.,
+%  FRAMES F creates a point FO
+%
+%  The NICHECK command calculates a more efficient numerical inte-
+%  gration checking function
+%
+%  The ANIMATE command has a new syntax
+%
+%  New mathematical functions were added:
+%  atan2, Ceil, Floor, Int, Round, Sign, square, sqrt, Max, Min
+%  RandomInteger
+%
+%  The declaration IMAGINARY names the imaginary number sqrt(-1)
+%
+%  The command INV may be used instead of INVERSE
+%
+%  A semicolon may be used to separate multiple commands, e.g.,
+%  a=2;  b=3;  c=4
+%
+%  The  numerical  integration  routine (kutta) and the linear al-
+%  gebraic  equation  solver (solve) are automatically appended to
+%  Fortran  and  C files by default, e.g., the next two lines pro-
+%  duce identical results:
+%  ODE() someFileName.c
+%  ODE() someFileName.c, SUBS
+%
+%  Simplifications  associated  with  ACOS,  ASIN, and ATAN can be
+%  turned on or off e.g., AutoSimplify ACOS=ON, ASIN=ON, ATAN=OFF
+%
+%  The HELP system has been revised/rewritten.
+%  Sample hyperlink
+%  <a href="#Evaluate"><b>Evaluate</b></a>

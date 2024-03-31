@@ -1,0 +1,54 @@
+% MotionGenesis file:  pulley.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N                % Example: Earth.
+RigidBody       P                % Example: Upper forearm.
+Particle        A, B             % Comment.
+Point PA(P), PB(P)
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    x'', TA, TB, theta'' 
+Constant    g    % Earth's gravitational acceleration.
+Constant    R    % Pulley radius
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+A.SetMass( m )
+B.SetMass( m )
+P.SetInertia( Pcm,  Ixx,  Iyy,  I )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+P.RotatePositiveZ( N, theta )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+A.Translate( No, x*Nx> )          % Sets position, velocity, acceleration.
+B.SetVelocityAcceleration( N, -x'*Ny> ) 
+PA.SetPosition( Pcm, R*Ny> )
+PB.SetPosition( PCm, R*Nx> )
+%--------------------------------------------------------------------
+%   Motion constraints (if any).
+SolveDt( x' = -theta'*R,  theta' )
+%--------------------------------------------------------------------
+%   Add relevant contact/distance forces.
+A.AddForce( -m*g*Ny> )            % Add's gravity force to each massive object.
+B.AddForce( -m*g*Ny> )
+A.AddForce( PA, TA*Nx> )       % External force.
+B.AddForce( PB, TB*Ny> )       % Law of action/reaction.
+%--------------------------------------------------------------------
+%   Translational dynamic equations (F = m*a).
+%   For static analysis, use  B.GetStatics()  or  System.GetStatics().
+Dynamics[1] = Dot(  A.GetDynamics(),  Nx>  )
+Dynamics[2] = Dot(  B.GetDynamics(),  Ny>  )
+%--------------------------------------------------------------------
+%   Rotational dynamic equations (M = DH/Dt + ...).
+%   For static analysis, use  B.GetStatics( aboutPoint ).
+Dynamics[3] = Dot(  P.GetDynamics(Pcm),  Nz>  )
+%--------------------------------------------------------------------
+%   Solve algebraic equations for list of unknowns.
+Solve( Dynamics = 0,   x'', TA, TB )
+DeltaTension = Rhs(TB-TA)
+%--------------------------------------------------------------------
+%   Record input together with responses.
+Save  pulley.html
+Quit
+

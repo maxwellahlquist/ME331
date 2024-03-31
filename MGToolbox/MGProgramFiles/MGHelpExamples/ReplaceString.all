@@ -1,0 +1,44 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: ReplaceString   (scalar expression)
+   (3) %--------------------------------------------------------------------
+   (4) Constant  a, x, y, z
+   (5) s = x^2*cos(y) - sin(t)
+-> (6) s = x^2*cos(y) - sin(t)
+
+   (7) s1 = ReplaceString( s,  2*cos(y) = z )
+-> (8) s1 = x^z - sin(t)
+
+   (9) s2 = ReplaceString( s,  x^2*cos(y) = z )
+-> (10) s2 = z - sin(t)
+
+   (11) se = ReplaceString( s,  x^2*cos(y) - sin(t) = 3*z )
+-> (12) se = 3*z
+
+   (13) %--------------------------------------------------------------------
+   (14) % Example 2: ReplaceString  (vector expression)
+   (15) %--------------------------------------------------------------------
+   (16) RigidBody   B
+   (17) v> = Vector( B, (1.0000000000004)*x, (1.0000004)*x*y, (1.0004)*x*y*z )
+-> (18) v> = 1*x*Bx> + 1*x*y*By> + 1.0004*x*y*z*Bz>
+
+   (19) v1> = ReplaceString( v> )
+-> (20) v1> = x*Bx> + x*y*By> + 1.0004*x*y*z*Bz>
+
+   (21) v2> = ReplaceString( v>,  x*y = z )
+-> (22) v2> = x*Bx> + z*By> + 1.0004*z^2*Bz>
+
+   (23) %--------------------------------------------------------------------
+   (24) % Example 3: ReplaceString   (matrix expression)
+   (25) %--------------------------------------------------------------------
+   (26) matrixA = [ v>;   x*y - z ]
+-> (27) matrixA = [1*x*Bx> + 1*x*y*By> + 1.0004*x*y*z*Bz>;  x*y - z]
+
+   (28) matrixB = ReplaceString( matrixA,  x*y - z = 5 )
+-> (29) matrixB = [x*Bx> + x*y*By> + 1.0004*x*y*z*Bz>;  5]
+
+   (30) %--------------------------------------------------------------------
+   (31) % Example 4: QueryReplaceString
+   (32) %--------------------------------------------------------------------
+   (33) q = QueryReplaceString( t + t^2 + sin(t) + cos(t),  t^2 = 9, cos(t) = exp(t) )
+-> (34) q = 9 + t + sin(t) + exp(t)
+

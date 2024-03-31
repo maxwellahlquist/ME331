@@ -1,0 +1,19 @@
+% MotionGenesis file:  3.10iB.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+NewtonianFrame N
+%   Mathematical declarations.
+Variable    d, y, z
+%--------------------------------------------------------------------
+u> = GetUnitVector( 3*Nx> - Ny> + Nz> )
+p> = Nx> + 2*Ny>	% Position vector No to Ao
+
+Dynamics[1] = Dot( Nx> , p> + d*u> - y*Ny> - 5*Nx> - z*Nz> )
+Dynamics[2] = Dot( Ny> , p> + d*u> - y*Ny> - 5*Nx> - z*Nz> )
+Dynamics[3] = Dot( Nz> , p> + d*u> - y*Ny> - 5*Nx> - z*Nz> )
+%--------------------------------------------------------------------
+%   Solve algebraic equations for list of unknowns.
+Solve( Dynamics = 0,   d, y, z )
+Save  3.10iB.html
+Quit
+

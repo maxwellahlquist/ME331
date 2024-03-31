@@ -1,0 +1,12 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: AddForceInverseSquare
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) Particle  P, Q
+   (6) Variable  x, y
+   (7) Q.SetPosition( P, x*Nx> + y*Ny> )
+-> (8) p_P_Q> = x*Nx> + y*Ny>
+
+   (9) Q.AddForceInverseSquare( P, 8 )
+-> (10) Force_Q_P> = 8*x/(x^2+y^2)^1.5*Nx> + 8*y/(x^2+y^2)^1.5*Ny>
+

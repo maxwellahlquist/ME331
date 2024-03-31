@@ -1,0 +1,111 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: GyroStickMipsi1.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">GyroStickMipsi1.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  GyroStickMipsi1.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N                % Example: Earth.
+   (6) RigidBody       A
+   (7) RigidBody       B
+   (8) RigidBody       C
+   (9) %--------------------------------------------------------------------
+   (10) %   Mathematical declarations.
+   (11) Variable    wA', wC'
+   (12) Variable    TBy, TBz
+   (13) Specified   qB''
+   (14) Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+   (15) Constant    L = 1.2 m, R = 0.3 m
+   (16) Constant    mA = 70 kg, mC = 1.5 kg
+   (17) Constant    Ic = mc*R^2, Jc = 0.5*mc*R^2
+-> (18) Ic = mC*R^2
+-> (19) Jc = 0.5*mC*R^2
+
+   (20) %--------------------------------------------------------------------
+   (21) %   Mass and inertia properties.
+   (22) A.SetMass( mA )
+   (23) B.SetMass( 0 )
+   (24) C.SetMass( mC )
+   (25) A.SetInertia( Acm, 0>> )
+   (26) B.SetInertia( Bcm,  0, 0, 0 )
+   (27) C.SetInertia( Ccm, B, Ic, Jc, Jc, 0, 0, 0 )
+   (28) %--------------------------------------------------------------------
+   (29) %   Rotational kinematics.
+   (30) A.SetAngularVelocityAcceleration( N, wA*Ay> )
+-> (31) w_A_N> = wA*Ay>
+-> (32) alf_A_N> = wA'*Ay>
+
+   (33) B.RotateZ( A, qB )
+-> (34) B_A = [cos(qB), sin(qB), 0;  -sin(qB), cos(qB), 0;  0, 0, 1]
+-> (35) w_B_A> = qB'*Bz>
+-> (36) w_B_N> = wA*Ay> + qB'*Bz>
+-> (37) alf_B_A> = qB''*Bz>
+-> (38) alf_B_N> = qB'*wA*Ax> + wA'*Ay> + qB''*Bz>
+
+   (39) C.SetAngularVelocityAcceleration( B, wC*Bx> )
+-> (40) w_C_B> = wC*Bx>
+-> (41) w_C_N> = (wC+sin(qB)*wA)*Bx> + cos(qB)*wA*By> + qB'*Bz>
+-> (42) alf_C_B> = wC'*Bx>
+-> (43) alf_C_N> = (cos(qB)*qB'*wA+wC'+sin(qB)*wA')*Bx> + (qB'*wC+cos(qB)*wA'-
+        sin(qB)*qB'*wA)*By> + (qB''-cos(qB)*wA*wC)*Bz>
+
+   (44) %--------------------------------------------------------------------
+   (45) %   Translational kinematics.
+   (46) Bo.SetVelocityAcceleration(N, 0>)
+-> (47) v_Bo_N> = 0>
+-> (48) a_Bo_N> = 0>
+
+   (49) Ccm.Translate( Bo, L*Bx> )
+-> (50) p_Bo_Ccm> = L*Bx>
+-> (51) v_Ccm_N> = L*qB'*By> - L*cos(qB)*wA*Bz>
+-> (52) a_Ccm_N> = -L*cos(qB)*wA^2*Ax> - L*qB'^2*Bx> + L*qB''*By> + L*(2*sin(
+        qB)*qB'*wA-cos(qB)*wA')*Bz>
+
+   (53) %--------------------------------------------------------------------
+   (54) %   Add relevant contact/distance forces.
+   (55) System.AddForceGravity( -g*Ay> )            % Add's gravity force to each massive object.
+-> (56) Force_Acm> = -g*mA*Ay>
+-> (57) Force_Ccm> = -g*mC*Ay>
+
+   (58) %--------------------------------------------------------------------
+   (59) %   Add relevant torques.
+   (60) B.AddTorque( A, TBy*Ay> + TBz*Az> )
+-> (61) Torque_B_A> = TBy*Ay> + TBz*Az>
+
+   (62) %--------------------------------------------------------------------
+   (63) %   Translational dynamic equations (F = m*a).
+   (64) Dynamics[1] = Dot(  System(B,C).GetDynamics(Bo),  Bz>  )
+-> (65) Dynamics[1] = g*L*mC*cos(qB) + mC*L^2*qB'' + Jc*(qB''-cos(qB)*wA*wC)
+        + mC*L^2*sin(qB)*cos(qB)*wA^2 - TBz - (Ic-Jc)*cos(qB)*wA*(wC+sin(qB)*
+        wA)
+
+   (66) Dynamics[2] = Dot(  System(B,C).GetDynamics(Bo),  By>  )
+-> (67) Dynamics[2] = (Ic-Jc)*qB'*(wC+sin(qB)*wA) - cos(qB)*TBy - Jc*(sin(qB)*
+        qB'*wA-qB'*wC-cos(qB)*wA') - mC*L^2*(2*sin(qB)*qB'*wA-cos(qB)*wA')
+
+   (68) Solve( Dynamics = 0, TBz, TBy)
+-> (69) TBz = g*L*mC*cos(qB) + mC*L^2*qB'' + Jc*(qB''-cos(qB)*wA*wC) + mC*L^2*
+        sin(qB)*cos(qB)*wA^2 - (Ic-Jc)*cos(qB)*wA*(wC+sin(qB)*wA)
+
+-> (70) TBy = ((Ic-Jc)*qB'*(wC+sin(qB)*wA)-Jc*(sin(qB)*qB'*wA-qB'*wC-cos(qB)*
+        wA')-mC*L^2*(2*sin(qB)*qB'*wA-cos(qB)*wA'))/cos(qB)
+
+   (71) TB_static = Evaluate(TBz, qB = 0, qB' = 0, qB'' = 0, wA = 0, wA' = 0)
+-> (72) TB_static = g*L*mC
+
+   (73) TB_left = Evaluate(TBz, qB = 0, qB' = 0, qB'' = 0, wA' = 0)
+-> (74) TB_left = g*L*mC - Ic*wA*wC
+
+   (75) TB_right = Evaluate(TBz, qB = 0, qB' = 0, qB'' = 0, wA' = 0)
+-> (76) TB_right = g*L*mC - Ic*wA*wC
+
+   (77) ratio1 = Explicit(TB_left/TB_static, Ic, mC)
+-> (78) ratio1 = (g*L*mC-Ic*wA*wC)/(g*L*mC)
+
+   (79) ratio2 = Explicit(TB_right/TB_static, Ic, mC)
+-> (80) ratio2 = (g*L*mC-Ic*wA*wC)/(g*L*mC)
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

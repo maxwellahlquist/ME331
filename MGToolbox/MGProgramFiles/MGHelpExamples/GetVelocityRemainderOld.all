@@ -1,0 +1,56 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetVelocityRemainder and GetAngularVelocityRemainder
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) RigidBody      B       % Sphere
+   (6) Point          BN(B)   % Point of B in contact with N
+   (7) %----------------------------------------------
+   (8) Constant    R
+   (9) Variable    x', y'
+   (10) Variable    wz
+   (11) Specified   wx,  wy
+   (12) SetGeneralizedSpeed( x', y', wz )
+   (13) %----------------------------------------------
+   (14) %     Kinematics
+   (15) B.SetAngularVelocity( N,  wx*Nx> + wy*Ny> + wz*Nz> )
+-> (16) w_B_N> = wx*Nx> + wy*Ny> + wz*Nz>
+
+   (17) Bcm.SetPositionVelocity( No, x*Nx> + y*Ny> + R*Nz> )
+-> (18) p_No_Bcm> = x*Nx> + y*Ny> + R*Nz>
+-> (19) v_Bcm_N> = x'*Nx> + y'*Ny>
+
+   (20) %----------------------------------------------
+   (21) %     Angular velocity and velocity remainders
+   (22) wBNRemainder> = B.GetAngularVelocityRemainder( N ) 
+-> (23) wBNRemainder> = wx*Nx> + wy*Ny>
+
+   (24) vBcmNRemainder> = Bcm.GetVelocityRemainder( N )
+-> (25) vBcmNRemainder> = 0>
+
+   (26) %----------------------------------------------
+   (27) %     Rolling constraints at point BN of B
+   (28) BN.SetPositionVelocity( Bcm, -R*Nz>, B )
+-> (29) p_Bcm_BN> = -R*Nz>
+-> (30) v_BN_N> = (x'-R*wy)*Nx> + (R*wx+y')*Ny>
+
+   (31) Dependent[1] = Dot( BN.GetVelocity(N), Nx> )
+-> (32) Dependent[1] = x' - R*wy
+
+   (33) Dependent[2] = Dot( BN.GetVelocity(N), Ny> )
+-> (34) Dependent[2] = R*wx + y'
+
+   (35) Constrain(  Dependent[ x', y' ]  )
+-> (36) x' = R*wy
+-> (37) y' = -R*wx
+
+   (38) %----------------------------------------------
+   (39) %     Angular velocity and velocity remainders
+   (40) wBNRemainderAfterConstrain> = B.GetAngularVelocityRemainder( N ) 
+-> (41) wBNRemainderAfterConstrain> = wx*Nx> + wy*Ny>
+
+   (42) vBcmNRemainderAfterConstrain> = Bcm.GetVelocityRemainder( N )
+-> (43) vBcmNRemainderAfterConstrain> = x'*Nx> + y'*Ny>
+
+   (44) remainderOfScalarExpression = GetVelocityRemainder( 2*x' + 3*wz )
+-> (45) remainderOfScalarExpression = 2*x'
+

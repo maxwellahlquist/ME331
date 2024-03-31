@@ -1,0 +1,28 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetForceElectrostaticPotentialEnergy  (horizontal 1D)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) Particle  A
+   (6) Variable  xA
+   (7) Constant  k
+   (8) No.SetCharge( chargeN )
+   (9) A.SetCharge(  chargeA )
+   (10) A.SetPosition( No, xA*Nx> )
+-> (11) p_No_A> = xA*Nx>
+
+   (12) potentialEnergy1 = A.GetForceElectrostaticPotentialEnergy( No, k )
+-> (13) potentialEnergy1 = chargeA*chargeN*k/abs(xA)
+
+   (14) %--------------------------------------------------------------------
+   (15) % Example 2: GetForceElectrostaticPotentialEnergy  (planar 2D)
+   (16) %--------------------------------------------------------------------
+   (17) Particle  P, Q
+   (18) Variable  x, y
+   (19) P.SetCharge( 10 )
+   (20) Q.SetCharge( 20 )
+   (21) Q.SetPosition( P, x*Nx> + y*Ny> )
+-> (22) p_P_Q> = x*Nx> + y*Ny>
+
+   (23) potentialEnergy2 = Q.GetForceElectrostaticPotentialEnergy( P, k )
+-> (24) potentialEnergy2 = 200*k/sqrt(x^2+y^2)
+

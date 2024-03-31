@@ -1,0 +1,46 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetVelocity 
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame  N
+   (5) RigidBody   B
+   (6) Variable    vx, vy, wz
+   (7) Bo.SetVelocity( N,  vx*Nx> + vy*Ny> )
+-> (8) v_Bo_N> = vx*Nx> + vy*Ny>
+
+   (9) BoVelocityInN> = Bo.GetVelocity( N )   
+-> (10) BoVelocityInN> = vx*Nx> + vy*Ny>
+
+   (11) %--------------------------------------------------------------------
+   (12) % Example: GetRelativeVelocity  (also called GetVelocityRelative)
+   (13) %--------------------------------------------------------------------
+   (14) Point       P            
+   (15) Variable    x', y'
+   (16) P.SetVelocity( N,  x'*Nx> + y'*Ny> )
+-> (17) v_P_N> = x'*Nx> + y'*Ny>
+
+   (18) vQRelativeToBo> = P.GetRelativeVelocity( Bo, N )
+-> (19) vQRelativeToBo> = (x'-vx)*Nx> + (y'-vy)*Ny>
+
+   (20) %--------------------------------------------------------------------
+   (21) % Example: GetRelativeVelocity  (via differentiation).
+   (22) %--------------------------------------------------------------------
+   (23) Point       S            
+   (24) S.SetPosition( P,  t^2*Nx> + t^3*Ny> )
+-> (25) p_P_S> = t^2*Nx> + t^3*Ny>
+
+   (26) vSRelativeToP> = S.GetRelativeVelocity( P, N )
+-> (27) vSRelativeToP> = 2*t*Nx> + 3*t^2*Ny>
+
+   (28) %--------------------------------------------------------------------
+   (29) % Example: GetVelocity (via two points fixed on RigidBody B).
+   (30) %--------------------------------------------------------------------
+   (31) Point       Q( B )
+   (32) B.SetAngularVelocity( N, wz*Bz> )
+-> (33) w_B_N> = wz*Bz>
+
+   (34) Q.SetPosition( Bo,  x*Bx> + y*By> )
+-> (35) p_Bo_Q> = x*Bx> + y*By>
+
+   (36) QVelocityInN> = Q.GetVelocity( N )
+-> (37) QVelocityInN> = -wz*y*Bx> + wz*x*By> + vx*Nx> + vy*Ny>
+

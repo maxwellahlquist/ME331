@@ -1,0 +1,97 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: SkewMatrix  (with 2 arguments).
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame A
+   (5) Constant   vx, vy, vz
+   (6) v> = vx*Ax> + vy*Ay> + vz*Az> 
+-> (7) v> = vx*Ax> + vy*Ay> + vz*Az>
+
+   (8) vSkewA = SkewMatrix( A,  v> )
+-> (9) vSkewA = [0, -vz, vy;  vz, 0, -vx;  -vy, vx, 0]
+
+   (10) v234> = 2*Ax> + 3*Ay> + 4*Az>
+-> (11) v234> = 2*Ax> + 3*Ay> + 4*Az>
+
+   (12) crossProductMatrixA = vSkewA * Matrix( A, v234> )
+-> (13) crossProductMatrixA = [4*vy - 3*vz;  2*vz - 4*vx;  3*vx - 2*vy]
+
+   (14) crossProductVector> = Cross( v>, v234> )
+-> (15) crossProductVector> = (4*vy-3*vz)*Ax> + (2*vz-4*vx)*Ay> + (3*vx-2*vy)*Az>
+
+   (16) isEqual[1] = IsSimplifyEqual( Vector(A, crossProductMatrixA),  crossProductVector> )
+-> (17) isEqual[1] = true
+
+   (18) %--------------------------------------------------------------------
+   (19) % Example 2: SkewMatrix  (with 1 argument since v> has a uniform basis).
+   (20) %--------------------------------------------------------------------
+   (21) vSkewA := SkewMatrix( v> )
+-> (22) vSkewA = [0, -vz, vy;  vz, 0, -vx;  -vy, vx, 0]
+
+   (23) %--------------------------------------------------------------------
+   (24) % Example 3: SkewMatrix  (with 2 arguments and a mixed-basis vector).
+   (25) %--------------------------------------------------------------------
+   (26) RigidBody  B
+   (27) Constant   theta
+   (28) B.SetRotationMatrixZ( A, theta )
+-> (29) B_A = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+
+   (30) v> := vx*Ax> + vy*By> + vz*Bz>    % Mixed-basis vector v>.
+-> (31) v> = vx*Ax> + vy*By> + vz*Bz>
+
+   (32) vSkewA := SkewMatrix( A,  v> )
+-> (33) vSkewA[1,1] = 0
+-> (34) vSkewA[1,2] = -vz
+-> (35) vSkewA[1,3] = vy*cos(theta)
+-> (36) vSkewA[2,1] = vz
+-> (37) vSkewA[2,2] = 0
+-> (38) vSkewA[2,3] = vy*sin(theta) - vx
+-> (39) vSkewA[3,1] = -vy*cos(theta)
+-> (40) vSkewA[3,2] = vx - vy*sin(theta)
+-> (41) vSkewA[3,3] = 0
+
+   (42) vSkewB := SkewMatrix( B,  v> )
+-> (43) vSkewB[1,1] = 0
+-> (44) vSkewB[1,2] = -vz
+-> (45) vSkewB[1,3] = vy - vx*sin(theta)
+-> (46) vSkewB[2,1] = vz
+-> (47) vSkewB[2,2] = 0
+-> (48) vSkewB[2,3] = -vx*cos(theta)
+-> (49) vSkewB[3,1] = vx*sin(theta) - vy
+-> (50) vSkewB[3,2] = vx*cos(theta)
+-> (51) vSkewB[3,3] = 0
+
+   (52) isEqual[2] = IsSimplifyEqual( A_B * vSkewB * B_A, vSkewA ) 
+-> (53) isEqual[2] = true
+
+   (54) isEqual[3] = IsSimplifyEqual( B_A * vSkewA * A_B, vSkewB ) 
+-> (55) isEqual[3] = true
+
+   (56) %--------------------------------------------------------------------
+   (57) % Example 4: SkewMatrix  (related to cross-product with unit dyadic).
+   (58) %--------------------------------------------------------------------
+   (59) v> := vx*Ax> + vy*Ay> + vz*Az> 
+-> (60) v> = vx*Ax> + vy*Ay> + vz*Az>
+
+   (61) vCrossUnitDyadic>> = Cross( v>,  1>> )
+-> (62) vCrossUnitDyadic>> = -vz*Ax>*Ay> + vy*Ax>*Az> + vz*Ay>*Ax> - vx*Ay>*Az>
+        - vy*Az>*Ax> + vx*Az>*Ay>
+
+   (63) unitDyadicCrossV>> = Cross( 1>>,  v> )
+-> (64) unitDyadicCrossV>> = -vz*Ax>*Ay> + vy*Ax>*Az> + vz*Ay>*Ax> - vx*Ay>*Az>
+        - vy*Az>*Ax> + vx*Az>*Ay>
+
+   (65) vCrossUnitDyadicSkewA = Matrix( A, vCrossUnitDyadic>> ) 
+-> (66) vCrossUnitDyadicSkewA = [0, -vz, vy;  vz, 0, -vx;  -vy, vx, 0]
+
+   (67) unitDyadicCrossVSkewA = Matrix( A, unitDyadicCrossV>> ) 
+-> (68) unitDyadicCrossVSkewA = [0, -vz, vy;  vz, 0, -vx;  -vy, vx, 0]
+
+   (69) vSkewMatrixA := SkewMatrix( A,  v> ) 
+-> (70) vSkewMatrixA = [0, -vz, vy;  vz, 0, -vx;  -vy, vx, 0]
+
+   (71) isEqual[4] = IsSimplifyEqual( vCrossUnitDyadicSkewA, unitDyadicCrossVSkewA ) 
+-> (72) isEqual[4] = true
+
+   (73) isEqual[5] = IsSimplifyEqual( vCrossUnitDyadicSkewA, vSkewMatrixA ) 
+-> (74) isEqual[5] = true
+

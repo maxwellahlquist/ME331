@@ -1,0 +1,13 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example:  %   Marks a comment in a MotionGenesis script.
+   (3) %--------------------------------------------------------------------
+   (4) %    File: SomeFileName.txt
+   (5) % Purpose: Biomechanic analysis of human motion in deep space.
+   (6) %
+   (7) %--------------------------------------------------------------------
+   (8) % Example:  %%  Marks a comment to be written to C, Fortran, or MATLAB programs.
+   (9) %--------------------------------------------------------------------
+   (10) %%  if( x == 2 )
+   (11) %%    y = sin(x+2);
+   (12) %%  else
+   (13) %%    y = cos(x+3);

@@ -1,0 +1,43 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: AddForceSpring  (natural length is 0)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) Particle  P1, Q1
+   (6) Variable  x, y
+   (7) Constant  k, Ln
+   (8) Q1.SetPosition( P1, x*Nx> )
+-> (9) p_P1_Q1> = x*Nx>
+
+   (10) Q1.AddForceSpring( P1, k, 0 )
+-> (11) Force_Q1_P1> = -k*x*Nx>
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2: AddForceSpring  (natural length Ln)
+   (14) %--------------------------------------------------------------------
+   (15) Particle  P2, Q2
+   (16) Q2.SetPosition( P2, x*Nx> )
+-> (17) p_P2_Q2> = x*Nx>
+
+   (18) Q2.AddForceSpring( P2, k, Ln )
+-> (19) Force_Q2_P2> = -k*x*(1-Ln/abs(x))*Nx>
+
+   (20) %--------------------------------------------------------------------
+   (21) % Example 3: AddForceSpring  (natural length Ln and exponent 3)
+   (22) %--------------------------------------------------------------------
+   (23) Particle  P3, Q3
+   (24) Q3.SetPosition( P3, y*Ny> )
+-> (25) p_P3_Q3> = y*Ny>
+
+   (26) Q3.AddForceSpring( P3, k, Ln, 3 )
+-> (27) Force_Q3_P3> = k*y*(Ln-abs(y))^3/abs(y)*Ny>
+
+   (28) %--------------------------------------------------------------------
+   (29) % Example 4: AddForceSpring  (position vector with two components)
+   (30) %--------------------------------------------------------------------
+   (31) Particle  P4, Q4
+   (32) Q4.SetPosition( P4, x*Nx> + y*Ny> )
+-> (33) p_P4_Q4> = x*Nx> + y*Ny>
+
+   (34) Q4.AddForceSpring( P4, k, Ln )
+-> (35) Force_Q4_P4> = -k*x*(1-Ln/sqrt(x^2+y^2))*Nx> - k*y*(1-Ln/sqrt(x^2+y^2))*Ny>
+

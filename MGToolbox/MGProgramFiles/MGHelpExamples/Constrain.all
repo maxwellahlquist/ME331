@@ -1,0 +1,38 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: Constrain  (sphere rolling on horizontal plane)
+   (3) %--------------------------------------------------------------------
+   (4) SetDefaults( AUTOLEV )
+   (5) RigidFrame N            % Horizontal plane.
+   (6) RigidBody  B            % Ball (sphere).
+   (7) Point      BN(B)        % Point of B in contact with N.
+   (8) Constant   r            % Radius of ball
+   (9) Variable   wx',  wy',  wz'
+   (10) Variable   vx',  vy',  vz'
+   (11) SetGeneralizedSpeed( wx, wy, wz, vx, vy, vz )
+   (12) B.SetAngularVelocity( N, wx*N1> + wy*N2> + wz*N3> )
+-> (13) w_B_N> = wx*N1> + wy*N2> + wz*N3>
+
+   (14) Bo.SetVelocity( N, vx*N1> + vy*N2> + vz*N3> )
+-> (15) v_BO_N> = vx*N1> + vy*N2> + vz*N3>
+
+   (16) BN.SetVelocity( N, v_Bo_N> + Cross( w_B_N>, -r*N2> )  )
+-> (17) v_BN_N> = (vx+r*wz)*N1> + vy*N2> + (vz-r*wx)*N3>
+
+   (18) %---------------------------
+   (19) Dependent[1] = Dot( BN.GetVelocity(N), N1> )
+-> (20) Dependent[1] = vx + r*wz
+
+   (21) Dependent[2] = Dot( BN.GetVelocity(N), N3> )
+-> (22) Dependent[2] = vz - r*wx
+
+   (23) Auxiliary[1] = Dot( BN.GetVelocity(N), N2> )  
+-> (24) Auxiliary[1] = vy
+
+   (25) Constrain( Dependent[vx,vz], Auxiliary[vy] ) 
+-> (26) vx = -r*wz
+-> (27) vz = r*wx
+-> (28) vy = 0
+-> (29) vx' = -r*wz'
+-> (30) vz' = r*wx'
+-> (31) vy' = 0
+

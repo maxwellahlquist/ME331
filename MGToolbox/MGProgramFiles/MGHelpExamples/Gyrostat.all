@@ -1,0 +1,45 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: Gyrostat
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) RigidBody      A     % Carrier
+   (6) RigidFrame     B     % Spherical   rotor
+   (7) RigidFrame     C     % Cylindrical rotor
+   (8) Constant       IB    % B's diametral moment of inertia 
+   (9) Constant       IC    % C's moment of inertia along cylindrical axis
+   (10) A.SetMass( mG )      % Attribute the gyrostat's mass and inertia to A.
+   (11) A.SetInertia( Acm, IGx, IGy, IGz ) 
+   (12) Variable       wx', wy', wz', w{1:3}', vx', vy', vz'
+   (13) Specified      s' 
+   (14) SetGeneralizedSpeed( wx, wy, wz, w{1:3}, vx, vy, vz )
+   (15) A.SetAngularVelocity( N, wx*Ax> + wy*Ay> + wz*Az> )
+-> (16) w_A_N> = wx*Ax> + wy*Ay> + wz*Az>
+
+   (17) B.SetAngularVelocity( A, w1*Ax> + w2*Ay> + w3*Az> )
+-> (18) w_B_A> = w1*Ax> + w2*Ay> + w3*Az>
+
+   (19) C.SetAngularVelocity( A, s*Ax> )
+-> (20) w_C_A> = s*Ax>
+
+   (21) Acm.SetVelocity( N, vx*Ax> + vy*Ay> + vz*Az> )
+-> (22) v_Acm_N> = vx*Ax> + vy*Ay> + vz*Az>
+
+   (23) GyroH> = A.GetAngularMomentum(Acm) + Gyrostat(ANGMOM,CYLINDER,A,C,IC) + Gyrostat(ANGMOM,SPHERE,A,B,IB)
+-> (24) GyroH> = (IC*s+IGx*wx+IB*w1)*Ax> + (IGy*wy+IB*w2)*Ay> + (IGz*wz+IB*w3)*Az>
+
+   (25) GyroKE = A.GetKineticEnergy() + Gyrostat(KE,CYLINDER,A,C,IC) + Gyrostat(KE,SPHERE,A,B,IB)
+-> (26) GyroKE = 0.5*IGx*wx^2 + 0.5*IGy*wy^2 + 0.5*IGz*wz^2 + 0.5*IC*s*(s+2*wx)
+        + 0.5*mG*(vx^2+vy^2+vz^2) - 0.5*IB*(wx^2+wy^2+wz^2-(w1+wx)^2-(w2+wy)^2-
+        (w3+wz)^2)
+
+   (27) GyroFrStar = FRSTAR(A) + Gyrostat(FRSTAR,CYLINDER,A,C,IC) + Gyrostat(FRSTAR,SPHERE,A,B,IB)
+-> (28) GyroFrStar[1] = (IGy-IGz)*wy*wz + IB*(w2*wz-w3*wy-w1') - IC*s' - IGx*wx'
+-> (29) GyroFrStar[2] = IB*(w3*wx-w1*wz-w2') - IC*s*wz - (IGx-IGz)*wx*wz - IGy*wy'
+-> (30) GyroFrStar[3] = IC*s*wy + (IGx-IGy)*wx*wy + IB*(w1*wy-w2*wx-w3') - IGz*wz'
+-> (31) GyroFrStar[4] = IB*(w2*wz-w3*wy-w1'-wx')
+-> (32) GyroFrStar[5] = IB*(w3*wx-w1*wz-w2'-wy')
+-> (33) GyroFrStar[6] = IB*(w1*wy-w2*wx-w3'-wz')
+-> (34) GyroFrStar[7] = mG*(vy*wz-vz*wy-vx')
+-> (35) GyroFrStar[8] = mG*(vz*wx-vx*wz-vy')
+-> (36) GyroFrStar[9] = mG*(vx*wy-vy*wx-vz')
+

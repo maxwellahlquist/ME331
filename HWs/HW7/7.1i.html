@@ -1,0 +1,47 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 7.1i.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">7.1i.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  7.1i.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) %   Mathematical declarations.
+   (6) Variable    d, c, z
+   (7) Constant    theta = 30 deg
+   (8) %--------------------------------------------------------------------
+   (9) u> = GetUnitVector( 3*Nx> - 1*Ny> + Nz> )			% direction of Ao to Q
+-> (10) u> = 0.904534*Nx> - 0.3015113*Ny> + 0.3015113*Nz>
+
+   (11) NoAo> = Nx> + 2*Ny>						% Position Vector No to Ao
+-> (12) NoAo> = Nx> + 2*Ny>
+
+   (13) QBo> = z*Nz> - c*cos(theta)*Nx> - c*sin(theta)*Ny>	% Position Vector Q to Bo
+-> (14) QBo> = -cos(theta)*c*Nx> - sin(theta)*c*Ny> + z*Nz>
+
+   (15) NoBo> = 4*Nx> + Nz>						% Position Vector Bo to No
+-> (16) NoBo> = 4*Nx> + Nz>
+
+   (17) Dynamics[1] = Dot( Nx> , NoAo> + d*u> + QBo> - NoBo> )
+-> (18) Dynamics[1] = -3 + 0.904534*d - cos(theta)*c
+
+   (19) Dynamics[2] = Dot( Ny> , NoAo> + d*u> + QBo> - NoBo> )
+-> (20) Dynamics[2] = 2 - 0.3015113*d - sin(theta)*c
+
+   (21) Dynamics[3] = Dot( Nz> , NoAo> + d*u> + QBo> - NoBo> )
+-> (22) Dynamics[3] = -1 + z + 0.3015113*d
+
+   (23) %--------------------------------------------------------------------
+   (24) %   Solve algebraic equations for list of unknowns.
+   (25) Solve( Dynamics = 0,   d, c, z )
+-> (26) d = 6.63325*(cos(theta)+1.5*sin(theta))/(cos(theta)+3*sin(theta))
+-> (27) c = 3/(cos(theta)+3*sin(theta))
+-> (28) z = 1 - 2*(cos(theta)+1.5*sin(theta))/(cos(theta)+3*sin(theta))
+
+   (29) ans = evaluate(d, theta = 30 deg)
+-> (30) ans = 4.530594
+
+   (31) %   Record input together with responses.
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

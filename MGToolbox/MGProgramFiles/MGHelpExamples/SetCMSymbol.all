@@ -1,0 +1,24 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example:  SetCMSymbol 
+   (3) %--------------------------------------------------------------------
+   (4) SetCMSymbol( cm )
+   (5) NewtonianFrame N
+   (6) RigidBody B
+   (7) B.SetMass( m )
+   (8) Bcm.Translate( No, t^3*Nx> + sin(t)*Ny> )
+-> (9) p_No_Bcm> = t^3*Nx> + sin(t)*Ny>
+-> (10) v_Bcm_N> = 3*t^2*Nx> + cos(t)*Ny>
+-> (11) a_Bcm_N> = 6*t*Nx> - sin(t)*Ny>
+
+   (12) LinearMomentum> = B.GetLinearMomentum()
+-> (13) LinearMomentum> = 3*m*t^2*Nx> + m*cos(t)*Ny>
+
+   (14) B.SetAngularVelocity( N, 0> )
+-> (15) w_B_N> = 0>
+
+   (16) AngularMomentumAboutNo> = B.GetAngularMomentum( No )
+-> (17) AngularMomentumAboutNo> = -m*t^2*(3*sin(t)-t*cos(t))*Nz>
+
+   (18) KinetEnergy = B.GetKineticEnergy()
+-> (19) KinetEnergy = 0.5*m*(9*t^4+cos(t)^2)
+

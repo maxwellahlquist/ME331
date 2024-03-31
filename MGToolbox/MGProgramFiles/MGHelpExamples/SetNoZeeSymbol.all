@@ -1,0 +1,53 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: SetNoZeeSymbol  (with scalar expressions)
+   (3) %--------------------------------------------------------------------
+   (4) Constant   a, b, c
+   (5) ScalarExpression = (a-b)*cos(t) + (b-c)*sin(t)
+-> (6) ScalarExpression = (a-b)*cos(t) + (b-c)*sin(t)
+
+   (7) SetNoZeeSymbol( a )
+   (8) testA = Zee( ScalarExpression )
+-> (9) z1 = cos(t)
+-> (10) z2 = sin(t)
+-> (11) z3 = b - c
+-> (12) z4 = z3*z2 - b*z1
+-> (13) testA = z4 + a*z1
+
+   (14) SetNoZeeSymbol( b )
+   (15) testB = Zee( ScalarExpression )
+-> (16) z5 = z2 - z1
+-> (17) z6 = c*z2
+-> (18) testB = a*z1 + b*z5 - z6
+
+   (19) ResetNoZeeSymbol()
+   (20) testC = Zee( ScalarExpression )
+-> (21) z7 = a - b
+-> (22) z8 = z3*z2 + z7*z1
+-> (23) testC = z8
+
+   (24) %--------------------------------------------------------------------
+   (25) % Example 2: SetNoZeeSymbol  (with matrix expressions)
+   (26) %--------------------------------------------------------------------
+   (27) Variable x, y
+   (28) matrix[1] = 10 + a + b + c + abs(t)*x + sin(t)*exp(t)*cos(t^2)*y
+-> (29) matrix[1] = 10 + a + b + c + abs(t)*x + sin(t)*exp(t)*cos(t^2)*y
+
+   (30) matrix[2] = 10 + a^2 + cos(b+c)*tan(t)*x
+-> (31) matrix[2] = 10 + a^2 + cos(b+c)*tan(t)*x
+
+   (32) SetNoZeeSymbol( x, y )
+   (33) testD = Zee( matrix )
+-> (34) z9 = abs(t)
+-> (35) z10 = exp(t)
+-> (36) z11 = cos(t^2)
+-> (37) z12 = z2*z10*z11
+-> (38) z13 = 10 + a + b + c
+-> (39) z14 = cos(b+c)
+-> (40) z15 = tan(t)
+-> (41) z16 = z14*z15
+-> (42) z17 = 10 + a^2
+-> (43) testD = [z13 + z9*x + z12*y;  z17 + z16*x]
+
+   (44) noZeeSymbols = GetNoZeeSymbol()
+-> (45) noZeeSymbols = [x;  y]
+

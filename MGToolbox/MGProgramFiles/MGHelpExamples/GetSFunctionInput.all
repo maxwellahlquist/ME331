@@ -1,0 +1,16 @@
+   (1) %---------------------------------------------------------------------
+   (2) % Example: GetSFunctionInput
+   (3) %---------------------------------------------------------------------
+   (4) Specified  a, b, c, x, y, z
+   (5) SetSFunctionInput( a, b, c )
+   (6) matrixA = GetSFunctionInput()
+-> (7) matrixA = [a; b; c]
+
+   (8) SetSFunctionInput( x, y, z )
+   (9) matrixB = GetSFunctionInput()
+-> (10) matrixB = [a; b; c; x; y; z]
+
+   (11) SetSFunctionInput()
+   (12) matrixC = GetSFunctionInput()
+-> (13) matrixC = [0]
+

@@ -1,0 +1,24 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: asin   (real scalar expressions)
+   (3) %--------------------------------------------------------------------
+   (4) angleInRadians = asin( 0.5 ) 
+-> (5) angleInRadians = 0.5235988
+
+   (6) angleInDegrees = asinDegrees( 0.5 ) 
+-> (7) angleInDegrees = 30
+
+   (8) Arad = asin(0.5+2*t)
+-> (9) Arad = asin(0.5+2*t)
+
+   (10) Adeg = asin(0.5+2*t) * ConvertUnits(rad,deg)
+-> (11) Adeg = 57.29578*asin(0.5+2*t)
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2: asin   (complex scalar expressions)
+   (14) %--------------------------------------------------------------------
+   (15) B = asin( 3*GetImaginaryNumber() )
+-> (16) B = 1.818446*imaginary
+
+   (17) C = asin( t - 3*GetImaginaryNumber() )
+-> (18) C = asin(t-3*imaginary)
+

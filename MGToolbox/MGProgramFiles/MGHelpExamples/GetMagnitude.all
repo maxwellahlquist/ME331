@@ -1,0 +1,14 @@
+   (1) %--------------------------------------------------------------------
+   (2) %Example: GetMagnitude and GetMagnitudeSquared
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame A
+   (5) Constant x, y, z
+   (6) v> = Vector( A, x, y, z )
+-> (7) v> = x*Ax> + y*Ay> + z*Az>
+
+   (8) magnitude = GetMagnitude( v> )
+-> (9) magnitude = sqrt(x^2+y^2+z^2)
+
+   (10) magnitudeSquared = GetMagnitudeSquared( v> )
+-> (11) magnitudeSquared = x^2 + y^2 + z^2
+

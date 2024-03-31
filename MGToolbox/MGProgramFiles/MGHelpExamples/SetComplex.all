@@ -1,0 +1,46 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  SetComplex( OFF )
+   (3) %--------------------------------------------------------------------
+   (4) Variable x
+   (5) SetComplex( OFF )
+   (6) a = sqrt(x^2)
+-> (7) a = abs(x)
+
+   (8) b = Evaluate( a, x = 2 + GetImaginaryNumber() )  
+-> (9) b = abs(2+imaginary)
+
+   (10) c = Exp( GetImaginaryNumber() * x )
+-> (11) c = exp(imaginary*x)
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2:  SetComplex( ON )
+   (14) %--------------------------------------------------------------------
+   (15) SetComplex( ON )
+   (16) d = sqrt(x^2)  
+-> (17) d = sqrt(x^2)
+
+   (18) e = Evaluate(   a,  x = 2 + GetImaginaryNumber() )  
+-> (19) e = 2.236068
+
+   (20) f = Evaluate( x^2,  x = 2 + GetImaginaryNumber() )  
+-> (21) f = 3 + 4*imaginary
+
+   (22) g = Evaluate(   d,  x = 2 + GetImaginaryNumber() )  
+-> (23) g = 2 + 1*imaginary
+
+   (24) h = Exp( GetImaginaryNumber() * x )
+-> (25) h = cos(x) + imaginary*sin(x)
+
+   (26) %--------------------------------------------------------------------
+   (27) % Example 3:  SetComplex( AUTO )
+   (28) %--------------------------------------------------------------------
+   (29) SetComplex( AUTO )
+   (30) k = sqrt(x^2)                                 % Complex if OFF
+-> (31) k = abs(x)
+
+   (32) L = Evaluate( a, x = 2+GetImaginaryNumber() ) % Complex turns ON
+-> (33) L = 2.236068
+
+   (34) m = Exp( GetImaginaryNumber() * x )           % Complex is ON
+-> (35) m = cos(x) + imaginary*sin(x)
+

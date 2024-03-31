@@ -1,0 +1,41 @@
+   (1) %--------------------------------------------------------------------
+   (2) %Example 1: GetUnitVector   (Unit vector from vector)
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame N
+   (5) v> = 3*Nx> + 4*Ny>
+-> (6) v> = 3*Nx> + 4*Ny>
+
+   (7) unitVector> = GetUnitVector( v> )
+-> (8) unitVector> = 0.6*Nx> + 0.8*Ny>
+
+   (9) %--------------------------------------------------------------------
+   (10) %Example 2: GetUnitVector   (Unit vector from vector with denominator)
+   (11) %--------------------------------------------------------------------
+   (12) Constant  epsilon
+   (13) unitVectorWithEpsilon> = GetUnitVector( t*Nx>, epsilon+t )
+-> (14) unitVectorWithEpsilon> = t/(epsilon+t)*Nx>
+
+   (15) %--------------------------------------------------------------------
+   (16) %Example 3: GetUnitVector   (Unit vector between points)
+   (17) %--------------------------------------------------------------------
+   (18) Point     P, Q
+   (19) Variable  zQ
+   (20) Q.SetPosition( P,  zQ*Nz> )
+-> (21) p_P_Q> = zQ*Nz>
+
+   (22) UnitPositionVectorFromPToQ> = Q.GetUnitVector( P )
+-> (23) UnitPositionVectorFromPToQ> = zQ/abs(zQ)*Nz>
+
+   (24) %--------------------------------------------------------------------
+   (25) %Example 4: GetUnitVector   (Unit vector between points with denominator)
+   (26) %--------------------------------------------------------------------
+   (27) Variable  xP, yP
+   (28) P.SetPosition( No, xP*Nx> + yP*Ny> )
+-> (29) p_No_P> = xP*Nx> + yP*Ny>
+
+   (30) L = Q.GetDistance( No )
+-> (31) L = sqrt(xP^2+yP^2+zQ^2)
+
+   (32) UnitPositionVectorFromNoToQ> = Q.GetUnitVector( No, L )
+-> (33) UnitPositionVectorFromNoToQ> = xP/L*Nx> + yP/L*Ny> + zQ/L*Nz>
+

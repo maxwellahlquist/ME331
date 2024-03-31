@@ -1,0 +1,22 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: SetPoissonParameterODE
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame  A, B
+   (5) Variable    wx,  wy,  wz
+   (6) Variable    Rxx', Rxy', Rxz'
+   (7) Variable    Ryx', Ryy', Ryz'
+   (8) Variable    Rzx', Rzy', Rzz'
+   (9) B.SetAngularVelocity( A, wx*Bx> + wy*By> + wz*Bz> )
+-> (10) w_B_A> = wx*Bx> + wy*By> + wz*Bz>
+
+   (11) B.SetPoissonParameterODE( A, Rxx,Rxy,Rxz, Ryx,Ryy,Ryz, Rzx,Rzy,Rzz )
+-> (12) Rxx' = Ryx*wz - Rzx*wy
+-> (13) Rxy' = Ryy*wz - Rzy*wy
+-> (14) Rxz' = Ryz*wz - Rzz*wy
+-> (15) Ryx' = Rzx*wx - Rxx*wz
+-> (16) Ryy' = Rzy*wx - Rxy*wz
+-> (17) Ryz' = Rzz*wx - Rxz*wz
+-> (18) Rzx' = Rxx*wy - Ryx*wx
+-> (19) Rzy' = Rxy*wy - Ryy*wx
+-> (20) Rzz' = Rxz*wy - Ryz*wx
+

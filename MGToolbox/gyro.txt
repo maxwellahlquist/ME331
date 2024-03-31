@@ -1,0 +1,58 @@
+
+%MotionGenesis file:  gyro.txt
+% Copyright (c) 2019 Motion Genesis LLC.  All rights reserved.
+%--------------------------------------------------------------
+NewtonianFrame  N
+RigidFrame      A, B              % Intermediate frames.
+RigidBody       C                 % Rotor.
+%--------------------------------------------------------------
+Variable   theta'', phi'', wC'    % Angles and spin rate.
+Constant   g = 9.81 m/s^2         % Earth's local gravity.
+Constant   L = 0.2  m             % Distance between No and Ccm.
+Constant   r = 0.2  m             % Rotor radius.
+C.SetMass( m = 0.1 kg )
+C.SetInertia( Ccm,  m*r^2/4*( Bx>*Bx> + By>*By> + 2*Bz>*Bz> )  )
+%--------------------------------------------------------------------
+%       Rotational and translational kinematics.
+A.RotateNegativeZ( N, theta )
+B.RotateNegativeX( A, phi )
+Express( w_B_N>, B )
+C.SetAngularVelocityAcceleration( B, wC*Bz> )
+CCm.Translate( No, L*Bz> )
+%--------------------------------------------------------------------
+%       Add relevant forces (gravity).
+CCm.AddForce( -m*g*Nz>  )
+%--------------------------------------------------------------------
+%       Form equations of motion (angular momentum principle).
+Dynamics[1] = Dot( Bx>,  System.GetDynamics(No) )
+Dynamics[2] = Dot( By>,  System.GetDynamics(No) )
+Dynamics[3] = Dot( Bz>,  System.GetDynamics(No) )
+FactorQuadratic( Dynamics,   theta', phi', wC )
+Solve( Dynamics = 0, theta'', phi'', wC' )
+%--------------------------------------------------------------------
+%       System momentum and energy.
+L> = System.GetTranslationalMomentum()	% System translational momentum.
+H> = System.GetAngularMomentum(No)	    % System angular momentum about No.
+KE = System.GetKineticEnergy()	        % System kinetic energy.
+PE = System.GetForceGravityPotentialEnergy(  -g*Nz>,  No )
+KePe = KE + PE             % Total mechanical energy
+%--------------------------------------------------------------------
+Hnz = Dot( H> , Nz> )    % Nz> measure of angular momentum (conserved).
+Hbz = Dot( H> , Bz> )    % Bz> measure of angular momentum (conserved).
+%--------------------------------------------------------------------
+%       Integration parameters and initial values.
+Input  tFinal = 4 sec,  tStep = 0.05 sec,  absError = 1.0E-07
+Input  theta  = 0 deg,      phi  = 20 deg,      wc = 300 rpm
+Input  theta' = 0 deg/sec,  phi' = 0  deg/sec
+%--------------------------------------------------------------------
+%       List output quantities and solve ODEs.
+Output  t sec,  theta deg,  phi deg,  KePe Joules,  Hnz kg*m^2/sec,  Hbz kg*m^2/sec
+
+OutputPlot  t sec,  theta deg
+OutputPlot t sec, phi deg
+OutputPlot  t sec, KePe Joules,  Hnz kg*m^2/sec,  Hbz kg*m^2/sec
+ODE()  gyro
+
+Save gyro.html
+Quit
+

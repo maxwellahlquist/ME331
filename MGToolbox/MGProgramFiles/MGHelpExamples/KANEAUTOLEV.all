@@ -1,0 +1,54 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: KANE  (Pendulum of mass m and length L)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame   N      % Nx> is horizontally right.
+   (5) RigidBody        B      % Ny> is vertically upward.
+   (6) Point            BN(B)  % Pivot point of B in contact with N.
+   (7) Constant         L      % Distance between BN and Bcm.
+   (8) Variable         FN     % Normal force on BN from N.
+   (9) Variable         q''    % Pendulum rotation angle.
+   (10) Variable         vy'    % vy brings FN into evidence.
+   (11) SetGeneralizedSpeed( q', vy )
+   (12) %-----  Mass and inertia -----------------
+   (13) B.SetMass( m )
+   (14) B.SetInertia( Bcm, Ixx, Iyy, Izz )
+   (15) %----- Kinematics and constraints --------
+   (16) B.RotateZ( N, q )
+-> (17) B_N = [cos(q), sin(q), 0;  -sin(q), cos(q), 0;  0, 0, 1]
+-> (18) w_B_N> = q'*Bz>
+-> (19) alf_B_N> = q''*Bz>
+
+   (20) BN.SetVelocityAcceleration( N, vy*Ny> )
+-> (21) v_BN_N> = vy*Ny>
+-> (22) a_BN_N> = vy'*Ny>
+
+   (23) Bcm.Translate( BN, -L*By> )
+-> (24) p_BN_Bcm> = -L*By>
+-> (25) v_Bcm_N> = L*q'*Bx> + vy*Ny>
+-> (26) a_Bcm_N> = L*q''*Bx> + L*q'^2*By> + vy'*Ny>
+
+   (27) Auxiliary[1] = vy - 0
+-> (28) Auxiliary[1] = vy
+
+   (29) Constrain( Auxiliary[vy] )
+-> (30) vy = 0
+-> (31) vy' = 0
+
+   (32) %----- Forces ----------------------------
+   (33) System.AddForceGravity( -9.8*Ny> )
+-> (34) Force_Bcm> = -9.8*m*Ny>
+
+   (35) BN.AddForce( FN*Ny> )
+-> (36) Force_BN> = FN*Ny>
+
+   (37) %----- Form equations of motion ----------
+   (38) Zero = System.GetDynamicsKane()
+-> (39) Zero[1] = 9.8*m*L*sin(q) + (Izz+m*L^2)*q''
+-> (40) Zero[2] = 9.8*m + m*L*cos(q)*q'^2 + m*L*sin(q)*q'' - FN
+
+   (41) %----- Solution for FN -------------------
+   (42) SetDefaults( AUTOLEV )
+   (43) Kane( FN )
+-> (44) FN = m*(9.8+L*cos(q)*q'^2+L*sin(q)*q'')
+-> (45) Zero[1] = 9.8*m*L*sin(q) + (Izz+m*L^2)*q''
+

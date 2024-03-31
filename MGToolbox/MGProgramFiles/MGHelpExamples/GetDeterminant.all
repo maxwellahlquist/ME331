@@ -1,0 +1,16 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: GetDeterminant  
+   (3) %--------------------------------------------------------------------
+   (4) Constant a, b, c,  d, e, f,  g, h, i
+   (5) M = [a, b, c;  d, e, f;  g, h, i]
+-> (6) M = [a, b, c;  d, e, f;  g, h, i]
+
+   (7) determinant = GetDeterminant( M )
+-> (8) determinant = g*(b*f-c*e) + i*(a*e-b*d) - h*(a*f-c*d)
+
+   (9) detWithMinors = GetDeterminant( MINORS, M )
+-> (10) detWithMinors = g*(b*f-c*e) + i*(a*e-b*d) - h*(a*f-c*d)
+
+   (11) detWithGauss  = GetDeterminant( GAUSS,  M )
+-> (12) detWithGauss = (a*e-b*d)*(i-c*g/a-(f-c*d/a)*(h-b*g/a)/(e-b*d/a))
+

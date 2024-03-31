@@ -1,0 +1,36 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: SetGeneralizedCoordinate  (Projectile motion)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) Particle P
+   (6) P.SetMass( m = 1 kg )
+   (7) Constant  g = 9.8 m/s^2
+   (8) Variable  x'', y''
+   (9) SetGeneralizedCoordinate( x, y )
+   (10) P.Translate( No, x*Nx> + y*Ny> )
+-> (11) p_No_P> = x*Nx> + y*Ny>
+-> (12) v_P_N> = x'*Nx> + y'*Ny>
+-> (13) a_P_N> = x''*Nx> + y''*Ny>
+
+   (14) P.AddForce( -m*g*Ny> )
+-> (15) Force_P> = -m*g*Ny>
+
+   (16) LagrangeEquations = System.GetDynamicsLagrange( systemPotential = m*g*y )
+-> (17) LagrangeEquations = [m*x'';  m*(g+y'')]
+
+   (18) Solve( LagrangeEquations = 0,  x'', y'' )
+-> (19) x'' = 0
+-> (20) y'' = -g
+
+   (21) %--------------------------------------------------------------------
+   (22) % Example 2: GetGeneralizedCoordinate
+   (23) %--------------------------------------------------------------------
+   (24) qMatrix = GetGeneralizedCoordinate()
+-> (25) qMatrix = [x;  y]
+
+   (26) %--------------------------------------------------------------------
+   (27) % Example 3: ResetGeneralizedCoordinate 
+   (28) %--------------------------------------------------------------------
+   (29) qMatrix := ResetGeneralizedCoordinate()
+-> (30) qMatrix = [0]
+

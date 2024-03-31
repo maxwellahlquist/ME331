@@ -1,0 +1,14 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: SetRodriguesParameterODE
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame  A, B
+   (5) Variable    wx,  wy,  wz
+   (6) Variable    r1', r2', r3' 
+   (7) B.SetAngularVelocity( A, wx*Bx> + wy*By> + wz*Bz> )
+-> (8) w_B_A> = wx*Bx> + wy*By> + wz*Bz>
+
+   (9) B.SetRodriguesParameterODE( A, r1, r2, r3 )
+-> (10) r1' = 0.5*wx*(1+r1^2) + 0.5*wz*(r2+r1*r3) - 0.5*wy*(r3-r1*r2)
+-> (11) r2' = 0.5*wx*(r3+r1*r2) + 0.5*wy*(1+r2^2) - 0.5*wz*(r1-r2*r3)
+-> (12) r3' = 0.5*wy*(r1+r2*r3) + 0.5*wz*(1+r3^2) - 0.5*wx*(r2-r1*r3)
+

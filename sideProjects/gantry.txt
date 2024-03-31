@@ -1,0 +1,99 @@
+% MotionGenesis file:  pantograph.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N               % Example: Earth.
+Particle	A
+RigidFrame	B
+Particle	Q
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    	x'', y'', w'', z''	% Particle A and B positions
+Variable 	theta'', phi''		% The rope angles
+Variable	dummy''
+Variable	Rx, Ry			% Force acting on the top particle
+Constant	L = 5 m
+Constant	mA = 25 kg, mQ = 5 kg
+Constant	g = 9.81 m/s^2
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+A.SetMass( mA )
+Q.SetMass( mQ )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+% Have b rotate with a two body sequence, think about it some more later
+%B.rotate(N, SpaceXZ, theta, phi)
+B.rotate(N, SpaceXZX, theta, phi, dummy)
+%--------------------------------------------------------------------
+%   Translational kinematics.
+A.Translate(No, x*nx> + y*ny>)
+Q.Translate(A, L*by>)
+%--------------------------------------------------------------------
+%   Motion constraints (if any).
+%NoQ> = Bo.GetPosition(No) + Q.GetPosition(Bo)
+%QDo> = Do.GetPosition(Q)
+%DoNo> = No.Getposition(Do)
+%Loop> = NoQ> + QDo> + DoNo>
+
+%Loop[1] = Dot( Loop>, nx> )
+%Loop[2] = Dot( Loop>, ny> )
+%SolveDT( DT(Loop) = 0,  qB', qC')
+% Linear Kinematic relationships between qA'('), qB'('), qC'('), qD'(')
+
+%Variable	x'', y''	% Position of P
+%SetDT( x = Dot( NoQ>, nx> ) )
+%SetDT( y = Dot( NoQ>, ny> ) )
+% Linear Kinematic relationships between x'('), y'('), qA'('), qD'(')
+% and nonlinear in x, y, qA, qD
+%--------------------------------------------------------------------
+Q.AddForce( -mQ*g*nz> )
+A.AddForce( Rx*nx>+Ry*ny> )
+%--------------------------------------------------------------------
+%   Translational dynamic equations (F = m*a).
+%   For static analysis, use  B.GetStatics()  or  System.GetStatics().
+%SetGeneralizedSpeed(x', y', w', z')
+SetGeneralizedSpeed(x', y', theta', phi')
+
+Dynamics = Evaluate(System.GetDynamicsKane(), dummy = 0, dummy' = 0, dummy'' = 0)
+%Dynamics = Explicit( System.GetDynamicsKane(), qA', qD')
+
+stop
+
+quit
+M_matrix = GetCoefficientMatrix( Dynamics, qA'', qD'')
+N_matrix = GetCoefficient( Dynamics, TA, TD)
+
+%--------------------------------------------------------------------
+% Desired Motion
+% x and yOffset are measured from No and defines the origin of the "control shape"
+
+Constant	xOffset = LN / 2, yOffset = 2/3* LP % These can/should be modified
+Constant	r = LP/3, period = 10 sec
+Variable	theta''
+SetDT( theta = 2*pi*t / period )
+
+Specified xDes'' 
+SetDt( xDes = xOffset + r*cos(theta) )
+Specified yDes'' 
+SetDt( yDes = yOffset + r*sin(theta) )
+% The current shape is a simple circle
+% centered at (xOffset, yOffset)
+
+
+% Control Law
+Constant	zeta = 1 noUnits, wn = 2 rad/s
+Specified controlLawX'' = yDes'' + 2*zeta*wn*(yDes' - y') + wn^2*(yDes - y)
+Specified controlLawY'' = yDes'' + 2*zeta*wn*(yDes' - y') + wn^2*(yDes - y)
+
+% Equals zero
+Substitution[1] = x'' - controlLawX''
+Substitution[2] = y'' - controlLawY''
+Solve(Explicit(Substitution) = 0, qA'', qD'')
+
+
+Input tfinal = EvaluateToNumber(period), absError = 1.0E-05, tStep = 0.05 sec
+
+
+OutputPlot x m, y m
+ODE()
+Quit

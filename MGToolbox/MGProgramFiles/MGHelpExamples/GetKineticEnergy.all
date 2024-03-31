@@ -1,0 +1,56 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetKineticEnergy  (Kinetic energy of a particle)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N             
+   (5) Particle       Q         
+   (6) Specified      v1    
+   (7) Variable       v2    
+   (8) Q.SetMass( mQ )
+   (9) Q.SetVelocity( N, (v1+v2)*Nx> )
+-> (10) v_Q_N> = (v1+v2)*Nx>
+
+   (11) QKineticEnergy = Q.GetKineticEnergy()
+-> (12) QKineticEnergy = 0.5*mQ*(v1+v2)^2
+
+   (13) %------------------------
+   (14) SetGeneralizedSpeed( v2 )
+   (15) QKineticEnergy0 = Q.GetKineticEnergy0()
+-> (16) QKineticEnergy0 = 0.5*mQ*v1^2
+
+   (17) QKineticEnergy1 = Q.GetKineticEnergy1()
+-> (18) QKineticEnergy1 = mQ*v1*v2
+
+   (19) QKineticEnergy2 = Q.GetKineticEnergy2()
+-> (20) QKineticEnergy2 = 0.5*mQ*v2^2
+
+   (21) %--------------------------------------------------------------------
+   (22) % Example 2: GetKineticEnergy  (Kinetic energy of a rigid body)
+   (23) %--------------------------------------------------------------------
+   (24) RigidBody    B             
+   (25) B.SetMass( mB )
+   (26) B.SetInertia( Bcm, Ixx, Iyy, Izz )
+   (27) Variable     vx, vy, wz    
+   (28) B.SetAngularVelocity( N, wz*Bz> )
+-> (29) w_B_N> = wz*Bz>
+
+   (30) Bcm.SetVelocity( N, vx*Nx> + vy*Ny> )
+-> (31) v_Bcm_N> = vx*Nx> + vy*Ny>
+
+   (32) BKineticEnergy = B.GetKineticEnergy()
+-> (33) BKineticEnergy = 0.5*Izz*wz^2 + 0.5*mB*(vx^2+vy^2)
+
+   (34) %--------------------------------------------------------------------
+   (35) % Example 3: GetKineticEnergy  (Kinetic energy of a system)
+   (36) %--------------------------------------------------------------------
+   (37) SKineticEnergy = System.GetKineticEnergy( N )
+-> (38) SKineticEnergy = 0.5*Izz*wz^2 + 0.5*mB*(vx^2+vy^2) + 0.5*mQ*(v1+v2)^2
+
+   (39) SKineticEnergy0 = System.GetKineticEnergy0()
+-> (40) SKineticEnergy0 = 0.5*mQ*v1^2 + 0.5*Izz*wz^2 + 0.5*mB*(vx^2+vy^2)
+
+   (41) SKineticEnergy1 = System.GetKineticEnergy1()
+-> (42) SKineticEnergy1 = mQ*v1*v2
+
+   (43) SKineticEnergy2 = System.GetKineticEnergy2()
+-> (44) SKineticEnergy2 = 0.5*mQ*v2^2
+

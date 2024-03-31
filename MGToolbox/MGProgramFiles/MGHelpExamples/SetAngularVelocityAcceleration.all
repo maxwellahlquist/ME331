@@ -1,0 +1,23 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: SetAngularVelocityAcceleration 
+   (3) % Set A's angular velocity and acceleration in N. 
+   (4) %--------------------------------------------------------------------
+   (5) NewtonianFrame N             
+   (6) RigidFrame     A
+   (7) Variable       wx', wy', wz'
+   (8) A.SetAngularVelocityAcceleration( N, wx*Ax> + wy*Ay> + wz*Az> )
+-> (9) w_A_N> = wx*Ax> + wy*Ay> + wz*Az>
+-> (10) alf_A_N> = wx'*Ax> + wy'*Ay> + wz'*Az>
+
+   (11) %--------------------------------------------------------------------
+   (12) % Example 2: SetAngularVelocityAcceleration 
+   (13) % Set B's angular velocity and acceleration in both A and N. 
+   (14) %--------------------------------------------------------------------
+   (15) RigidFrame    B
+   (16) Variable      wBA'
+   (17) B.SetAngularVelocityAcceleration( A, wBA*Az> )
+-> (18) w_B_A> = wBA*Az>
+-> (19) w_B_N> = wx*Ax> + wy*Ay> + (wBA+wz)*Az>
+-> (20) alf_B_A> = wBA'*Az>
+-> (21) alf_B_N> = (wBA*wy+wx')*Ax> + (wy'-wBA*wx)*Ay> + (wBA'+wz')*Az>
+

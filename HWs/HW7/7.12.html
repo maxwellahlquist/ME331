@@ -1,0 +1,67 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 7.12.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">7.12.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  7.12.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame  N
+   (5) RigidBody       B
+   (6) %-------------------------------------------------------------------
+   (7) Variable   e0',  e1',  e2',  e3'   % Euler parameters (quaternion).
+   (8) Variable   wx',  wy',  wz'         % Angular velocity measures.
+   (9) B.SetInertia( Bcm,  Ixx = 1 kg*m^2,  Iyy = 2 kg*m^2,  Izz = 3 kg*m^2 )
+   (10) %-------------------------------------------------------------------
+   (11) %       Rotational kinematics and kinematical ODEs.
+   (12) B.SetAngularVelocityAcceleration( N,  wx*Bx> + wy*By> + wz*Bz> )
+-> (13) w_B_N> = wx*Bx> + wy*By> + wz*Bz>
+-> (14) alf_B_N> = wx'*Bx> + wy'*By> + wz'*Bz>
+
+   (15) B.SetRotationMatrixODE( N, Quaternion, e0, e1, e2, e3 )
+-> (16) B_N[1,1] = -1 + 2*e0^2 + 2*e1^2
+-> (17) B_N[1,2] = 2*e0*e3 + 2*e1*e2
+-> (18) B_N[1,3] = 2*e1*e3 - 2*e0*e2
+-> (19) B_N[2,1] = 2*e1*e2 - 2*e0*e3
+-> (20) B_N[2,2] = -1 + 2*e0^2 + 2*e2^2
+-> (21) B_N[2,3] = 2*e0*e1 + 2*e2*e3
+-> (22) B_N[3,1] = 2*e0*e2 + 2*e1*e3
+-> (23) B_N[3,2] = 2*e2*e3 - 2*e0*e1
+-> (24) B_N[3,3] = -1 + 2*e0^2 + 2*e3^2
+-> (25) e0' = -0.5*e1*wx - 0.5*e2*wy - 0.5*e3*wz
+-> (26) e1' = 0.5*e0*wx + 0.5*e2*wz - 0.5*e3*wy
+-> (27) e2' = 0.5*e0*wy + 0.5*e3*wx - 0.5*e1*wz
+-> (28) e3' = 0.5*e0*wz + 0.5*e1*wy - 0.5*e2*wx
+
+   (29) %-------------------------------------------------------------------
+   (30) %       Form equations of motion (angular momentum principle).
+   (31) Dynamics[1] = Dot(  Bx>,  B.GetDynamics(Bcm)  )
+-> (32) Dynamics[1] = Ixx*wx' - (Iyy-Izz)*wy*wz
+
+   (33) Dynamics[2] = Dot(  By>,  B.GetDynamics(Bcm)  )
+-> (34) Dynamics[2] = (Ixx-Izz)*wx*wz + Iyy*wy'
+
+   (35) Dynamics[3] = Dot(  Bz>,  B.GetDynamics(Bcm)  )
+-> (36) Dynamics[3] = Izz*wz' - (Ixx-Iyy)*wx*wy
+
+   (37) Solve( Dynamics = 0,   wx',  wy',  wz'  )
+-> (38) wx' = (Iyy-Izz)*wy*wz/Ixx
+-> (39) wy' = -(Ixx-Izz)*wx*wz/Iyy
+-> (40) wz' = (Ixx-Iyy)*wx*wy/Izz
+
+   (41) %-----------------------------------------------------------
+   (42) %       Numerical integration parameters and initial values.
+   (43) Input  tFinal = 8 sec,  tStep = 0.01 sec, absError = 1.0E-7
+   (44) Input  e0 = 1 noUnits,  e1 = 0 noUnits,  e2 = 0 noUnits,  e3 = 0 noUnits
+   (45) Input  wx = 0.2 rad/sec,  wy = 7.0 rad/sec,  wz = 0.2 rad/sec
+   (46) %------------------------------------------------------------
+   (47) %       List output quantities and solve ODEs.
+   (48) theta = GetAngleBetweenUnitVectors( Ny>,  By> )
+-> (49) theta = acos(-1+2*e0^2+2*e2^2)
+
+   (50) Output  t sec,  theta degrees
+   (51) ODE()
+
+   (52) %--------------------------------------------------------------------
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

@@ -1,0 +1,14 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: TSTAR 
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) RigidBody      B
+   (6) B.SetInertia( Bcm, Ix, Iy, Iz )
+   (7) Variable wx', wy', wz'
+   (8) B.SetAngularVelocity( N, wx*Bx> + wy*By> + wz*Bz> )
+-> (9) w_B_N> = wx*Bx> + wy*By> + wz*Bz>
+
+   (10) InertiaTorque> = TSTAR( B, N )
+-> (11) InertiaTorque> = ((Iy-Iz)*wy*wz-Ix*wx')*Bx> + (-(Ix-Iz)*wx*wz-Iy*wy')*By>
+        + ((Ix-Iy)*wx*wy-Iz*wz')*Bz>
+

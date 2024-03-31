@@ -1,0 +1,83 @@
+% MotionGenesis file:  FinalMipsi.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N       % Earth         
+RigidBody       A	% Rectangular plate, 2 metronome chassis
+RigidFrame     	B	% Left Metronome Arm
+RigidFrame      C	% Right Metronome Arm
+
+Particle        QB1
+Particle        QB2
+Particle        QC1
+Particle        QC2
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Constant    g = 9.8 m/s^2    % Earth's gravitational acceleration.
+Constant    m1 = 0.2 kg, m2 = 0.05 kg          
+Constant    mA = 0.3 kg
+Constant    L1 = 0.05 m, L2 = 0.08 m
+Constant    k = 0.001 N*m*s     
+Constant    q0 = 30 deg
+
+Variable    qB'', qC'', x''
+Variable    TB = -k*((2*qB/q0)^2 - 1)*qB'
+Variable    TC = -k*((2*qC/q0)^2 - 1)*qC'
+Variable    qDifference = qB - qC
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+A.SetMass(mA)
+QB1.SetMass( m1 )
+QB2.SetMass( m2 )
+QC1.SetMass( m1 )
+QC2.SetMass( m2 )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+A.RotateZ( N, 0 )
+B.RotateZ( N, qB )
+C.RotateZ( N, qC )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+Bo.Translate(No, x*Ax>)
+Bo.SetVelocityAcceleration( A, 0>)
+Co.SetVelocityAcceleration( N, Bo.GetVelocity(N) )
+Acm.SetVelocityAcceleration( N, Bo.GetVelocity(N) )
+QB1.Translate( Bo, -L1*By> )
+QB2.Translate( Bo, L2*By> )
+QC1.Translate( Co, -L1*Cy> )
+QC2.Translate( Co, L2*Cy> )
+%--------------------------------------------------------------------
+%   Add relevant contact/distance forces.
+System.AddForceGravity( -g*Ay> )            % Add's gravity force to each massive object.
+%--------------------------------------------------------------------
+%   Add relevant torques.
+B.AddTorque(A, TB*Az> )
+C.AddTorque(A, TC*Az> )
+%--------------------------------------------------------------------
+%   Kane Dynamics.
+SetGeneralizedSpeeds(qB',qC', x')
+Eq = System.GetDynamicsKane()
+%--------------------------------------------------------------------
+Input  tFinal = 20 sec,  tStep = 0.01 sec,  absError = 1.0E-07
+Input qB = 35 deg, qB' = 0 deg/sec, qC = 12 deg, qC' = 0 deg/sec
+Input x = 0 m, x' = 0 m/s
+%--------------------------------------------------------------------
+% Energy Check
+KE = System.GetKineticEnergy()
+PE = System(QB1,QB2).GetForceGravityPotentialEnergy(-g*Ay>,Bo) + System(QC1,QC2).GetForceGravityPotentialEnergy(-g*Ay>,Co)
+PEinitial = EvaluateAtInput(PE,t=0)
+deltaPE = PE - PEinitial
+Variable workDone' = TB*qB' + TC*qC'
+ME = KE + deltaPE - workDone
+%--------------------------------------------------------------------
+% Outputs for problem 4
+GetCoefficient(Eq, qB'',qC'',x'')
+Exclude(Eq, qB'',qC'',x'')
+%--------------------------------------------------------------------
+Output t sec, qB deg, qC deg, qDifference deg, ME joules
+Input workDone = 0 joules
+ODE( eq = 0, qB'', qC'', x'') FinalMipsi
+Plot FinalMipsi.1 [1,2,3] 
+Save FinalMipsi.html
+quit
+

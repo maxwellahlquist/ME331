@@ -1,0 +1,43 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetForceSpringPotentialEnergy  (natural length is 0)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) Particle  P1, Q1
+   (6) Variable  x, y
+   (7) Constant  k, Ln
+   (8) Q1.SetPosition( P1, x*Nx> )
+-> (9) p_P1_Q1> = x*Nx>
+
+   (10) PE1 = Q1.GetForceSpringPotentialEnergy( P1, k, 0 )
+-> (11) PE1 = 0.5*k*x^2
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2: GetForceSpringPotentialEnergy  (natural length is Ln)
+   (14) %--------------------------------------------------------------------
+   (15) Particle  P2, Q2
+   (16) Q2.SetPosition( P2, x*Nx> )
+-> (17) p_P2_Q2> = x*Nx>
+
+   (18) PE2 = Q2.GetForceSpringPotentialEnergy( P2, k, Ln )
+-> (19) PE2 = 0.5*k*(Ln-abs(x))^2
+
+   (20) %--------------------------------------------------------------------
+   (21) % Example 3: GetForceSpringPotentialEnergy (natural length is Ln; exponent 3)
+   (22) %--------------------------------------------------------------------
+   (23) Particle  P3, Q3
+   (24) Q3.SetPosition( P3, x*Nx> )
+-> (25) p_P3_Q3> = x*Nx>
+
+   (26) PE3 = Q3.GetForceSpringPotentialEnergy( P3, k, Ln, 3 )
+-> (27) PE3 = 0.25*k*(Ln-abs(x))^4
+
+   (28) %--------------------------------------------------------------------
+   (29) % Example 4: GetForceSpringPotentialEnergy  (natural length is Ln; exponent -1)
+   (30) %--------------------------------------------------------------------
+   (31) Particle  P4, Q4
+   (32) Q4.SetPosition( P4, x*Nx> + y*Ny> )
+-> (33) p_P4_Q4> = x*Nx> + y*Ny>
+
+   (34) PE4 = Q4.GetForceSpringPotentialEnergy( P4, k, Ln, -1 )
+-> (35) PE4 = k*log(sqrt(x^2+y^2)-Ln)
+

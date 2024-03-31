@@ -1,0 +1,260 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: 22.8.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">22.8.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  22.8.txt
+   (2) % Copyright (c) 2009 Motion Genesis LLC.  All rights reserved.
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame  N                 % Ground link.
+   (5) RigidBody       A, B, C           % Crank, coupler, rocker links.
+   (6) Point           BC( B )           % Point of B connected to C.
+   (7) Point           CB( C )           % Point of C connected to B.
+   (8) %--------------------------------------------------------------------
+   (9) Constant   LN = 1 m,  LA = 1 m    % Length of ground link, crank link.
+   (10) Constant   LB = 2 m,  LC = 2 m    % Length of coupler link, rocker link.
+   (11) Constant   g = 9.81 m/s^2         % Earth's gravitational acceleration.
+   (12) Specified  H = 200                % Horizontal force at point CB.
+-> (13) H = 200
+
+   (14) Variable   qA'',  qB'',  qC''     % Link angles (relative to ground).
+   (15) Variable   FCx, FCy               % Contact forces on C from B.
+   (16) %--------------------------------------------------------------------
+   (17) A.SetMassInertia( mA = 10 kg,  0,  IA = mA*LA^2/12,  IA  )
+-> (18) IA = 0.08333333*mA*LA^2
+
+   (19) B.SetMassInertia( mB = 20 kg,  0,  IB = mB*LB^2/12,  IB  )
+-> (20) IB = 0.08333333*mB*LB^2
+
+   (21) C.SetMassInertia( mC = 20 kg,  0,  IC = mC*LC^2/12,  IC  )
+-> (22) IC = 0.08333333*mC*LC^2
+
+   (23) %---------------------------------------------------------------
+   (24) %   Rotational kinematics.
+   (25) A.RotateZ( N,  qA )
+-> (26) A_N = [cos(qA), sin(qA), 0;  -sin(qA), cos(qA), 0;  0, 0, 1]
+-> (27) w_A_N> = qA'*Az>
+-> (28) alf_A_N> = qA''*Az>
+
+   (29) B.RotateZ( N,  qB )
+-> (30) B_N = [cos(qB), sin(qB), 0;  -sin(qB), cos(qB), 0;  0, 0, 1]
+-> (31) w_B_N> = qB'*Bz>
+-> (32) alf_B_N> = qB''*Bz>
+
+   (33) C.RotateZ( N,  qC )
+-> (34) C_N = [cos(qC), sin(qC), 0;  -sin(qC), cos(qC), 0;  0, 0, 1]
+-> (35) w_C_N> = qC'*Cz>
+-> (36) alf_C_N> = qC''*Cz>
+
+   (37) %--------------------------------------------------------------------
+   (38) %   Translational kinematics.
+   (39) Ao.Translate(   No,          0> )
+-> (40) p_No_Ao> = 0>
+-> (41) v_Ao_N> = 0>
+-> (42) a_Ao_N> = 0>
+
+   (43) Acm.Translate(  Ao,  0.5*LA*Ax> )
+-> (44) p_Ao_Acm> = 0.5*LA*Ax>
+-> (45) v_Acm_N> = 0.5*LA*qA'*Ay>
+-> (46) a_Acm_N> = -0.5*LA*qA'^2*Ax> + 0.5*LA*qA''*Ay>
+
+   (47) Bo.Translate(   Ao,      LA*Ax> )
+-> (48) p_Ao_Bo> = LA*Ax>
+-> (49) v_Bo_N> = LA*qA'*Ay>
+-> (50) a_Bo_N> = -LA*qA'^2*Ax> + LA*qA''*Ay>
+
+   (51) Bcm.Translate(  Bo,  0.5*LB*Bx> )
+-> (52) p_Bo_Bcm> = 0.5*LB*Bx>
+-> (53) v_Bcm_N> = LA*qA'*Ay> + 0.5*LB*qB'*By>
+-> (54) a_Bcm_N> = -LA*qA'^2*Ax> + LA*qA''*Ay> - 0.5*LB*qB'^2*Bx> + 0.5*LB*qB''*By>
+
+   (55) BC.Translate(   Bo,      LB*Bx> )
+-> (56) p_Bo_BC> = LB*Bx>
+-> (57) v_BC_N> = LA*qA'*Ay> + LB*qB'*By>
+-> (58) a_BC_N> = -LA*qA'^2*Ax> + LA*qA''*Ay> - LB*qB'^2*Bx> + LB*qB''*By>
+
+   (59) Co.Translate(   No,      LN*Ny> )
+-> (60) p_No_Co> = LN*Ny>
+-> (61) v_Co_N> = 0>
+-> (62) a_Co_N> = 0>
+
+   (63) Ccm.Translate(  Co,  0.5*LC*Cx> )
+-> (64) p_Co_Ccm> = 0.5*LC*Cx>
+-> (65) v_Ccm_N> = 0.5*LC*qC'*Cy>
+-> (66) a_Ccm_N> = -0.5*LC*qC'^2*Cx> + 0.5*LC*qC''*Cy>
+
+   (67) CB.Translate(   Co,      LC*Cx> )
+-> (68) p_Co_CB> = LC*Cx>
+-> (69) v_CB_N> = LC*qC'*Cy>
+-> (70) a_CB_N> = -LC*qC'^2*Cx> + LC*qC''*Cy>
+
+   (71) %--------------------------------------------------------------------
+   (72) %   Add relevant forces and torques.
+   (73) System.AddForceGravity(  g * Nx>  )
+-> (74) Force_Acm> = mA*g*Nx>
+-> (75) Force_Bcm> = mB*g*Nx>
+-> (76) Force_Ccm> = mC*g*Nx>
+
+   (77) CB.AddForce(  H * Ny>  )
+-> (78) Force_CB> = H*Ny>
+
+   (79) CB.AddForce( BC,  FCx*Nx> + FCy*Ny> )   % "Cut" linkage at CB/BC
+-> (80) Force_CB_BC> = FCx*Nx> + FCy*Ny>
+
+   (81) %--------------------------------------------------------------------
+   (82) %   Form equations of motion ("cut" linkage at CB/BC).
+   (83) Dynamics[1] = Dot( Nz>,  System(A,B).GetDynamics(Ao) )
+-> (84) Dynamics[1] = LA*FCy*cos(qA) + LB*FCy*cos(qB) + mB*g*LA*sin(qA) + 0.5*
+        mA*g*LA*sin(qA) + 0.5*mB*g*LB*sin(qB) + 0.5*mB*LA*LB*sin(qA-qB)*qB'^2
+        + IA*qA'' + IB*qB'' + mB*LA^2*qA'' + 0.25*mA*LA^2*qA'' + 0.25*mB*LB^2*qB''
+        + 0.5*mB*LA*LB*cos(qA-qB)*qA'' + 0.5*mB*LA*LB*cos(qA-qB)*qB'' - LA*FCx*sin(qA)
+        - LB*FCx*sin(qB) - 0.5*mB*LA*LB*sin(qA-qB)*qA'^2
+
+   (85) Dynamics[2] = Dot( Nz>,            B.GetDynamics(Bo) )
+-> (86) Dynamics[2] = IB*qB'' + 0.25*mB*LB^2*qB'' - 0.5*LB*(2*FCx*sin(qB)-2*FCy
+        *cos(qB)-mB*g*sin(qB)) - 0.5*mB*LA*LB*(sin(qA-qB)*qA'^2-cos(qA-qB)*qA'')
+
+   (87) Dynamics[3] = Dot( Nz>,            C.GetDynamics(Co) )
+-> (88) Dynamics[3] = IC*qC'' + 0.25*mC*LC^2*qC'' - 0.5*LC*(2*H*cos(qC)+2*FCy*
+        cos(qC)-2*FCx*sin(qC)-mC*g*sin(qC))
+
+   (89) setGeneralizedSpeeds(qA', qB', qC')
+   (90) dynamicsKane = System.GetDynamicsKane()
+-> (91) dynamicsKane[1] = 0.5*mB*LA*LB*cos(qA-qB)*qB'' + 0.25*(4*IA+mA*LA^2+4*
+        mB*LA^2)*qA'' - 0.5*LA*(2*FCx*sin(qA)-2*FCy*cos(qA)-2*mB*g*sin(qA)-mA*g
+        *sin(qA)-mB*LB*sin(qA-qB)*qB'^2)
+
+-> (92) dynamicsKane[2] = 0.5*LB*(2*FCy*cos(qB)+mB*g*sin(qB)-2*FCx*sin(qB)-mB*
+        LA*sin(qA-qB)*qA'^2) + 0.25*(4*IB+mB*LB^2)*qB'' + 0.5*mB*LA*LB*cos(qA-
+        qB)*qA''
+
+-> (93) dynamicsKane[3] = 0.25*(4*IC+mC*LC^2)*qC'' - 0.5*LC*(2*H*cos(qC)+2*FCy*
+        cos(qC)-2*FCx*sin(qC)-mC*g*sin(qC))
+
+   (94) % Below, just proves that the dyanmics are the same.
+   (95) solveA = solve(Dynamics = 0, qA'', qB'', qC'' )
+-> (96) solveA[1] = -2*(LB*(4*IB+mB*LB^2+2*mB*LA*LB*cos(qA-qB))*(2*FCy*cos(qB)+
+        mB*g*sin(qB)-2*FCx*sin(qB)-mB*LA*sin(qA-qB)*qA'^2)+(4*IB+mB*LB^2)*(2*
+        LA*FCx*sin(qA)+2*LB*FCx*sin(qB)+mB*LA*LB*sin(qA-qB)*qA'^2-2*LA*FCy*cos(
+        qA)-2*LB*FCy*cos(qB)-2*mB*g*LA*sin(qA)-mA*g*LA*sin(qA)-mB*g*LB*sin(qB)-
+        mB*LA*LB*sin(qA-qB)*qB'^2))/(2*mB*LA*LB*cos(qA-qB)*(4*IB+mB*LB^2+2*mB*
+        LA*LB*cos(qA-qB))-(4*IB+mB*LB^2)*(4*IA+mA*LA^2+4*mB*LA^2+2*mB*LA*LB*cos
+        (qA-qB)))
+
+-> (97) solveA[2] = 2*LB*((4*IA+mA*LA^2+4*mB*LA^2+2*mB*LA*LB*cos(qA-qB))*(2*FCy
+        *cos(qB)+mB*g*sin(qB)-2*FCx*sin(qB)-mB*LA*sin(qA-qB)*qA'^2)+2*mB*LA*cos
+        (qA-qB)*(2*LA*FCx*sin(qA)+2*LB*FCx*sin(qB)+mB*LA*LB*sin(qA-qB)*qA'^2-2*
+        LA*FCy*cos(qA)-2*LB*FCy*cos(qB)-2*mB*g*LA*sin(qA)-mA*g*LA*sin(qA)-mB*g*
+        LB*sin(qB)-mB*LA*LB*sin(qA-qB)*qB'^2))/(2*mB*LA*LB*cos(qA-qB)*(4*IB+mB*LB^2
+        +2*mB*LA*LB*cos(qA-qB))-(4*IB+mB*LB^2)*(4*IA+mA*LA^2+4*mB*LA^2+2*mB*LA*
+        LB*cos(qA-qB)))
+
+-> (98) solveA[3] = 2*LC*(2*H*cos(qC)+2*FCy*cos(qC)-2*FCx*sin(qC)-mC*g*sin(qC))
+        /(4*IC+mC*LC^2)
+
+   (99) solveB = Solve( dynamicsKane = 0, qA'', qB'', qC'' )
+-> (100) solveB[1] = 2*LA*(2*mB*LB^2*cos(qA-qB)*(2*FCy*cos(qB)+mB*g*sin(qB)-2*
+         FCx*sin(qB)-mB*LA*sin(qA-qB)*qA'^2)+(4*IB+mB*LB^2)*(2*FCx*sin(qA)-2*
+         FCy*cos(qA)-2*mB*g*sin(qA)-mA*g*sin(qA)-mB*LB*sin(qA-qB)*qB'^2))/((4*
+         IB+mB*LB^2)*(4*IA+mA*LA^2+4*mB*LA^2)-4*mB^2*LA^2*LB^2*cos(qA-qB)^2)
+
+-> (101) solveB[2] = -2*LB*((4*IA+mA*LA^2+4*mB*LA^2)*(2*FCy*cos(qB)+mB*g*sin(
+         qB)-2*FCx*sin(qB)-mB*LA*sin(qA-qB)*qA'^2)+2*mB*LA^2*cos(qA-qB)*(2*FCx*
+         sin(qA)-2*FCy*cos(qA)-2*mB*g*sin(qA)-mA*g*sin(qA)-mB*LB*sin(qA-qB)*qB'^2))
+         /((4*IB+mB*LB^2)*(4*IA+mA*LA^2+4*mB*LA^2)-4*mB^2*LA^2*LB^2*cos(qA-qB)^2)
+
+-> (102) solveB[3] = 2*LC*(2*H*cos(qC)+2*FCy*cos(qC)-2*FCx*sin(qC)-mC*g*sin(qC))
+         /(4*IC+mC*LC^2)
+
+   (103) shouldBeZero = solveA - solveB
+-> (104) shouldBeZero[1] = -2*LA*(2*mB*LB^2*cos(qA-qB)*(2*FCy*cos(qB)+mB*g*sin(
+         qB)-2*FCx*sin(qB)-mB*LA*sin(qA-qB)*qA'^2)+(4*IB+mB*LB^2)*(2*FCx*sin(
+         qA)-2*FCy*cos(qA)-2*mB*g*sin(qA)-mA*g*sin(qA)-mB*LB*sin(qA-qB)*qB'^2))
+         /((4*IB+mB*LB^2)*(4*IA+mA*LA^2+4*mB*LA^2)-4*mB^2*LA^2*LB^2*cos(qA-qB)^2)
+         - 2*(LB*(4*IB+mB*LB^2+2*mB*LA*LB*cos(qA-qB))*(2*FCy*cos(qB)+mB*g*sin(
+         qB)-2*FCx*sin(qB)-mB*LA*sin(qA-qB)*qA'^2)+(4*IB+mB*LB^2)*(2*LA*FCx*sin
+         (qA)+2*LB*FCx*sin(qB)+mB*LA*LB*sin(qA-qB)*qA'^2-2*LA*FCy*cos(qA)-2*LB*
+         FCy*cos(qB)-2*mB*g*LA*sin(qA)-mA*g*LA*sin(qA)-mB*g*LB*sin(qB)-mB*LA*
+         LB*sin(qA-qB)*qB'^2))/(2*mB*LA*LB*cos(qA-qB)*(4*IB+mB*LB^2+2*mB*LA*LB*
+         cos(qA-qB))-(4*IB+mB*LB^2)*(4*IA+mA*LA^2+4*mB*LA^2+2*mB*LA*LB*cos(qA-
+         qB)))
+
+-> (105) shouldBeZero[2] = 2*LB*(((4*IA+mA*LA^2+4*mB*LA^2)*(2*FCy*cos(qB)+mB*g*
+         sin(qB)-2*FCx*sin(qB)-mB*LA*sin(qA-qB)*qA'^2)+2*mB*LA^2*cos(qA-qB)*(2*
+         FCx*sin(qA)-2*FCy*cos(qA)-2*mB*g*sin(qA)-mA*g*sin(qA)-mB*LB*sin(qA-qB)
+         *qB'^2))/((4*IB+mB*LB^2)*(4*IA+mA*LA^2+4*mB*LA^2)-4*mB^2*LA^2*LB^2*cos
+         (qA-qB)^2)+((4*IA+mA*LA^2+4*mB*LA^2+2*mB*LA*LB*cos(qA-qB))*(2*FCy*cos(
+         qB)+mB*g*sin(qB)-2*FCx*sin(qB)-mB*LA*sin(qA-qB)*qA'^2)+2*mB*LA*cos(qA-
+         qB)*(2*LA*FCx*sin(qA)+2*LB*FCx*sin(qB)+mB*LA*LB*sin(qA-qB)*qA'^2-2*LA*
+         FCy*cos(qA)-2*LB*FCy*cos(qB)-2*mB*g*LA*sin(qA)-mA*g*LA*sin(qA)-mB*g*
+         LB*sin(qB)-mB*LA*LB*sin(qA-qB)*qB'^2))/(2*mB*LA*LB*cos(qA-qB)*(4*IB+
+         mB*LB^2+2*mB*LA*LB*cos(qA-qB))-(4*IB+mB*LB^2)*(4*IA+mA*LA^2+4*mB*LA^2+
+         2*mB*LA*LB*cos(qA-qB))))
+
+-> (106) shouldBeZero[3] = 0
+
+   (107) Expand( shouldBeZero )
+-> (108) shouldBeZero = [0;  0;  0]
+
+   (109) %--------------------------------------------------------------------
+   (110) %   Configuration (loop) constraints and their time-derivatives.
+   (111) Loop> = LA*Ax> + LB*Bx> - LC*Cx> - LN*Ny>
+-> (112) Loop> = LA*Ax> + LB*Bx> - LC*Cx> - LN*Ny>
+
+   (113) Loop[1] = Dot( Loop>, Nx> )
+-> (114) Loop[1] = LA*cos(qA) + LB*cos(qB) - LC*cos(qC)
+
+   (115) Loop[2] = Dot( Loop>, Ny> )
+-> (116) Loop[2] = LA*sin(qA) + LB*sin(qB) - LN - LC*sin(qC)
+
+   (117) LoopDt = Dt( Loop )
+-> (118) LoopDt[1] = LC*sin(qC)*qC' - LA*sin(qA)*qA' - LB*sin(qB)*qB'
+-> (119) LoopDt[2] = LA*cos(qA)*qA' + LB*cos(qB)*qB' - LC*cos(qC)*qC'
+
+   (120) LoopDtDt = Dt( LoopDt )
+-> (121) LoopDtDt[1] = LC*cos(qC)*qC'^2 + LC*sin(qC)*qC'' - LA*cos(qA)*qA'^2
+         - LB*cos(qB)*qB'^2 - LA*sin(qA)*qA'' - LB*sin(qB)*qB''
+
+-> (122) LoopDtDt[2] = LC*sin(qC)*qC'^2 + LA*cos(qA)*qA'' + LB*cos(qB)*qB''
+         - LA*sin(qA)*qA'^2 - LB*sin(qB)*qB'^2 - LC*cos(qC)*qC''
+
+   (123) %--------------------------------------------------------------------
+   (124) %   Use the loop constraints to solve for initial values of qB, qC and qB',qC'
+   (125) %   (results depend on constants and initial values of qA and qA').
+   (126) Input  qA = 30 deg,  qA' = 0 rad/sec
+   (127) SolveSetInput(   Loop = 0,   qB = 60 deg,      qC  = 20 deg )
+
+->    %  INPUT has been assigned as follows:
+->    %   qB                        74.47751218592994       deg
+->    %   qC                        45.52248781407009       deg
+
+   (128) SolveSetInput( LoopDt = 0,   qB' = 0 rad/sec,  qC' = 0 rad/sec )
+
+->    %  INPUT has been assigned as follows:
+->    %   qB'                       0                       rad/sec
+->    %   qC'                       0                       rad/sec
+
+   (129) %--------------------------------------------------------------------
+   (130) %   Numerical integration parameters.
+   (131) Input  tFinal = 7 sec,  tStep = 0.02 sec,  absError = 1.0E-07
+   (132) %--------------------------------------------------------------------
+   (133) %   List quantities to be output from ODE.
+   (134) Output  t sec,  qA deg,  qB deg,  qC deg,  FCx Newtons,  FCy  Newtons
+   (135) %--------------------------------------------------------------------
+   (136) %   Augment dynamics with constraints and solve ODEs (plot results).
+   (137) ODE( [Dynamics; LoopDtDt] = 0,  qA'', qB'', qC'', FCx, FCy )  MGFourBarDynamicsFBD
+
+   (138) Plot MGFourBarDynamicsFBD.1 [1, 2, 3, 4]
+   (139) %********************************************************************
+   (140) %   Statics via dynamics - simulate with damping..
+   (141) H := 200 - 80 * qC'
+-> (142) H = 200 - 80*qC'
+
+   (143) Input  tFinal := 5 sec
+   (144) ODE( [Dynamics; LoopDtDt] = 0,  qA'', qB'', qC'', FCx, FCy ) MGFourBarDynamicsFBDdamped
+
+   (145) Plot MGFourBarDynamicsFBDdamped.1 [1, 2, 3, 4]
+   (146) %--------------------------------------------------------------------
+   (147) %   Save input together with program responses.
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

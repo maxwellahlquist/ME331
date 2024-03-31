@@ -1,0 +1,52 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: Exclude  (scalar expressions)
+   (3) %--------------------------------------------------------------------
+   (4) Constant  a, b, c, x
+   (5) y = 7 + a*x + a*c^2 + b*(11+c+a*b)
+-> (6) y = 7 + a*x + a*c^2 + b*(11+c+a*b)
+
+   (7) y1 = Exclude( y,  a )
+-> (8) y1 = 7 + b*(11+c)
+
+   (9) y2 = Exclude( y,  b )
+-> (10) y2 = 7 + a*x + a*c^2
+
+   (11) y3 = Exclude( y,  c, x )
+-> (12) y3 = 7 + b*(11+a*b)
+
+   (13) %--------------------------------------------------------------------
+   (14) % Example 2: Exclude  (vector expressions)
+   (15) %--------------------------------------------------------------------
+   (16) RigidFrame N
+   (17) v> = Vector( N, a*sin(b), cos(b*c), x )
+-> (18) v> = a*sin(b)*Nx> + cos(b*c)*Ny> + x*Nz>
+
+   (19) v1> = Exclude( v>,  a )
+-> (20) v1> = cos(b*c)*Ny> + x*Nz>
+
+   (21) v2> = Exclude( v>,  b )
+-> (22) v2> = x*Nz>
+
+   (23) v3> = Exclude( v>,  [c,x] )
+-> (24) v3> = a*sin(b)*Nx>
+
+   (25) %--------------------------------------------------------------------
+   (26) % Example 3: Exclude  (matrix expressions)
+   (27) %--------------------------------------------------------------------
+   (28) Constant  b1, b2, b3
+   (29) Variable  x1, x2, x3
+   (30) Zero[1] = 2*x1 + 3*x2 + 4*x3 - b1
+-> (31) Zero[1] = 2*x1 + 3*x2 + 4*x3 - b1
+
+   (32) Zero[2] = 3*x1 + 4*x2 + 5*x3 - b2
+-> (33) Zero[2] = 3*x1 + 4*x2 + 5*x3 - b2
+
+   (34) Zero[3] = 6*x1 + 7*x2 + 9*x3 - b3
+-> (35) Zero[3] = 6*x1 + 7*x2 + 9*x3 - b3
+
+   (36) CoefficientMatrix = D( Zero,  [x1, x2, x3] )     
+-> (37) CoefficientMatrix = [2, 3, 4;  3, 4, 5;  6, 7, 9]
+
+   (38) RemainderMatrix = Exclude( Zero,  [x1, x2, x3] ) 
+-> (39) RemainderMatrix = [-b1;  -b2;  -b3]
+

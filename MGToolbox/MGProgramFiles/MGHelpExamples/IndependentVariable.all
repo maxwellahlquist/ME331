@@ -1,0 +1,11 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  IndependentVariable  
+   (3) %--------------------------------------------------------------------
+   (4) Variable  y''  
+   (5) a = GetIndependentVariable() + y + dt(y)
+-> (6) a = t + y + y'
+
+   (7) SetIndependentVariable( s )
+   (8) b = GetIndependentVariable()^2
+-> (9) b = s^2
+

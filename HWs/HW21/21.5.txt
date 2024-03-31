@@ -1,0 +1,46 @@
+% MotionGenesis file:  21.5.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N                % Example: Earth.
+RigidFrame      B
+Particle        Q
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    y'', theta''
+Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+Constant    Ln = 0.5 m, k = 100 m
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+Q.SetMass( m = 1 kg )
+%--------------------------------------------------------------------
+%   Rotational kinematics.
+B.RotateZ( N, theta )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+Q.Translate( No, -(Ln + y)*By> )
+%--------------------------------------------------------------------
+%   Add relevant contact/distance forces.
+System.AddForceGravity( -g*Ny> )            % Add's gravity force to each massive object.
+Q.AddForce( y*k*By> )                   % External force.
+%--------------------------------------------------------------------
+
+SetGeneralizedSpeeds(y', theta')
+eq = System.GetDynamicsKane()
+Solve( eq, y'', theta'' )
+
+Input y = 0.2 m, theta = 1 deg
+Input y' = 0, theta' = 0
+Input  tFinal = 16 sec,  tStep = 0.02 sec,  absError = 1.0E-07
+
+OutputPlot t sec, theta deg
+ODE ()
+Ln := 0.3
+
+eq := System.GetDynamicsKane()
+Solve( eq := 0, y'', theta'' )
+ODE ()
+
+Save 21.5.html
+
+Quit

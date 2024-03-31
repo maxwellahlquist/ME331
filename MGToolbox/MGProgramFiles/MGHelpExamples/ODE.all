@@ -1,0 +1,44 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: ODE()      (1st-order ODE)
+   (3) %--------------------------------------------------------------------
+   (4) Variable x' = sin(t)
+-> (5) x' = sin(t)
+
+   (6) Input  x = 1 m,  tFinal=10 sec,  tStep=0.02 sec,  absError=1.0E-07
+   (7) Output  t seconds,  x m,  x' m/sec
+   (8) ODE()  FirstOrderODE
+
+   (9) %--------------------------------------------------------------------
+   (10) % Example 2: ODE()      (2nd-order ODE)
+   (11) %--------------------------------------------------------------------
+   (12) Variable  q'' = cos(t) - sin(q) 
+-> (13) q'' = cos(t) - sin(q)
+
+   (14) Input  q = 0 deg,  q' = 2 rad/sec
+   (15) Output  t seconds,  q  degrees,  q' deg/sec,  q'' rad/sec^2
+   (16) ODE()  SecondOrderODE
+
+   (17) %--------------------------------------------------------------------
+   (18) % Example 3: ODE()      (Pass arguments b and k to .m function) 
+   (19) %--------------------------------------------------------------------
+   (20) Constant m = 1 kg,  b,  k
+   (21) Variable y'' = (-b*y' - k*y) / m
+-> (22) y'' = -(k*y+b*y')/m
+
+   (23) Input  y = 1 m,  y' = 0 m/sec
+   (24) ODE()  HarmonicOscillator.m(  b N*s/m,  k N/cm ) 
+
+   (25) %--------------------------------------------------------------------
+   (26) % Example 4: ODE(...)   (Coupled 2rd-order ODEs - with plotting) 
+   (27) %--------------------------------------------------------------------
+   (28) Variable qA'', qB''
+   (29) Eqn[1] = 10*sin(qA) + (21-sin(qB)^2)*qA'' - 2*sin(qB)*cos(qB)*qA'*qB' 
+-> (30) Eqn[1] = 10*sin(qA) + (21-sin(qB)^2)*qA'' - 2*sin(qB)*cos(qB)*qA'*qB'
+
+   (31) Eqn[2] = sin(qB)*cos(qB)*qA'^2 + qB''
+-> (32) Eqn[2] = sin(qB)*cos(qB)*qA'^2 + qB''
+
+   (33) Input  qA = 90 deg,  qB = 1.0 deg,  qA' = 0 rad/sec,  qB' = 0 rad/sec
+   (34) OutputPlot  t sec,  qA degrees,  qB degrees
+   (35) ODE( Eqn,  qA'',  qB'' )  CoupledSecondOrderODE.m 
+

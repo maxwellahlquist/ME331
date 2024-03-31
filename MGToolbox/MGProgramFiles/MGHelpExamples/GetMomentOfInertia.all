@@ -1,0 +1,46 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetMomentOfInertia  (moment of inertia of a rigid body)
+   (3) %--------------------------------------------------------------------
+   (4) RigidBody  B
+   (5) B.SetInertia( Bcm, Ixx, Iyy, Izz )
+   (6) BMomentOfInertiaAboutBcmForBx = B.GetMomentOfInertia( Bcm, Bx> )
+-> (7) BMomentOfInertiaAboutBcmForBx = Ixx
+
+   (8) %--------------------------------------------------------------------
+   (9) % Example 2: GetMomentOfInertia  (moment of inertia in another basis)
+   (10) %--------------------------------------------------------------------
+   (11) RigidFrame A
+   (12) Variable  theta
+   (13) B.SetRotationMatrixZ( A, theta )
+-> (14) B_A = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+
+   (15) BMomentOfInertiaAboutBcmForAx = B.GetMomentOfInertia( Bcm, Ax> )
+-> (16) BMomentOfInertiaAboutBcmForAx = Ixx*cos(theta)^2 + Iyy*sin(theta)^2
+
+   (17) %--------------------------------------------------------------------
+   (18) % Example 3: GetMomentOfInertia  (moment of inertia of a particle)
+   (19) %--------------------------------------------------------------------
+   (20) Particle   Q
+   (21) Q.SetMass( mQ )
+   (22) Variable   x, y, z
+   (23) Q.SetPosition( Bo, x*Bx> + y*By> + z*Bz> )
+-> (24) p_Bo_Q> = x*Bx> + y*By> + z*Bz>
+
+   (25) QMomentOfInertiaAboutBoForBx = Q.GetMomentOfInertia( Bo, Bx> )
+-> (26) QMomentOfInertiaAboutBoForBx = mQ*(y^2+z^2)
+
+   (27) %--------------------------------------------------------------------
+   (28) % Example 4: GetMomentOfInertia  (moment of inertia of a system)
+   (29) %--------------------------------------------------------------------
+   (30) B.SetMass( mB )
+   (31) Bcm.SetPosition( Bo, 2*Bx> + 3*By> + 4*Bz> )
+-> (32) p_Bo_Bcm> = 2*Bx> + 3*By> + 4*Bz>
+
+   (33) SMomentOfInertiaAboutBoForBx = System.GetMomentOfInertia( Bo, Bx> )
+-> (34) SMomentOfInertiaAboutBoForBx = Ixx + 25*mB + mQ*(y^2+z^2)
+
+   (35) SMomentOfInertiaAboutBoForAx = System.GetMomentOfInertia( Bo, Ax> )
+-> (36) SMomentOfInertiaAboutBoForAx = Ixx + 25*mB + mQ*(y^2+z^2) + sin(theta)*
+        (Iyy*sin(theta)+12*mB*cos(theta)+mQ*x^2*sin(theta)+2*mQ*x*y*cos(theta)-
+        5*mB*sin(theta)-Ixx*sin(theta)-mQ*y^2*sin(theta))
+

@@ -1,0 +1,41 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetForceGravityPotentialEnergy  (local gravity on a particle)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N             
+   (5) Particle   Q             
+   (6) Variable   xQ, yQ
+   (7) Q.SetMass( mQ )
+   (8) Q.SetPosition( No, xQ*Nx> + yQ*Ny> )
+-> (9) p_No_Q> = xQ*Nx> + yQ*Ny>
+
+   (10) QPotentialEnergy = Q.GetForceGravityPotentialEnergy( -9.81*Ny>, No )
+-> (11) QPotentialEnergy = 9.81*mQ*yQ
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2: GetForceGravityPotentialEnergy  (local gravity on rigid body)
+   (14) %--------------------------------------------------------------------
+   (15) RigidBody  B             
+   (16) B.SetMass( mB )
+   (17) Variable   xB, yB    
+   (18) Bcm.SetPosition( No, xB*Nx> + yB*Ny> )
+-> (19) p_No_Bcm> = xB*Nx> + yB*Ny>
+
+   (20) BPotentialEnergy = B.GetPotentialEnergyGravity( -9.81*Ny>, No )
+-> (21) BPotentialEnergy = 9.81*mB*yB
+
+   (22) SPotentialEnergy = System.GetForceGravityPotentialEnergy( -9.81*Ny>, No )
+-> (23) SPotentialEnergy = 9.81*mB*yB + 9.81*mQ*yQ
+
+   (24) %--------------------------------------------------------------------
+   (25) % Example 3: GetPotentialEnergyGravity  (universal gravity)
+   (26) %--------------------------------------------------------------------
+   (27) Constant   G       % Universal gravitational constant
+   (28) Particle   P
+   (29) Variable   x, y
+   (30) P.SetMass( mP )
+   (31) Q.SetPosition( P, x*Nx> + y*Ny> )
+-> (32) p_P_Q> = x*Nx> + y*Ny>
+
+   (33) InverseSquareLawPotentialEnergy = Q.GetForceGravityPotentialEnergy( P, G )
+-> (34) InverseSquareLawPotentialEnergy = -mP*mQ*G/sqrt(x^2+y^2)
+

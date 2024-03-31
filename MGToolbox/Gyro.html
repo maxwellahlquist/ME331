@@ -1,0 +1,123 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: gyro.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">gyro.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) %MotionGenesis file:  gyro.txt
+   (2) % Copyright (c) 2019 Motion Genesis LLC.  All rights reserved.
+   (3) %--------------------------------------------------------------
+   (4) NewtonianFrame  N
+   (5) RigidFrame      A, B              % Intermediate frames.
+   (6) RigidBody       C                 % Rotor.
+   (7) %--------------------------------------------------------------
+   (8) Variable   theta'', phi'', wC'    % Angles and spin rate.
+   (9) Constant   g = 9.81 m/s^2         % Earth's local gravity.
+   (10) Constant   L = 0.2  m             % Distance between No and Ccm.
+   (11) Constant   r = 0.2  m             % Rotor radius.
+   (12) C.SetMass( m = 0.1 kg )
+   (13) C.SetInertia( Ccm,  m*r^2/4*( Bx>*Bx> + By>*By> + 2*Bz>*Bz> )  )
+   (14) %--------------------------------------------------------------------
+   (15) %       Rotational and translational kinematics.
+   (16) A.RotateNegativeZ( N, theta )
+-> (17) A_N = [cos(theta), -sin(theta), 0;  sin(theta), cos(theta), 0;  0, 0, 1]
+-> (18) w_A_N> = -theta'*Az>
+-> (19) alf_A_N> = -theta''*Az>
+
+   (20) B.RotateNegativeX( A, phi )
+-> (21) B_A = [1, 0, 0;  0, cos(phi), -sin(phi);  0, sin(phi), cos(phi)]
+-> (22) w_B_A> = -phi'*Bx>
+-> (23) w_B_N> = -theta'*Az> - phi'*Bx>
+-> (24) alf_B_A> = -phi''*Bx>
+-> (25) alf_B_N> = phi'*theta'*Ay> - theta''*Az> - phi''*Bx>
+
+   (26) Express( w_B_N>, B )
+-> (27) w_B_N> = -phi'*Bx> + sin(phi)*theta'*By> - cos(phi)*theta'*Bz>
+
+   (28) C.SetAngularVelocityAcceleration( B, wC*Bz> )
+-> (29) w_C_B> = wC*Bz>
+-> (30) w_C_N> = -phi'*Bx> + sin(phi)*theta'*By> + (wC-cos(phi)*theta')*Bz>
+-> (31) alf_C_B> = wC'*Bz>
+-> (32) alf_C_N> = (wC*sin(phi)*theta'-phi'')*Bx> + (wC*phi'+cos(phi)*phi'*the
+        ta'+sin(phi)*theta'')*By> + (wC'+sin(phi)*phi'*theta'-cos(phi)*theta'')*Bz>
+
+   (33) CCm.Translate( No, L*Bz> )
+-> (34) p_No_Ccm> = L*Bz>
+-> (35) v_Ccm_N> = L*sin(phi)*theta'*Bx> + L*phi'*By>
+-> (36) a_Ccm_N> = L*(2*cos(phi)*phi'*theta'+sin(phi)*theta'')*Bx> - L*(sin(phi)
+        *cos(phi)*theta'^2-phi'')*By> - L*(phi'^2+sin(phi)^2*theta'^2)*Bz>
+
+   (37) %--------------------------------------------------------------------
+   (38) %       Add relevant forces (gravity).
+   (39) CCm.AddForce( -m*g*Nz>  )
+-> (40) Force_Ccm> = -m*g*Nz>
+
+   (41) %--------------------------------------------------------------------
+   (42) %       Form equations of motion (angular momentum principle).
+   (43) Dynamics[1] = Dot( Bx>,  System.GetDynamics(No) )
+-> (44) Dynamics[1] = -0.25*m*(r^2*phi''-4*g*L*sin(phi)-r^2*sin(phi)*theta'*(2*
+        wC-cos(phi)*theta')-4*L^2*(sin(phi)*cos(phi)*theta'^2-phi''))
+
+   (45) Dynamics[2] = Dot( By>,  System.GetDynamics(No) )
+-> (46) Dynamics[2] = 0.25*m*(2*r^2*wC*phi'+r^2*sin(phi)*theta''+4*L^2*(2*cos(
+        phi)*phi'*theta'+sin(phi)*theta''))
+
+   (47) Dynamics[3] = Dot( Bz>,  System.GetDynamics(No) )
+-> (48) Dynamics[3] = 0.5*m*r^2*(wC'+sin(phi)*phi'*theta'-cos(phi)*theta'')
+
+   (49) FactorQuadratic( Dynamics,   theta', phi', wC )
+-> (50) Dynamics[1] = 0.25*m*(4*g*L*sin(phi)+2*r^2*wC*sin(phi)*theta'+(4*L^2-r^2)
+        *sin(phi)*cos(phi)*theta'^2-4*L^2*phi''-r^2*phi'')
+
+-> (51) Dynamics[2] = 0.25*m*(2*r^2*wC*phi'+8*L^2*cos(phi)*phi'*theta'+(r^2+4*L^2)
+        *sin(phi)*theta'')
+-> (52) Dynamics[3] = 0.5*m*r^2*(wC'+sin(phi)*phi'*theta'-cos(phi)*theta'')
+
+   (53) Solve( Dynamics = 0, theta'', phi'', wC' )
+-> (54) theta'' = -2*phi'*(r^2*wC+4*L^2*cos(phi)*theta')/((r^2+4*L^2)*sin(phi))
+-> (55) phi'' = sin(phi)*(4*g*L+2*r^2*wC*theta'+(4*L^2-r^2)*cos(phi)*theta'^2)/
+        (r^2+4*L^2)
+-> (56) wC' = -phi'*(sin(phi)*theta'+2*(r^2*wC+4*L^2*cos(phi)*theta')/((r^2+4*L^2)
+        *tan(phi)))
+
+   (57) %--------------------------------------------------------------------
+   (58) %       System momentum and energy.
+   (59) L> = System.GetTranslationalMomentum()	% System translational momentum.
+-> (60) L> = m*L*sin(phi)*theta'*Bx> + m*L*phi'*By>
+
+   (61) H> = System.GetAngularMomentum(No)	    % System angular momentum about No.
+-> (62) H> = -0.25*m*(r^2+4*L^2)*phi'*Bx> + 0.25*m*(r^2+4*L^2)*sin(phi)*theta'*By>
+        + 0.5*m*r^2*(wC-cos(phi)*theta')*Bz>
+
+   (63) KE = System.GetKineticEnergy()	        % System kinetic energy.
+-> (64) KE = 0.125*m*(4*L^2*(phi'^2+sin(phi)^2*theta'^2)+r^2*(phi'^2+sin(phi)^2
+        *theta'^2+2*(wC-cos(phi)*theta')^2))
+
+   (65) PE = System.GetForceGravityPotentialEnergy(  -g*Nz>,  No )
+-> (66) PE = m*g*L*cos(phi)
+
+   (67) KePe = KE + PE             % Total mechanical energy
+-> (68) KePe = PE + KE
+
+   (69) %--------------------------------------------------------------------
+   (70) Hnz = Dot( H> , Nz> )    % Nz> measure of angular momentum (conserved).
+-> (71) Hnz = -0.25*m*((r^2+4*L^2)*sin(phi)^2*theta'-2*r^2*cos(phi)*(wC-cos(phi)
+        *theta'))
+
+   (72) Hbz = Dot( H> , Bz> )    % Bz> measure of angular momentum (conserved).
+-> (73) Hbz = 0.5*m*r^2*(wC-cos(phi)*theta')
+
+   (74) %--------------------------------------------------------------------
+   (75) %       Integration parameters and initial values.
+   (76) Input  tFinal = 4 sec,  tStep = 0.05 sec,  absError = 1.0E-07
+   (77) Input  theta  = 0 deg,      phi  = 20 deg,      wc = 300 rpm
+   (78) Input  theta' = 0 deg/sec,  phi' = 0  deg/sec
+   (79) %--------------------------------------------------------------------
+   (80) %       List output quantities and solve ODEs.
+   (81) Output  t sec,  theta deg,  phi deg,  KePe Joules,  Hnz kg*m^2/sec,  Hbz kg*m^2/sec
+   (82) OutputPlot  t sec,  theta deg
+   (83) OutputPlot t sec, phi deg
+   (84) OutputPlot  t sec, KePe Joules,  Hnz kg*m^2/sec,  Hbz kg*m^2/sec
+   (85) ODE()  gyro
+
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

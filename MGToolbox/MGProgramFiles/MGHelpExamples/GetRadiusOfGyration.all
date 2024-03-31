@@ -1,0 +1,47 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetRadiusOfGyration  (radius of gyration of a rigid body)
+   (3) %--------------------------------------------------------------------
+   (4) RigidBody  B
+   (5) B.SetMass( mB )
+   (6) B.SetInertia( Bcm, Ixx, Iyy, Izz )
+   (7) BRadiusOfGyrationAboutBcmForBx = B.GetRadiusOfGyration( Bcm, Bx> )
+-> (8) BRadiusOfGyrationAboutBcmForBx = sqrt(Ixx)/sqrt(mB)
+
+   (9) %--------------------------------------------------------------------
+   (10) % Example 2: GetRadiusOfGyration  (radius of gyration in another basis)
+   (11) %--------------------------------------------------------------------
+   (12) RigidFrame A
+   (13) Variable  theta
+   (14) B.SetRotationMatrixZ( A, theta )
+-> (15) B_A = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+
+   (16) BRadiusOfGyrationAboutBcmForAx = B.GetRadiusOfGyration( Bcm, Ax> )
+-> (17) BRadiusOfGyrationAboutBcmForAx = sqrt(Ixx*cos(theta)^2+Iyy*sin(theta)^2)
+        /sqrt(mB)
+
+   (18) %--------------------------------------------------------------------
+   (19) % Example 3: GetRadiusOfGyration  (radius of gyration of a particle)
+   (20) %--------------------------------------------------------------------
+   (21) Particle   Q
+   (22) Q.SetMass( mQ )
+   (23) Variable   x, y, z
+   (24) Q.SetPosition( Bo, x*Bx> + y*By> + z*Bz> )
+-> (25) p_Bo_Q> = x*Bx> + y*By> + z*Bz>
+
+   (26) QRadiusOfGyrationAboutBoForBx = Q.GetRadiusOfGyration( Bo, Bx> )
+-> (27) QRadiusOfGyrationAboutBoForBx = sqrt(y^2+z^2)
+
+   (28) %--------------------------------------------------------------------
+   (29) % Example 4: GetRadiusOfGyration  (radius of gyration of a system)
+   (30) %--------------------------------------------------------------------
+   (31) Bcm.SetPosition( Bo, 2*Bx> + 3*By> + 4*Bz> )
+-> (32) p_Bo_Bcm> = 2*Bx> + 3*By> + 4*Bz>
+
+   (33) SRadiusOfGyrationAboutBoForBx = System.GetRadiusOfGyration( Bo, Bx> )
+-> (34) SRadiusOfGyrationAboutBoForBx = sqrt((Ixx+25*mB+mQ*(y^2+z^2))/(mB+mQ))
+
+   (35) SRadiusOfGyrationAboutBoForAx = System.GetRadiusOfGyration( Bo, Ax> )
+-> (36) SRadiusOfGyrationAboutBoForAx = sqrt((Ixx+25*mB+mQ*(y^2+z^2)+sin(theta)
+        *(Iyy*sin(theta)+12*mB*cos(theta)+mQ*x^2*sin(theta)+2*mQ*x*y*cos(theta)
+        -5*mB*sin(theta)-Ixx*sin(theta)-mQ*y^2*sin(theta)))/(mB+mQ))
+

@@ -1,0 +1,163 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: MetronomeSynchronizationMipsi.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">MetronomeSynchronizationMipsi.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  MetronomeSynchronizationMipsi.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N       % Earth         
+   (6) RigidBody       A	% Rectangular plate, 2 metronome chassis
+   (7) RigidFrame     	B	% Left Metronome Arm
+   (8) RigidFrame      C	% Right Metronome Arm
+   (9) Particle        QB1
+   (10) Particle        QB2
+   (11) Particle        QC1
+   (12) Particle        QC2
+   (13) %--------------------------------------------------------------------
+   (14) %   Mathematical declarations.
+   (15) Constant    g = 9.8 m/s^2    % Earth's gravitational acceleration.
+   (16) Constant    m1 = 0.2 kg, m2 = 0.05 kg          
+   (17) Constant    mA = 0.3 kg
+   (18) Constant    L1 = 0.05 m, L2 = 0.08 m
+   (19) Constant    k = 0.001 N*m*s     
+   (20) Constant    q0 = 30 deg
+   (21) Variable    qB'', qC'', x''
+   (22) Variable    TB = -k*((2*qB/q0)^2 - 1)*qB'
+-> (23) TB = -k*(-1+4*qB^2/q0^2)*qB'
+
+   (24) Variable    TC = -k*((2*qC/q0)^2 - 1)*qC'
+-> (25) TC = -k*(-1+4*qC^2/q0^2)*qC'
+
+   (26) Variable    qDifference = qB - qC
+-> (27) qDifference = qB - qC
+
+   (28) %--------------------------------------------------------------------
+   (29) %   Mass and inertia properties.
+   (30) A.SetMass(mA)
+   (31) QB1.SetMass( m1 )
+   (32) QB2.SetMass( m2 )
+   (33) QC1.SetMass( m1 )
+   (34) QC2.SetMass( m2 )
+   (35) %--------------------------------------------------------------------
+   (36) %   Rotational kinematics.
+   (37) A.RotateZ( N, 0 )
+-> (38) A_N = [1, 0, 0;  0, 1, 0;  0, 0, 1]
+-> (39) w_A_N> = 0>
+-> (40) alf_A_N> = 0>
+
+   (41) B.RotateZ( N, qB )
+-> (42) B_N = [cos(qB), sin(qB), 0;  -sin(qB), cos(qB), 0;  0, 0, 1]
+-> (43) w_B_N> = qB'*Bz>
+-> (44) alf_B_N> = qB''*Bz>
+
+   (45) C.RotateZ( N, qC )
+-> (46) C_N = [cos(qC), sin(qC), 0;  -sin(qC), cos(qC), 0;  0, 0, 1]
+-> (47) w_C_N> = qC'*Cz>
+-> (48) alf_C_N> = qC''*Cz>
+
+   (49) %--------------------------------------------------------------------
+   (50) %   Translational kinematics.
+   (51) Bo.Translate(No, x*Ax>)
+-> (52) p_No_Bo> = x*Ax>
+-> (53) v_Bo_N> = x'*Ax>
+-> (54) a_Bo_N> = x''*Ax>
+
+   (55) Bo.SetVelocityAcceleration( A, 0>)
+-> (56) v_Bo_A> = 0>
+-> (57) a_Bo_A> = 0>
+
+   (58) Co.SetVelocityAcceleration( N, Bo.GetVelocity(N) )
+-> (59) v_Co_N> = x'*Ax>
+-> (60) a_Co_N> = x''*Ax>
+
+   (61) Acm.SetVelocityAcceleration( N, Bo.GetVelocity(N) )
+-> (62) v_Acm_N> = x'*Ax>
+-> (63) a_Acm_N> = x''*Ax>
+
+   (64) QB1.Translate( Bo, -L1*By> )
+-> (65) p_Bo_QB1> = -L1*By>
+-> (66) v_QB1_N> = x'*Ax> + L1*qB'*Bx>
+-> (67) a_QB1_N> = x''*Ax> + L1*qB''*Bx> + L1*qB'^2*By>
+
+   (68) QB2.Translate( Bo, L2*By> )
+-> (69) p_Bo_QB2> = L2*By>
+-> (70) v_QB2_N> = x'*Ax> - L2*qB'*Bx>
+-> (71) a_QB2_N> = x''*Ax> - L2*qB''*Bx> - L2*qB'^2*By>
+
+   (72) QC1.Translate( Co, -L1*Cy> )
+-> (73) p_Co_QC1> = -L1*Cy>
+-> (74) v_QC1_N> = x'*Ax> + L1*qC'*Cx>
+-> (75) a_QC1_N> = x''*Ax> + L1*qC''*Cx> + L1*qC'^2*Cy>
+
+   (76) QC2.Translate( Co, L2*Cy> )
+-> (77) p_Co_QC2> = L2*Cy>
+-> (78) v_QC2_N> = x'*Ax> - L2*qC'*Cx>
+-> (79) a_QC2_N> = x''*Ax> - L2*qC''*Cx> - L2*qC'^2*Cy>
+
+   (80) %--------------------------------------------------------------------
+   (81) %   Add relevant contact/distance forces.
+   (82) System.AddForceGravity( -g*Ay> )            % Add's gravity force to each massive object.
+-> (83) Force_Acm> = -g*mA*Ay>
+-> (84) Force_QB1> = -g*m1*Ay>
+-> (85) Force_QB2> = -g*m2*Ay>
+-> (86) Force_QC1> = -g*m1*Ay>
+-> (87) Force_QC2> = -g*m2*Ay>
+
+   (88) %--------------------------------------------------------------------
+   (89) %   Add relevant torques.
+   (90) B.AddTorque(A, TB*Az> )
+-> (91) Torque_B_A> = TB*Az>
+
+   (92) C.AddTorque(A, TC*Az> )
+-> (93) Torque_C_A> = TC*Az>
+
+   (94) %--------------------------------------------------------------------
+   (95) %   Kane Dynamics.
+   (96) SetGeneralizedSpeeds(qB',qC', x')
+   (97) Eq = System.GetDynamicsKane()
+-> (98) Eq[1] = g*L1*m1*sin(qB) + (m1*L1^2+m2*L2^2)*qB'' + (L1*m1-L2*m2)*cos(
+        qB)*x'' - TB - g*L2*m2*sin(qB)
+-> (99) Eq[2] = g*L1*m1*sin(qC) + (m1*L1^2+m2*L2^2)*qC'' + (L1*m1-L2*m2)*cos(
+        qC)*x'' - TC - g*L2*m2*sin(qC)
+-> (100) Eq[3] = L2*m2*sin(qB)*qB'^2 + L2*m2*sin(qC)*qC'^2 + (mA+2*m1+2*m2)*x''
+         + (L1*m1-L2*m2)*cos(qB)*qB'' + (L1*m1-L2*m2)*cos(qC)*qC'' - L1*m1*sin(
+         qB)*qB'^2 - L1*m1*sin(qC)*qC'^2
+
+   (101) %--------------------------------------------------------------------
+   (102) Input  tFinal = 20 sec,  tStep = 0.01 sec,  absError = 1.0E-07
+   (103) Input qB = 35 deg, qB' = 0 deg/sec, qC = 12 deg, qC' = 0 deg/sec
+   (104) Input x = 0 m, x' = 0 m/s
+   (105) %--------------------------------------------------------------------
+   (106) % Energy Check
+   (107) KE = System.GetKineticEnergy()
+-> (108) KE = 0.5*mA*x'^2 + 0.5*L1*m1*qC'*(L1*qC'+2*cos(qC)*x') + 0.5*L2*m2*qC'
+         *(L2*qC'-2*cos(qC)*x') + 0.5*m1*(2*x'^2+L1^2*qB'^2+2*L1*cos(qB)*qB'*
+         x') + 0.5*m2*(2*x'^2+L2^2*qB'^2-2*L2*cos(qB)*qB'*x')
+
+   (109) PE = System(QB1,QB2).GetForceGravityPotentialEnergy(-g*Ay>,Bo) + System(QC1,QC2).GetForceGravityPotentialEnergy(-g*Ay>,Co)
+-> (110) PE = -g*(L1*m1-L2*m2)*(cos(qB)+cos(qC))
+
+   (111) PEinitial = EvaluateAtInput(PE,t=0)
+-> (112) PEinitial = -0.1056812
+
+   (113) deltaPE = PE - PEinitial
+-> (114) deltaPE = 0.1056812 + PE
+
+   (115) Variable workDone' = TB*qB' + TC*qC'
+-> (116) workDone' = TB*qB' + TC*qC'
+
+   (117) ME = KE + deltaPE - workDone
+-> (118) ME = deltaPE + KE - workDone
+
+   (119) %--------------------------------------------------------------------
+   (120) % Outputs for problem 4
+   (121) %--------------------------------------------------------------------
+   (122) Output t sec, qB deg, qC deg, qDifference deg, ME joules
+   (123) Input workDone = 0 joules
+   (124) ODE( eq = 0, qB'', qC'', x'') MetronomeSynchronizationMipsi
+
+   (125) Plot MetronomeSynchronizationMipsi.1 [1,2,3] 
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

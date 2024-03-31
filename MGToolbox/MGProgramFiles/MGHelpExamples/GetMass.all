@@ -1,0 +1,32 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetMass   (mass of particles)
+   (3) %--------------------------------------------------------------------
+   (4) Particle   P, Q, R, S            
+   (5) Variable   mS'
+   (6) P.SetMass( 17 )   
+   (7) Q.SetMass( mQ )         % Declares mQ as a non-negative constant
+   (8) R.SetMass( mR = 3 kg )  % Declares mR and sets its INPUT value to 3 kg
+   (9) S.SetMass( mS )         % mS may be governed by an ODE 
+   (10) massOfP = P.GetMass()
+-> (11) massOfP = 17
+
+   (12) massOfPAndQ = P.GetMass() + Q.GetMass()
+-> (13) massOfPAndQ = 17 + mQ
+
+   (14) massOfPQRS = System.GetMass()
+-> (15) massOfPQRS = 17 + mQ + mR + mS
+
+   (16) %--------------------------------------------------------------------
+   (17) % Example 2: GetMass   (mass of rigid body)
+   (18) %--------------------------------------------------------------------
+   (19) RigidBody  B
+   (20) B.SetMass( mB )    % Declares mB as a non-negative constant
+   (21) massOfB = B.GetMass()
+-> (22) massOfB = mB
+
+   (23) %--------------------------------------------------------------------
+   (24) % Example 3: GetMass   (mass of system of particles and rigid body)
+   (25) %--------------------------------------------------------------------
+   (26) massOfSystem = System.GetMass()    
+-> (27) massOfSystem = 17 + mB + mQ + mR + mS
+

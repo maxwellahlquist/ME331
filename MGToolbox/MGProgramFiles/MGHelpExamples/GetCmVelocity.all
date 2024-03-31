@@ -1,0 +1,26 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetCmVelocity  (center of mass of rigid body)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N   
+   (5) RigidBody  B 
+   (6) B.SetMass( mB )
+   (7) Variable   xB', yB'
+   (8) Bcm.SetVelocity( N, xB'*Nx> + yB'*Ny> )
+-> (9) v_Bcm_N> = xB'*Nx> + yB'*Ny>
+
+   (10) BCmVelocityInN> = B.GetCmVelocity( N )
+-> (11) BCmVelocityInN> = xB'*Nx> + yB'*Ny>
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2: GetCmVelocity  (center of mass of system)
+   (14) %--------------------------------------------------------------------
+   (15) Particle   P
+   (16) P.SetMass( mP )
+   (17) Variable   xP', yP'
+   (18) P.SetVelocity( N, xP'*Nx> + yP'*Ny> )
+-> (19) v_P_N> = xP'*Nx> + yP'*Ny>
+
+   (20) SystemCmVelocityInN> = System.GetCmVelocity( N )
+-> (21) SystemCmVelocityInN> = (mB*xB'+mP*xP')/(mB+mP)*Nx> + (mB*yB'+mP*yP')/(
+        mB+mP)*Ny>
+

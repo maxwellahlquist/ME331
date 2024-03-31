@@ -1,0 +1,24 @@
+   (1) %--------------------------------------------------------------------
+   (2) %Example: Units 
+   (3) %--------------------------------------------------------------------
+   (4) inchToCentimeter = ConvertUnits( inch, cm )
+-> (5) inchToCentimeter = 2.54
+
+   (6) SetUnitSystem( kg, meter,  second)   % Default.
+   (7) Constant   a = 20 cm,  b = 0.02 km,  c = 30 inches
+   (8) distance = EvaluateToNumber( a + b + c )
+-> (9) distance = 20.962
+
+   (10) Variable   x'' = sin(t),  y'' = t^2
+-> (11) x'' = sin(t)
+-> (12) y'' = t^2
+
+   (13) Input      x  = 2 cm,    y  = 3 noUnits
+   (14) Input      x' = 6 cm/s,  y' = 7 noUnits/s
+   (15) speed = EvaluateToNumber( x' + y'  +  (x + y)/t )
+-> (16) speed = 7.06 + 3.02/t
+
+   (17) Input   tFinal = 3 seconds, tStep = 0.5 seconds
+   (18) Output  t seconds,  x km,  y miles
+   (19) ODE() unitTest  
+

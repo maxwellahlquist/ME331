@@ -1,0 +1,124 @@
+<!DOCTYPE html><HTML LANG="en"><HEAD><TITLE>MotionGenesis: offcenterRotation2.html</TITLE><STYLE>.BoldDarkBlueNoWrap {font-weight:bold; color:darkBlue; white-space:nowrap;}</STYLE></HEAD>
+<BODY STYLE="background-color:#FFFFFF; margin:8px 0px 0px 8px">
+<DIV class="BoldDarkBlueNoWrap"><SPAN STYLE="font-size:large;">offcenterRotation2.html</SPAN> &nbsp; <SPAN STYLE="font-size:small;">(MotionGenesis input/output)</SPAN>.</DIV>
+<PRE>
+   (1) % MotionGenesis file:  offcenterRotation2.txt
+   (2) % Copyright (c) 2009-2021 Motion Genesis LLC.
+   (3) %--------------------------------------------------------------------
+   (4) %   Physical objects.
+   (5) NewtonianFrame  N                
+   (6) RigidBody       B                % Rotor
+   (7) %--------------------------------------------------------------------
+   (8) %   Mathematical declarations.
+   (9) Variable    	wz', Fx, Fy, Fz, Tx, Ty
+   (10) % best practices to declare the highest order derivative I will be using?
+   (11) Constant    	g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+   (12) Constant 	xcm
+   (13) Constant	zcm
+   (14) %--------------------------------------------------------------------
+   (15) %   Mass and inertia properties.
+   (16) B.SetMass( m )
+   (17) B.SetInertia( Bo,  IBxx, IByy, IBzz,  IBxy, IByz, IBzx )
+   (18) %--------------------------------------------------------------------
+   (19) %   Rotational kinematics.
+   (20) B.SetAngularVelocity( N, wz*Bz> )
+-> (21) w_B_N> = wz*Bz>
+
+   (22) %--------------------------------------------------------------------
+   (23) %   Translational kinematics.
+   (24) Bo.Translate( No, 0> )
+-> (25) p_No_Bo> = 0>
+-> (26) v_Bo_N> = 0>
+-> (27) a_Bo_N> = 0>
+
+   (28) Bcm.Translate(Bo, xcm*Bx> + zcm*Bz>)
+-> (29) p_Bo_Bcm> = xcm*Bx> + zcm*Bz>
+-> (30) v_Bcm_N> = xcm*wz*By>
+-> (31) a_Bcm_N> = -xcm*wz^2*Bx> + xcm*wz'*By>
+
+   (32) %--------------------------------------------------------------------
+   (33) %   Add relevant contact/distance forces.
+   (34) B.AddForceGravity( -g*Bz> )            % Add's gravity force to each massive object. %On the right location???
+-> (35) Force_Bcm> = -m*g*Bz>
+
+   (36) Bo.AddForce( Fx*Bx> + Fy*By> + Fz*Bz>)                   % External force.
+-> (37) Force_Bo> = Fx*Bx> + Fy*By> + Fz*Bz>
+
+   (38) %--------------------------------------------------------------------
+   (39) %   Add relevant torques.
+   (40) B.AddTorque( Tx*Bx> + Ty*By>)                  % External torque.
+-> (41) Torque_B> = Tx*Bx> + Ty*By>
+
+   (42) %--------------------------------------------------------------------
+   (43) %   Translational dynamic equations (F = m*a).
+   (44) Dynamics[1] = Dot(  B.GetDynamics(),  Bx>  )
+-> (45) Dynamics[1] = -Fx - m*xcm*wz^2
+
+   (46) Dynamics[2] = Dot(  B.GetDynamics(),  By>  )
+-> (47) Dynamics[2] = m*xcm*wz' - Fy
+
+   (48) Dynamics[3] = Dot(  B.GetDynamics(),  Bz>  )
+-> (49) Dynamics[3] = m*g - Fz
+
+   (50) %--------------------------------------------------------------------
+   (51) %   Rotational dynamic equations (M = DH/Dt + ...).
+   (52) Dynamics[4] = Dot(  B.GetDynamics(Bo),  Bx>  )
+-> (53) Dynamics[4] = IBzx*wz' - Tx - IByz*wz^2
+
+   (54) Dynamics[5] = Dot(  B.GetDynamics(Bo),  By>  )
+-> (55) Dynamics[5] = IBzx*wz^2 + IByz*wz' - m*g*xcm - Ty
+
+   (56) Dynamics[6] = Dot(  B.GetDynamics(Bo),  Bz>  )
+-> (57) Dynamics[6] = IBzz*wz'
+
+   (58) %--------------------------------------------------------------------
+   (59) %   Solve algebraic equations for list of unknowns.
+   (60) Solve( Dynamics = 0,   wz', Fx, Fy, Fz, Tx, Ty )
+-> (61) wz' = 0
+-> (62) Fx = -m*xcm*wz^2
+-> (63) Fy = 0
+-> (64) Fz = m*g
+-> (65) Tx = -IByz*wz^2
+-> (66) Ty = IBzx*wz^2 - m*g*xcm
+
+   (67) %--------------------------------------------------------------------
+   (68) %   Energy calculations
+   (69) KE = B.GetKineticEnergy()
+-> (70) KE = 0.5*IBzz*wz^2
+
+   (71) %--------------------------------------------------------------------
+   (72) %   Momentum calculations
+   (73) Variable theta
+   (74) B.RotateZ(N, theta)
+-> (75) B_N = [cos(theta), sin(theta), 0;  -sin(theta), cos(theta), 0;  0, 0, 1]
+
+   (76) HB> = B.GetAngularMomentum( Bo )
+-> (77) HB> = IBzx*wz*Bx> + IByz*wz*By> + IBzz*wz*Bz>
+
+   (78) HN> = Express(HB>, N) % For visual comfirmation
+-> (79) HN> = -wz*(IByz*sin(theta)-IBzx*cos(theta))*Nx> + wz*(IByz*cos(theta)+
+        IBzx*sin(theta))*Ny> + IBzz*wz*Nz>
+
+   (80) LB> = B.GetLinearMomentum(N)
+-> (81) LB> = m*xcm*wz*By>
+
+   (82) LN> = Express(LB>, N) % For visual comfirmation
+-> (83) LN> = -m*xcm*wz*sin(theta)*Nx> + m*xcm*wz*cos(theta)*Ny>
+
+   (84) LMag = GetMagnitude( LB> )
+-> (85) LMag = m*abs(xcm*wz)
+
+   (86) HMag = GetMagnitude( HB> )
+-> (87) HMag = sqrt(IByz^2+IBzx^2+IBzz^2)*abs(wz)
+
+   (88) %--------------------------------------------------------------------
+   (89) %   List output quantities (e.g., from the ODE command).
+   (90) OutputPlot  t sec,  wz rad/sec, LMag, HMag, KE
+   (91) %--------------------------------------------------------------------
+   (92) ODE()  offcenterRotation2
+
+   (93) %--------------------------------------------------------------------
+   (94) %   Record input together with responses.
+</PRE>
+<DIV class="BoldDarkBlueNoWrap" STYLE="font-size:x-small;">Saved by Stanford ME331 student. &nbsp; Command names and syntax: Copyright (c) 2009-2021 Motion Genesis LLC.  All rights reserved.</DIV>
+</BODY></HTML>

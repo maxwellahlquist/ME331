@@ -1,0 +1,39 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetRotationMatrixDyadic (form a rotation matrix dyadic)
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame A, B
+   (5) Variable   q
+   (6) B.SetRotationMatrixZ( A, q )
+-> (7) B_A = [cos(q), sin(q), 0;  -sin(q), cos(q), 0;  0, 0, 1]
+
+   (8) B_A>> = B.GetRotationMatrixDyadic( A )
+-> (9) B_A>> = cos(q)*Bx>*Ax> + sin(q)*Bx>*Ay> - sin(q)*By>*Ax> + cos(q)*By>*Ay> + Bz>*Az>
+
+   (10) A_B>> = A.GetRotationMatrixDyadic( B )
+-> (11) A_B>> = cos(q)*Ax>*Bx> - sin(q)*Ax>*By> + sin(q)*Ay>*Bx> + cos(q)*Ay>*By> + Az>*Bz>
+
+   (12) %--------------------------------------------------------------------
+   (13) % Example 2: Use A_B>> to express a vector in another frame.
+   (14) %--------------------------------------------------------------------
+   (15) Variable  x, y, z
+   (16) vA> = x*Ax> + y*Ay> + z*Az>    % Vector v expressed in frame A.
+-> (17) vA> = x*Ax> + y*Ay> + z*Az>
+
+   (18) vB> := Dot(   vA>,  A_B>> )    % Vector v expressed in frame B.
+-> (19) vB> = (x*cos(q)+y*sin(q))*Bx> + (y*cos(q)-x*sin(q))*By> + z*Bz>
+
+   (20) vB> := Dot( B_A>>,   vA>  )    % Vector v expressed in frame B.
+-> (21) vB> = (x*cos(q)+y*sin(q))*Bx> + (y*cos(q)-x*sin(q))*By> + z*Bz>
+
+   (22) vB> := Express( vA>,   B  )    % Vector v expressed in frame B.
+-> (23) vB> = (x*cos(q)+y*sin(q))*Bx> + (y*cos(q)-x*sin(q))*By> + z*Bz>
+
+   (24) vA> := Dot(   vB>,  B_A>> )    % Vector v expressed in frame A.
+-> (25) vA> = x*Ax> + y*Ay> + z*Az>
+
+   (26) vA> := Dot( A_B>>,   vB>  )    % Vector v expressed in frame A.
+-> (27) vA> = x*Ax> + y*Ay> + z*Az>
+
+   (28) vA> := Express( vB>,  A   )    % Vector v expressed in frame A.
+-> (29) vA> = x*Ax> + y*Ay> + z*Az>
+

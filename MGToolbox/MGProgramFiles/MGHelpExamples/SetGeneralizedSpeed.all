@@ -1,0 +1,36 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: SetGeneralizedSpeed  (Projectile motion)
+   (3) %--------------------------------------------------------------------
+   (4) NewtonianFrame N
+   (5) Particle P
+   (6) P.SetMass( m = 1 kg )
+   (7) Constant  g = 9.8 m/s^2
+   (8) Variable  x'', y''
+   (9) SetGeneralizedSpeed( x', y' )
+   (10) P.Translate( No, x*Nx> + y*Ny> )
+-> (11) p_No_P> = x*Nx> + y*Ny>
+-> (12) v_P_N> = x'*Nx> + y'*Ny>
+-> (13) a_P_N> = x''*Nx> + y''*Ny>
+
+   (14) P.AddForce( -m*g*Ny> )
+-> (15) Force_P> = -m*g*Ny>
+
+   (16) KaneDynamics = System.GetDynamicsKane()
+-> (17) KaneDynamics = [m*x'';  m*(g+y'')]
+
+   (18) Solve( KaneDynamics = 0,  Dt(GetGeneralizedSpeeds()) )
+-> (19) x'' = 0
+-> (20) y'' = -g
+
+   (21) %--------------------------------------------------------------------
+   (22) % Example 2: GetGeneralizedSpeed 
+   (23) %--------------------------------------------------------------------
+   (24) speeds = GetGeneralizedSpeed()
+-> (25) speeds = [x';  y']
+
+   (26) %--------------------------------------------------------------------
+   (27) % Example 3: ResetGeneralizedSpeed 
+   (28) %--------------------------------------------------------------------
+   (29) speeds := ResetGeneralizedSpeed()
+-> (30) speeds = [0]
+

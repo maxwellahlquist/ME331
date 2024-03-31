@@ -1,0 +1,24 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1:  IsSimplifyTrue( scalarExpression )
+   (3) %--------------------------------------------------------------------
+   (4) trueOrFalse = IsSimplifyEqual( sin(t)/cos(t), tan(t) )
+-> (5) trueOrFalse = true
+
+   (6) isTrueA = IsSimplifyTrue( trueOrFalse )
+-> (7) isTrueA = true
+
+   (8) %--------------------------------------------------------------------
+   (9) % Example 2:  IsSimplifyZero( matrixExpression ) 
+   (10) %--------------------------------------------------------------------
+   (11) trueFalse[1] = IsSimplifyEqual( 9, 9 )
+-> (12) trueFalse[1] = true
+
+   (13) trueFalse[2] = IsSimplifyEqual( 1, sin(t)^2 + cos(t)^2 )
+-> (14) trueFalse[2] = true
+
+   (15) trueFalse[3] = IsSimplifyEqual( t^3/t, t^2 )
+-> (16) trueFalse[3] = true
+
+   (17) isTrueB = IsSimplifyTrue( trueFalse )
+-> (18) isTrueB = true
+

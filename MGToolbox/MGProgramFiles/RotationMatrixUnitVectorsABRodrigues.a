@@ -1,0 +1,13 @@
+oneOverMagAB := 1 / sqrt( magSquared(#1#) * magSquared(#2#) )
+dotUnitVectorsAB := Dot(#1#, #2#) * oneOverMagAB
+crossUnitVectorsAB> := Cross( #1#, #2# ) * oneOverMagAB
+% c := Dot(#1#, #2#)
+% s> := Cross(#1#, #2#)
+v1 := Dot( crossUnitVectorsAB>, Ax> )
+v2 := Dot( crossUnitVectorsAB>, Ay> )
+v3 := Dot( crossUnitVectorsAB>, Az> )
+vx = [0, -v3, v2;  v3, 0, -v1;  -v2, v1, 0]
+RAB := IdentityMatrix(3) + vx + vx*vx/(1+dotUnitVectorsAB)
+
+
+

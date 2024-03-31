@@ -1,0 +1,21 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: SetInertia 
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame N   
+   (5) RigidBody  A, B, C, D, E, F
+   (6) A.SetInertia( Acm, IAxx, IAyy, IAzz )  
+   (7) B.SetInertia( Bcm, IBxx, IByy, IBzz, IBxy, IByz, IBzx ) 
+   (8) C.SetInertia( Ccm, N, I11, I22, I33 )
+   (9) D.SetInertia( Dcm, 5*1>> )
+   (10) E.SetInertia( Eo, [2, 3, 4] )
+   (11) F.SetInertia( Fo, [2, -0.1, 0;  -0.1, 3, 0;  0, 0, 4] )
+   (12) %--------------------------------------------------------------------
+   (13) AInertiaAboutAcm>> = A.GetInertia( Acm )
+-> (14) AInertiaAboutAcm>> = IAxx*Ax>*Ax> + IAyy*Ay>*Ay> + IAzz*Az>*Az>
+
+   (15) DInertiaAboutDcm>> = D.GetInertia( Dcm )
+-> (16) DInertiaAboutDcm>> = 5*1>>
+
+   (17) EInertiaAboutEo>> = E.GetInertia( Eo )
+-> (18) EInertiaAboutEo>> = 2*Ex>*Ex> + 3*Ey>*Ey> + 4*Ez>*Ez>
+

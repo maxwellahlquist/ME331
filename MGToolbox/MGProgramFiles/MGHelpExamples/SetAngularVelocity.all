@@ -1,0 +1,15 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example: SetAngularVelocity 
+   (3) %--------------------------------------------------------------------
+   (4) RigidFrame N             
+   (5) RigidBody  A, B
+   (6) Variable   wx, wy, wz,  w1, w2, w3
+   (7) A.SetAngularVelocity( N, wx*Ax> + wy*Ay> + wz*Az> )
+-> (8) w_A_N> = wx*Ax> + wy*Ay> + wz*Az>
+
+   (9) B.SetAngularVelocity( A, w1*Bx> + w2*By> + w3*Bz> )
+-> (10) w_B_A> = w1*Bx> + w2*By> + w3*Bz>
+
+   (11) B.SetAngularVelocity( N )
+-> (12) w_B_N> = wx*Ax> + wy*Ay> + wz*Az> + w1*Bx> + w2*By> + w3*Bz>
+

@@ -1,0 +1,35 @@
+   (1) %--------------------------------------------------------------------
+   (2) % Example 1: GetInverse  (inverse of a matrix)
+   (3) %--------------------------------------------------------------------
+   (4) Constant  a, b, c, d
+   (5) M = [a, b;  c, d]
+-> (6) M = [a, b;  c, d]
+
+   (7) inverse = GetInverse( M )
+-> (8) inverse[1,1] = d/(a*d-b*c)
+-> (9) inverse[1,2] = -b/(a*d-b*c)
+-> (10) inverse[2,1] = -c/(a*d-b*c)
+-> (11) inverse[2,2] = a/(a*d-b*c)
+
+   (12) inverseWithMinors = GetInverse( MINORS, M )
+-> (13) inverseWithMinors[1,1] = d/(a*d-b*c)
+-> (14) inverseWithMinors[1,2] = -b/(a*d-b*c)
+-> (15) inverseWithMinors[2,1] = -c/(a*d-b*c)
+-> (16) inverseWithMinors[2,2] = a/(a*d-b*c)
+
+   (17) inverseWithGauss  = GetInverse( GAUSS,  M )
+-> (18) inverseWithGauss[1,1] = (1+b*c/(a*d-b*c))/a
+-> (19) inverseWithGauss[1,2] = -b/(a*d-b*c)
+-> (20) inverseWithGauss[2,1] = -c/(a*d-b*c)
+-> (21) inverseWithGauss[2,2] = 1/(d-b*c/a)
+
+   (22) %--------------------------------------------------------------------
+   (23) % Example 2: GetInverse  (inverse of a dyadic)
+   (24) %--------------------------------------------------------------------
+   (25) RigidFrame F
+   (26) D>> = 2*Fx>*Fy> - 3*Fy>*Fz> + Fz>*Fx>
+-> (27) D>> = 2*Fx>*Fy> - 3*Fy>*Fz> + Fz>*Fx>
+
+   (28) dyadicInverse>> = GetInverse( D>> )
+-> (29) dyadicInverse>> = Fx>*Fz> + 0.5*Fy>*Fx> - 0.3333333*Fz>*Fy>
+

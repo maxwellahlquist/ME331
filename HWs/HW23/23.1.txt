@@ -1,0 +1,80 @@
+% MotionGenesis file:  23.1.txt
+% Copyright (c) 2009-2021 Motion Genesis LLC.
+%--------------------------------------------------------------------
+%   Physical objects.
+NewtonianFrame  N
+RigidFrame      A
+Particle        Q
+%--------------------------------------------------------------------
+%   Mathematical declarations.
+Variable    v'
+Variable    F_unmodelled = 40*(sin(t))^2
+Constant    g = 9.80665 m/s^2    % Earth's gravitational acceleration.
+Constant    theta
+Constant    m, b
+Specified   Kp1 = 0.25, Kp2 = 0.5, Kp3 = 1
+Specified   vDes'
+SetDt( vDes = 20 )
+
+Variable    Fc = m*( vDes' + Kp1*(vDes - v) ) + b*v^2 + m*g*sin(theta)
+%--------------------------------------------------------------------
+%   Mass and inertia properties.
+Q.SetMass( m )
+%--------------------------------------------------------------------
+%   Rotational kinematics. 
+A.RotateZ( N, theta )
+%--------------------------------------------------------------------
+%   Translational kinematics.
+Q.SetVelocityAcceleration(N, v*Ax>)
+%--------------------------------------------------------------------
+%   Add relevant contact/distance forces.
+System.AddForceGravity( -g*Ny> )            % Add's gravity force to each massive object.
+Q.AddForce( (Fc - b*v^2 - F_unmodelled)*Ax> )
+%--------------------------------------------------------------------
+%   Translational dynamic equations (F = m*a).
+%   For static analysis, use  B.GetStatics()  or  System.GetStatics().
+SetGeneralizedSpeeds( v )
+Eq = System.GetDynamicsKane()
+Solve( Explicit(Eq, theta) = 0, v' )
+Variable v2' = Evaluate(v', Kp1 = Kp2, v = v2)
+Variable v3' = Evaluate(v', Kp1 = Kp3, v = v3)
+
+Input tfinal = 12 sec, m = 50 kg, v = 0 m/s, v2 = 0 m/s, v3 = 0 m/s
+OutputPlot t sec, v m/s, v2 m/s, v3 m/s
+ODE()
+Save 23.1.html
+Quit
+%--------------------------------------------------------------------
+%   Solve algebraic equations for list of unknowns.
+Solve( Dynamics = 0,   x'', y'', Fx, Fy )
+%--------------------------------------------------------------------
+%   Energy calculations (if needed).
+Variable workDone' = Dot( someForce>, someVelocity> )
+KE = System.GetKineticEnergy()
+PEgravity = System.GetForceGravityPotentialEnergy( -g*Ny>, No )
+MechanicalEnergy = KE + PEgravity - workDone
+%--------------------------------------------------------------------
+%   Momentum calculations (if needed).
+H> = System.GetAngularMomentum( aboutPoint )
+L> = EvaluateToNumber( System.GetLinearMomentum() )
+%--------------------------------------------------------------------
+%   Other calculations (e.g., for output).
+xQ = Dot(  Q.GetPosition(No),  Nx>  )
+%--------------------------------------------------------------------
+%   Set initial values for variables (for subsequent ODE command).
+Input  qA = 30 deg,  qA' = 0 rad/sec
+Input  qB = 90 deg,  qB' = 0 rad/sec
+%--------------------------------------------------------------------
+%   List output quantities (e.g., from the ODE command).
+Output      t sec,  x m,  Fx Newton,  Fy Newton
+OutputPlot  t sec,  qA degrees  qB degrees
+%--------------------------------------------------------------------
+%   Set numerical integration parameters and solve ODEs.
+%   Or auto-generate MATLAB, C, or Fortran code.
+Input  tFinal = 10 sec,  tStep = 0.02 sec,  absError = 1.0E-07
+ODE()  Filename    % or ODE( Zero = 0, listOfVariablesToSolve ) Filename.m
+%--------------------------------------------------------------------
+%   Record input together with responses.
+Save  someFileName.html
+Quit
+
